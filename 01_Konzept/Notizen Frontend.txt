@@ -1,0 +1,10 @@
+Frontend
+- Starte das JS nach document.ready
+- Hole die Daten zu einem Chart via jQuery.get() (Ajax Aufruf)
+- rufe dabei die data.php (Beispiel) auf
+- dieses liefert die Daten als String (je nach gewünschtem Format)
+- Datenübertragung von php als JSON Objekt
+- iteriere mit einer Schleife über die Daten und füge sie in das Chart ein
+=> Vorteil: die Daten stehen nicht im Quellcode der HTML Datei
+=> Nachteil: Zusätzlicher Server-Request
+=> Zu testen: Ladezeiten
