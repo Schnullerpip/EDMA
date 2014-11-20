@@ -1,4 +1,4 @@
 EDMA
 ====
 
-Teamprojekt HTWG Konstanz 
+Teamprojekt EDMA HTWG Konstanz
