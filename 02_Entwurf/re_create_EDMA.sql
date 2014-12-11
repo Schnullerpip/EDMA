@@ -139,7 +139,7 @@ MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
 
 CREATE TABLE `passwort` (
 `id` bigint(20) unsigned NOT NULL,
-  `hash` varbinary(256) NOT NULL,
+  `hash` varchar(32) NOT NULL,
   `projekt_id` bigint(20) unsigned DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
