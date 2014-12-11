@@ -75,17 +75,13 @@ $projekt = new Projekt();
                 <div id="navbar" class="navbar-collapse collapse">
                     <?php if ($projekt->isLoggedIn()) : ?>
                         <ul class="nav navbar-nav">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Verwaltung<span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <?php if ($projekt->isMaster()) : ?>
-                                        <li><a href="projekt.php">Projektverwaltung</a></li>
-                                        <li><a href="#">Messreihenverwaltung</a></li>
-                                        <li class="divider"></li>
-                                    <?php endif; ?>
-                                    <li><a href="logout.php">Projekt wechseln</a></li>
-                                </ul>
-                            </li>
+                            <?php if ($projekt->isMaster()) : ?>
+                                <li><a href="projekt.php">Projektverwaltung</a></li>
+                                <li><a href="messreihe.php">Messreihenverwaltung</a></li>
+                            <?php endif; ?>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="logout.php">Projekt wechseln</a></li>
                         </ul>
                     <?php endif; ?>
                 </div><!--/.nav-collapse -->

@@ -1,4 +1,19 @@
 /* EDMA-Custom Theme */
+
+
+/* Resets */
+/* ------------------------------- */
+
+th,
+label{
+    font-weight: normal;
+    font-family: 'RobotoMedium', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+
+/* General Stuff */
+/* ------------------------------- */
+
 html {
     position: relative;
     min-height: 100%;
@@ -9,8 +24,37 @@ body {
     color: white;
     height: 100%;
     margin-bottom: 90px;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Regular.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/Roboto-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('../fonts/Roboto-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+        url('../fonts/Roboto-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+        url('../fonts/Roboto-Regular.ttf')  format('truetype'), /* Safari, Android, iOS */
+        url('../fonts/Roboto-Regular.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+    font-family: 'RobotoMedium';
+    src: url('../fonts/Roboto-Medium.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/Roboto-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('../fonts/Roboto-Medium.woff2') format('woff2'), /* Super Modern Browsers */
+        url('../fonts/Roboto-Medium.woff') format('woff'), /* Pretty Modern Browsers */
+        url('../fonts/Roboto-Medium.ttf')  format('truetype'), /* Safari, Android, iOS */
+        url('../fonts/Roboto-Medium.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+::-moz-selection {
+    background-color: white;
+    color: #224565;
+}
+::selection {
+    background-color: white;
+    color: #224565;
+}
 
 /* Helpers */
 /* ------------------------------- */
@@ -148,6 +192,52 @@ table {
     border-color: white;
 }
 
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+    line-height: 1.65;
+}
+
+table td:last-child {
+    width: 5%;
+    min-width: 15px;
+}
+table td .glyphicon {
+    visibility: hidden;
+}
+
+table tr:hover .glyphicon {
+    visibility: visible;
+    cursor: pointer;
+}
+
+
+/* Dropdown-Menu */
+/* ------------------------------- */
+
+.dropdown-menu {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    background-color: #224565;
+}
+.dropdown-menu .divider {
+    margin: 0;
+}
+.dropdown-menu li a {
+    color: white;
+    padding: 10px 20px;
+}
+.dropdown-menu li a:hover,
+.dropdown-menu li a:focus,
+.dropdown-menu li a:active {
+    background-color: white;
+}
+
 
 /* Popover */
 /* ------------------------------- */
@@ -183,6 +273,11 @@ table {
 
 .footer img {
     max-height: 50px;
+}
+
+.footer ul {
+    margin-bottom: 0;
+    margin: 15px 0;
 }
 
 
