@@ -76,6 +76,7 @@ $projekt = new Projekt();
                     <?php if ($projekt->isLoggedIn()) : ?>
                         <ul class="nav navbar-nav">
                             <?php if ($projekt->isMaster()) : ?>
+                                <li><a href="index.php">Startseite</a></li>
                                 <li><a href="projekt.php">Projektverwaltung</a></li>
                                 <li><a href="messreihe.php">Messreihenverwaltung</a></li>
                             <?php endif; ?>
