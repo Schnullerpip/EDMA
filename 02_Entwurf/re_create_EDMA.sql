@@ -27,7 +27,7 @@ USE `EDMA`;
 CREATE TABLE `anhang` (
 `id` bigint(20) unsigned NOT NULL,
   `projekt_id` bigint(20) unsigned NOT NULL,
-  `dateiname` varchar(256) NOT NULL,
+  `dateiname` varchar(100) NOT NULL,
   `inhalt` mediumblob NOT NULL,
   `groesse` int(10) unsigned NOT NULL,
   `dateityp` varchar(30) NOT NULL
@@ -92,7 +92,7 @@ ADD CONSTRAINT pk_messreihe_metainfo PRIMARY KEY (messreihe_id, metainfo_id);
 CREATE TABLE `messreihe_sensor` (
   `messreihe_id` bigint(20) unsigned NOT NULL,
   `sensor_id` bigint(20) unsigned NOT NULL,
-  `anzeigename` varchar(30) NOT NULL
+  `anzeigename` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `messreihe_sensor`
@@ -139,7 +139,7 @@ MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
 
 CREATE TABLE `passwort` (
 `id` bigint(20) unsigned NOT NULL,
-  `hash` varchar(32) NOT NULL,
+  `hash` varchar(64) NOT NULL,
   `projekt_id` bigint(20) unsigned DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -155,8 +155,8 @@ MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
 
 CREATE TABLE `projekt` (
 `id` bigint(20) unsigned NOT NULL,
-  `projektname` varchar(128) NOT NULL,
-  `salt` varchar(8) NOT NULL,
+  `projektname` varchar(100) NOT NULL,
+  `salt` varchar(32) NOT NULL,
   `passwort_id` bigint(20) unsigned NOT NULL DEFAULT '1' COMMENT 'masterpasswort'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -175,7 +175,7 @@ CREATE INDEX index_projektname ON `projekt` (projektname);
 
 CREATE TABLE `sensor` (
 `id` bigint(20) unsigned NOT NULL,
-  `sensorname` varchar(20) NOT NULL
+  `sensorname` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `sensor`
