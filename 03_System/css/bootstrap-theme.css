@@ -175,6 +175,7 @@ a:active,
 .panel {
     background: none;
     border: 1px solid white;
+    overflow: hidden;
 }
 
 .panel-default > .panel-heading {
@@ -249,18 +250,38 @@ table tr:hover .glyphicon {
 
 .accordeon .panel-heading .glyphicon {
     top: 2px;
-    padding-left: 8px;
+    padding: 0 6px;
+    -webkit-transition: -webkit-transform 0.3s ease-out;
+    -moz-transition:    -moz-transform 0.3s ease-out;
+    -o-transition:      -o-transform 0.3s ease-out;
+    -ms-transition:     -ms-transform 0.3s ease-out;
+    transition:         transform 0.3s ease-out;
 }
 
-.accordeon .panel-heading,
-.accordeon .panel-heading:hover {
-    color: #36a7eb;
+.accordeon .panel-heading.collapsed:hover,
+.accordeon .panel-heading.collapsed:focus,
+.accordeon .panel-heading.collapsed:active,
+.accordeon .panel-heading:hover,
+.accordeon .panel-heading:focus,
+.accordeon .panel-heading:active {
+    color: #36a7eb ;
     background-color: white;
     border-color: white;
 }
 .accordeon .panel-heading.collapsed {
     background-color: transparent;
     color: white;
+}
+.accordeon .panel-heading.collapsed .glyphicon {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -webkit-transition: -webkit-transform 0.3s ease-out;
+    -moz-transition:    -moz-transform 0.3s ease-out;
+    -o-transition:      -o-transform 0.3s ease-out;
+    -ms-transition:     -ms-transform 0.3s ease-out;
+    transition:         transform 0.3s ease-out;
 }
 
 .accordeon .btn:active,
@@ -292,9 +313,20 @@ table tr:hover .glyphicon {
     float: left;
     padding: 0;
 }
-.accordeon .controls li .glyphicon {
+.accordeon .controls li a {
+    display: block;
+}
+.accordeon .controls li a:hover,
+.accordeon .controls li a:focus,
+.accordeon .controls li a:active {
+    background-color: white;
+    color: #224565;
+    border-bottom: none;
+}
+.accordeon .controls li a .glyphicon {
     font-size: 15px;
-    padding: 12px;
+    top: 0;
+    padding: 14px 12px 12px;
 }
 
 

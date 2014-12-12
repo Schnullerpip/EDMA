@@ -1,5 +1,7 @@
-$(function () {
-    $('[data-toggle="popover"]').popover();
+$(document).ready(function() {
+    $(function () {
+        $('[data-toggle="popover"]').popover();
+    });
 });
 
 // Upload-Funktionalitaet

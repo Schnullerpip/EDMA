@@ -13,10 +13,9 @@ if (!$projekt->isLoggedIn()) {
             <div class="panel-group accordeon" role="tablist">
                 <div class="panel panel-default">
                     <a class="btn btn-block panel-heading text-center collapsed" role="tab" href="#collapseListengruppe1" data-toggle="collapse" aria-expanded="true" aria-controls="collapseListengruppe1" id="collapseListengruppeÜberschrift1">
-                        Letzte Messreihenimporte anzeigen<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                        Letzte Messreihenimporte anzeigen<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
                     </a>
-                    <!-- TODO: collapse out anstatt collapse in Klasse -->
-                    <div id="collapseListengruppe1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="collapseListengruppeÜberschrift1" aria-expanded="true">
+                    <div id="collapseListengruppe1" class="panel-collapse collapse out" role="tabpanel" aria-labelledby="collapseListengruppeÜberschrift1" aria-expanded="true">
                         <ul class="list-group list-unstyled">
                             <li>
                                 <div class="row">
@@ -51,19 +50,27 @@ if (!$projekt->isLoggedIn()) {
                                 <div class="row">
                                     <div class="col-sm-2">
                                         <div class="list-content">
-                                            Messreihe 2
+                                            Messreihe 1
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="list-content">
                                             <!-- TODO: <data> -->
-                                            02.01.1970
+                                            01.01.1970
                                         </div>
                                     </div>
                                     <div class="col-sm-2 pull-right controls">
                                         <ul class="list-unstyled list-inline pull-right">
-                                            <li>1</li>
-                                            <li>2</li>
+                                            <li>
+                                                <a href="#graph">
+                                                    <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -72,19 +79,27 @@ if (!$projekt->isLoggedIn()) {
                                 <div class="row">
                                     <div class="col-sm-2">
                                         <div class="list-content">
-                                            Messreihe 3
+                                            Messreihe 1
                                         </div>
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="list-content">
                                             <!-- TODO: <data> -->
-                                            03.01.1970
+                                            01.01.1970
                                         </div>
                                     </div>
                                     <div class="col-sm-2 pull-right controls">
                                         <ul class="list-unstyled list-inline pull-right">
-                                            <li>1</li>
-                                            <li>2</li>
+                                            <li>
+                                                <a href="#graph">
+                                                    <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
