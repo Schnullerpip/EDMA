@@ -140,7 +140,8 @@ MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
 CREATE TABLE `passwort` (
 `id` bigint(20) unsigned NOT NULL,
   `hash` varchar(64) NOT NULL,
-  `projekt_id` bigint(20) unsigned DEFAULT NULL
+  `projekt_id` bigint(20) unsigned DEFAULT NULL,
+  `salt` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `passwort`
@@ -156,8 +157,7 @@ MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
 CREATE TABLE `projekt` (
 `id` bigint(20) unsigned NOT NULL,
   `projektname` varchar(100) NOT NULL,
-  `salt` varchar(32) NOT NULL,
-  `passwort_id` bigint(20) unsigned NOT NULL DEFAULT '1' COMMENT 'masterpasswort'
+  `passwort_id` bigint(20) unsigned NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `projekt`

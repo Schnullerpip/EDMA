@@ -1,11 +1,11 @@
-INSERT INTO `passwort` (hash, projekt_id)
-VALUES (SHA2('master', 256), null);
+INSERT INTO `passwort` (hash, projekt_id, salt)
+VALUES (SHA2('masterabcdefghijklmnopqRsTuvWXzY!@#$%^', 256), null, 'abcdefghijklmnopqRsTuvWXzY!@#$%^');
 
-INSERT INTO `projekt` (projektname, salt)
-VALUES ('Testprojekt zum Testen', 'abcdefghijklmnopqRsTuvWXzY!@#$%^');
+INSERT INTO `projekt` (projektname)
+VALUES ('Testprojekt zum Testen');
 
-INSERT INTO `passwort` (hash, projekt_id)
-VALUES (SHA2((SELECT CONCAT('Testprojekt', salt) FROM `projekt` WHERE projektname = 'Testprojekt zum Testen'), 256), (SELECT id fROM `projekt` WHERE projektname = 'Testprojekt zum Testen')); 
+INSERT INTO `passwort` (hash, projekt_id, salt)
+VALUES (SHA2('TestprojektA3G57VsJ^8Ch*5$pqRsTuvWXzY!F#$%^', 256), (SELECT id FROM `projekt` WHERE projektname = 'Testprojekt zum Testen'), 'A3G57VsJ^8Ch*5$pqRsTuvWXzY!F#$%^'); 
 
 INSERT INTO `messreihe` (projekt_id)
 VALUES ((SELECT id FROM `projekt` WHERE projektname = 'Testprojekt zum Testen')); 
