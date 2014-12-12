@@ -14,7 +14,8 @@ if (!$projekt->isLoggedIn()) {
                     <a class="btn btn-block panel-heading text-center collapsed" role="tab" href="#collapseListengruppe1" data-toggle="collapse" aria-expanded="true" aria-controls="collapseListengruppe1" id="collapseListengruppeÜberschrift1">
                         Letzte Messreihenimporte anzeigen<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
                     </a>
-                    <div id="collapseListengruppe1" class="panel-collapse collapse out" role="tabpanel" aria-labelledby="collapseListengruppeÜberschrift1" aria-expanded="true">
+                    <!-- TODO: collapse out anstatt collapse in Klasse -->
+                    <div id="collapseListengruppe1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="collapseListengruppeÜberschrift1" aria-expanded="true">
                         <ul class="list-group list-unstyled">
                             <li class="list-group-item">
                                 <div class="row">
@@ -23,6 +24,12 @@ if (!$projekt->isLoggedIn()) {
                                     </div>
                                     <div class="col-sm-2">
                                         01.01.1970
+                                    </div>
+                                    <div class="col-sm-1 pull-right controls">
+                                        <ul class="list-unstyled list-inline">
+                                            <li>1</li>
+                                            <li>2</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </li>
