@@ -1,11 +1,17 @@
 <?php
 
 /**
- * Description of Config
+ * Hilfs-Klasse um schnell Werte aus der config ('core/init.php') zu holen.
  *
  * @author Sandro
  */
 class Config {
+    
+    /**
+     * Hole den Wert aus der Config
+     * 
+     * @param string $path der Config-Eintrag
+     */
     public static function get($path = null) {
         if ($path) {
             $config = $GLOBALS['config']; 
