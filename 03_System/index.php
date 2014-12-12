@@ -17,7 +17,7 @@ if (!$projekt->isLoggedIn()) {
                     <!-- TODO: collapse out anstatt collapse in Klasse -->
                     <div id="collapseListengruppe1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="collapseListengruppeÜberschrift1" aria-expanded="true">
                         <ul class="list-group list-unstyled">
-                            <li class="">
+                            <li>
                                 <div class="row">
                                     <div class="col-sm-2">
                                         <div class="list-content">
@@ -30,31 +30,61 @@ if (!$projekt->isLoggedIn()) {
                                             01.01.1970
                                         </div>
                                     </div>
-                                    <div class="col-sm-1 pull-right controls">
-                                        <ul class="list-unstyled list-inline">
+                                    <div class="col-sm-2 pull-right controls">
+                                        <ul class="list-unstyled list-inline pull-right">
+                                            <li>
+                                                <a href="#graph">
+                                                    <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <div class="list-content">
+                                            Messreihe 2
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="list-content">
+                                            <!-- TODO: <data> -->
+                                            02.01.1970
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 pull-right controls">
+                                        <ul class="list-unstyled list-inline pull-right">
                                             <li>1</li>
                                             <li>2</li>
                                         </ul>
                                     </div>
                                 </div>
                             </li>
-                            <li class="">
+                            <li>
                                 <div class="row">
                                     <div class="col-sm-2">
-                                        Messreihe 2
+                                        <div class="list-content">
+                                            Messreihe 3
+                                        </div>
                                     </div>
                                     <div class="col-sm-2">
-                                        02.01.1970
+                                        <div class="list-content">
+                                            <!-- TODO: <data> -->
+                                            03.01.1970
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                            <li class="">
-                                <div class="row">
-                                    <div class="col-sm-2">
-                                        Messreihe 3
-                                    </div>
-                                    <div class="col-sm-2">
-                                        03.01.1970
+                                    <div class="col-sm-2 pull-right controls">
+                                        <ul class="list-unstyled list-inline pull-right">
+                                            <li>1</li>
+                                            <li>2</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </li>
@@ -68,6 +98,7 @@ if (!$projekt->isLoggedIn()) {
     <h1>Metadaten filtern</h1>
     <h1>Messreihe wählen</h1>
     <h1>Einstellungen</h1>
+    <div id="graph"></div>
 
 <?php
 require_once 'footer.php';

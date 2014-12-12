@@ -283,12 +283,18 @@ table tr:hover .glyphicon {
     height: 100%;
 }
 .accordeon .controls li {
-    width: 50%;
+    width: 40px;
+    height: 40px;
     display: block;
     background-color: #224565;
     border: none;
     border-left: 1px solid white; 
     float: left;
+    padding: 0;
+}
+.accordeon .controls li .glyphicon {
+    font-size: 15px;
+    padding: 12px;
 }
 
 
