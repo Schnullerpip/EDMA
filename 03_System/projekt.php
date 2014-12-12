@@ -1,7 +1,6 @@
 <?php
 require_once 'header.php';
 
-$projekt = new Projekt();
 if (!$projekt->isMaster()) {
     Redirect::to('login.php');
 }
@@ -57,7 +56,7 @@ if (Input::exists()) {
 ?>
 
 <h2>
-    <?php echo ($projekt->data() ? $projekt->data()->projekt . ' bearbeiten' : 'Neues Projekt anlegen'); ?>
+    <?php echo ($projekt->data() ? $projekt->data()->name . ' bearbeiten' : 'Neues Projekt anlegen'); ?>
 </h2>
 <br>
 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
@@ -81,29 +80,33 @@ if (Input::exists()) {
                 <div class="panel-heading">Vorhandene Projektbeschreibungen</div>
 
                 <!-- Tabelle -->
-                <table class="table">
+                <table class="table" id="projektbeschreibungen" data-count="3">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Dateiname</th>
-                            <th>Datum</th>
+                            <th class="text-right">Datum</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>1</td>
                             <td>Mark</td>
-                            <td>1.1.1970</td>
+                            <td class="text-right">01.01.1970</td>
+                            <td><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="0"></span></td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>Jacob</td>
-                            <td>1.1.1970</td>
+                            <td class="text-right">01.01.1970</td>
+                            <td><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="1"></span></td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td>Larry</td>
-                            <td>1.1.1970</td>
+                            <td class="text-right">01.01.1970</td>
+                            <td><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="2"></span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -114,7 +117,7 @@ if (Input::exists()) {
                         <div class="form-horizontal" role="form">
                             <input class="col-md-9 control-label" name="file[]" id="files" type="file" id="projektbeschreibung" multiple="multiple" data-maxsize="<?php echo Utils::convertBytes(ini_get('post_max_size')); ?>">
                             <div class="col-md-3">
-                                <button type="submit" name="upload" id="upload" class="btn btn-primary btn-sm pull-right form-control">Upload</button>
+                                <button type="button" name="upload" id="upload" class="btn btn-primary btn-sm pull-right form-control">Upload</button>
                             </div>
                             <div class="col-md-3">
                                 <div id="progress-circle" style="display: none;">
@@ -145,14 +148,12 @@ if (Input::exists()) {
 
     <script>
         $('#upload').click(function (event) {
+            var f = $('#files')[0];
             var pie = $('#progress-circle');
             var errorBox = $('#upload-errors');
-            var $pCaption = $('.progress-circle-bar p');
             var button = $(this);
-            var aProgress = document.getElementById('activeProgress');
             var maxSize = $('#files').data('maxsize');
-            var f = $('#files')[0];
-            
+
             event.preventDefault();
 
             var msg = checkMaxsize(maxSize, f);
@@ -170,20 +171,58 @@ if (Input::exists()) {
 
             app.uploader({
                 files: f,
-                pCaption: $pCaption,
-                aProgress: aProgress,
+                function: 'upload',
+                element: {
+                    name: 'projektbeschreibung'
+                },
+                pCaption: $('.progress-circle-bar p'),
+                aProgress: $('#activeProgress'),
                 maxsize: maxSize,
-                processor: 'upload.php',
+                processor: 'ajaxHandler.php',
                 finished: function (data) {
                     pie.toggle();
                     button.toggle();
                     // Fuege Element in Tabelle ein
-                    console.log(data);
+                    var count = parseInt($('#projektbeschreibungen').data('count'));
+                    $.each(data.succeeded, function (i) {
+                        $('#projektbeschreibungen').append(
+                                '<tr><td>' + 
+                                (count + (i + 1)) + 
+                                '</td><td>' 
+                                + data.succeeded[i].name + 
+                                '</td><td>' + 
+                                data.succeeded[i].date + 
+                                '</td><td>' +
+                                '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="' + data.succeeded[i].id + '"></span>' +
+                                '</td></tr>'
+                                );
+                    });
                 },
                 error: function (data) {
                     console.log(data);
                     $('#upload-errors').append('error');
                 }
+            });
+        });
+        
+        $('.glyphicon-remove').on('click', function() {
+            $.ajax({
+                type: 'post',
+                url: 'ajaxHandler.php',
+                data: {
+                    function: "delete",
+                    element: {
+                        name: "projektbeschreibung",
+                        id: $(this).data('id')
+                    }
+                }
+            })
+            .done(function() {
+              console.log("success");
+              // TODO: Tabelleneintrag löschen
+            })
+            .fail(function() {
+              // TODO: Fehler in $('#upload-errors') anzeigen
             });
         });
     </script>

@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 $GLOBALS['config'] = array(
@@ -14,7 +15,7 @@ $GLOBALS['config'] = array(
     ),
     'session' => array(
         'session_name' => 'projekt',
-        'token_name' => 'token' 
+        'token_name' => 'token'
     ),
     'settings' => array(
         'masterpassword' => 'master'
@@ -28,9 +29,38 @@ define('HOME', 'http://localhost/virtual/EDMANetBeans/');
  * Somit muss nicht ständig ein require auf die benötigte Klasse gemacht werden.
  * Stattdessen wird sie nur required, wenn sie auch tatsächlich benutzt wird.
  */
-spl_autoload_register(function($class) {
-    require_once 'classes/' . $class . '.php';
-});
+spl_autoload_register('autoload');
+
+/**
+ * autoload
+ *
+ * @author Joe Sexton <joe.sexton@bigideas.com>
+ * @param  string $class
+ * @param  string $dir
+ * @return bool
+ */
+function autoload($class, $dir = null) {
+    if (is_null($dir))
+        $dir = 'classes/';
+
+    foreach (scandir($dir) as $file) {
+
+        // directory?
+        if (is_dir($dir . $file) && substr($file, 0, 1) !== '.')
+            autoload($class, $dir . $file . '/');
+
+        // php file?
+        if (substr($file, 0, 2) !== '._' && preg_match("/.php$/i", $file)) {
+
+            // filename matches class?
+            if (str_replace('.php', '', $file) == $class || str_replace('.class.php', '', $file) == $class) {
+
+                include $dir . $file;
+            }
+        }
+    }
+}
+
 
 /**
  * Kann leider nicht so wie oben gemacht werden, da functions keine Klasse ist.
@@ -40,13 +70,9 @@ require_once 'functions/sanitize.php';
 if (Cookie::exists(Config::get('remember/cookie_name')) && !Session::exists(Config::get('session/session_name'))) {
     $hash = Cookie::get(Config::get('remember/cookie_name'));
     $hashCheck = DB::getInstance()->get('users_session', array('hash', '=', $hash));
-    
+
     if ($hashCheck->count()) {
         $user = new User($hashCheck->first()->user_id);
         $user->login();
     }
 }
-
-function setMasterPassWord($newPass) {
-    $GLOBALS['config']['settings']['masterpassword'] = $newPass;
-} 

@@ -46,3 +46,10 @@ Temporary Items
 *.JPG
 
 *.mp4
+<<<<<<< Updated upstream
+/node_modules/
+/gulpfile.js
+=======
+/uploads/tmp/Erklärung Gleitzone Herr u_ Tonon.doc
+/uploads/tmp/MyPoint_Connector_2.4.dmg
+>>>>>>> Stashed changes

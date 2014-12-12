@@ -1,7 +1,6 @@
 <?php
 require_once 'header.php';
 
-$projekt = new Projekt();
 $projekt->logout();
 
 if (Input::exists()) {

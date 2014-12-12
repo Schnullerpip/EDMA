@@ -1,4 +1,19 @@
 /* EDMA-Custom Theme */
+
+
+/* Resets */
+/* ------------------------------- */
+
+th,
+label{
+    font-weight: normal;
+    font-family: 'RobotoMedium', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+
+/* General Stuff */
+/* ------------------------------- */
+
 html {
     position: relative;
     min-height: 100%;
@@ -9,8 +24,38 @@ body {
     color: white;
     height: 100%;
     margin-bottom: 90px;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow-y: scroll;
 }
 
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Regular.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/Roboto-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('../fonts/Roboto-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+        url('../fonts/Roboto-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+        url('../fonts/Roboto-Regular.ttf')  format('truetype'), /* Safari, Android, iOS */
+        url('../fonts/Roboto-Regular.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+    font-family: 'RobotoMedium';
+    src: url('../fonts/Roboto-Medium.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/Roboto-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('../fonts/Roboto-Medium.woff2') format('woff2'), /* Super Modern Browsers */
+        url('../fonts/Roboto-Medium.woff') format('woff'), /* Pretty Modern Browsers */
+        url('../fonts/Roboto-Medium.ttf')  format('truetype'), /* Safari, Android, iOS */
+        url('../fonts/Roboto-Medium.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+::-moz-selection {
+    background-color: white;
+    color: #224565;
+}
+::selection {
+    background-color: white;
+    color: #224565;
+}
 
 /* Helpers */
 /* ------------------------------- */
@@ -93,6 +138,10 @@ a:active,
     color: white;
 }
 
+.btn-40 {
+    height: 40px;
+}
+
 
 /* Inputs */
 /* ------------------------------- */
@@ -125,7 +174,7 @@ a:active,
 
 .panel {
     background: none;
-    border: 2px solid white;
+    border: 1px solid white;
 }
 
 .panel-default > .panel-heading {
@@ -145,6 +194,81 @@ a:active,
 /* ------------------------------- */
 
 table {
+    border-color: white;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+    line-height: 1.65;
+}
+
+table td:last-child {
+    width: 5%;
+    min-width: 15px;
+}
+table td .glyphicon {
+    visibility: hidden;
+}
+
+table tr:hover .glyphicon {
+    visibility: visible;
+    cursor: pointer;
+}
+
+
+/* Accordeon */
+/* ------------------------------- */
+
+.accordeon .panel > .list-group:first-child .list-group-item:first-child,
+.accordeon .panel > .panel-collapse > .list-group:first-child .list-group-item:first-child {
+    border-radius: 0;
+}
+
+.accordeon.panel-group .panel-heading+.panel-collapse>.panel-body,
+.accordeon.panel-group .panel-heading+.panel-collapse>.list-group {
+    border-top: 1px solid white;
+}
+
+.accordeon .list-group-item {
+    background-color: transparent;
+}
+
+.accordeon .panel-title {
+    font-size: 14px;
+}
+
+.accordeon .panel-default > .panel-heading {
+    border: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.accordeon .panel-heading .glyphicon {
+    top: 2px;
+    padding-left: 8px;
+}
+
+.accordeon .panel-heading,
+.accordeon .panel-heading:hover {
+    color: #36a7eb;
+    background-color: white;
+    border-color: white;
+}
+.accordeon .panel-heading.collapsed {
+    background-color: transparent;
+    color: white;
+}
+
+.accordeon .btn:active,
+.accordeon .btn.active {
+    box-shadow: none;
+}
+
+.accordeon .list-group-item {
     border-color: white;
 }
 
@@ -183,6 +307,11 @@ table {
 
 .footer img {
     max-height: 50px;
+}
+
+.footer ul {
+    margin-bottom: 0;
+    margin: 15px 0;
 }
 
 

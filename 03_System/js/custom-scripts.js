@@ -48,6 +48,8 @@ var app = app || {};
             data.append('file[]', source[i]);
         }
 
+        data.append('function', o.options.function);
+        data.append('element', o.options.element.name);
         data.append('ajax', true);
         data.append('maxsize', o.options.maxsize);
 
