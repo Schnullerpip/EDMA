@@ -80,7 +80,18 @@
 
 
 	<div class="description">
-	<p>Description of Validation</p>
+	<p>Eine Klasse zum Überprüfen von Eingabefeldern.</p>
+
+<p>Es kann z.B. definiert werden, dass ein Input-Feld mit dem Namen 'user'
+mindestens 5 Zeichen haben soll. Oder dass das Passwort Feld required ist etc.
+Dabei wird ein array mit den Feldern angelegt, welche wiederrum ein Array mit
+den kriterien haben. Das Array für ein required 'passwort'-Feld sieht z.B.
+so aus:
+'password' => array('required' => true)</p>
+
+<p>Es kann auch ein Ausgabewert für den Feldnamen angegeben werden, wenn die
+Validierung des Feldes fehlschlägt, z.B.:
+'fieldname' => 'Passwort'</p>
 
 	</div>
 
@@ -101,7 +112,7 @@
 				<b>Author:</b>
 				Sandro
 <br>
-		<b>Located at</b> <a href="source-class-Validate.html#3-80" title="Go to source code">Validate.php</a><br>
+		<b>Located at</b> <a href="source-class-Validate.html#3-111" title="Go to source code">Validate.php</a><br>
 	</div>
 
 
@@ -113,26 +124,41 @@
 		<td class="attributes"><code>
 			 public 
 
-			
+			<code><a href="class-Validate.html">Validate</a></code>
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_check">#</a>
-		<code><a href="source-class-Validate.html#12-63" title="Go to source code">check</a>( <span>mixed <var>$source</var></span>, <span>mixed <var>$items</var> = <span class="php-keyword1">array</span>()</span> )</code>
+		<code><a href="source-class-Validate.html#23-82" title="Go to source code">check</a>( <span>array <var>$source</var></span>, <span>array <var>$items</var> = <span class="php-keyword1">array</span>()</span> )</code>
 
 		<div class="description short">
-			
+			<p>Prüft die Eingabewerte von $source ($_POST oder $_GET) auf die angegebenen
+Anforderungen in $items</p>
 
 		</div>
 
 		<div class="description detailed hidden">
-			
+			<p>Prüft die Eingabewerte von $source ($_POST oder $_GET) auf die angegebenen
+Anforderungen in $items</p>
 
 
 
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$source</var></dt>
+					<dd>$_POST oder $_GET
+</dd>
+					<dt><var>$items</var></dt>
+					<dd>die Anforderungen
+</dd>
+				</dl></div>
 
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Validate.html">Validate</a></code></code>
+				</div>
 
 
 
@@ -145,26 +171,31 @@
 		<td class="attributes"><code>
 			 public 
 
-			
+			string-array
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_errors">#</a>
-		<code><a href="source-class-Validate.html#73-75" title="Go to source code">errors</a>( )</code>
+		<code><a href="source-class-Validate.html#93-100" title="Go to source code">errors</a>( )</code>
 
 		<div class="description short">
-			
+			<p>Gibt das Array mit eventuellen Fehlern aus.</p>
 
 		</div>
 
 		<div class="description detailed hidden">
-			
+			<p>Gibt das Array mit eventuellen Fehlern aus.</p>
 
 
 
 
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string-array</code><br>mit den Fehlern
+
+				</div>
 
 
 
@@ -177,26 +208,30 @@
 		<td class="attributes"><code>
 			 public 
 
-			
+			boolean
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_passed">#</a>
-		<code><a href="source-class-Validate.html#77-79" title="Go to source code">passed</a>( )</code>
+		<code><a href="source-class-Validate.html#103-110" title="Go to source code">passed</a>( )</code>
 
 		<div class="description short">
-			
+			<p>Gibt true zurück, wenn die Validierung erfolgreich war. Ansonsten false</p>
 
 		</div>
 
 		<div class="description detailed hidden">
-			
+			<p>Gibt true zurück, wenn die Validierung erfolgreich war. Ansonsten false</p>
 
 
 
 
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code>
+				</div>
 
 
 

@@ -1,12 +1,23 @@
 <?php
 
 /**
- * Description of Utils
+ * Hilfs-Klasse mit verschiedenen Hilfs-Funktionen.
  *
  * @author Sandro
  */
 class Utils {
 
+    /**
+     * Konvertiert eine Größenangabe im von MB, GB etc. in Bytes.
+     * 
+     * Als Einheit möglich sind:
+     * k
+     * m
+     * g
+     * 
+     * @param string/numeric $value
+     * @return int Größe in Byte
+     */
     public static function convertBytes($value) {
         if (is_numeric($value)) {
             return $value;
@@ -28,4 +39,5 @@ class Utils {
             return $qty;
         }
     }
+
 }
