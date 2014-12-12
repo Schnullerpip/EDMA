@@ -6,6 +6,14 @@
  * @author Sandro
  */
 class Hash {
+    
+    /**
+     * Generiert für einen String mit dem Salt einen Hash
+     * 
+     * @param type $string
+     * @param type $salt
+     * @return type
+     */
     public static function make($string, $salt = '') {
         return hash('sha256', $string . $salt);
     }

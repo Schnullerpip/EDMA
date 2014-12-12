@@ -268,19 +268,26 @@ table tr:hover .glyphicon {
     box-shadow: none;
 }
 
-.accordeon .list-group-item {
-    border-color: white;
+.accordeon li {
+    border-bottom: 1px solid white;
+}
+.accordeon li:last-child {
+    border: none;
+}
+
+.accordeon li > .row .list-content {
+    padding: 10px 15px;
 }
 
 .accordeon .controls {
-    margin: 0;
+    height: 100%;
 }
 .accordeon .controls li {
     width: 50%;
     display: block;
     background-color: #224565;
-    border: 1px solid white;
-    border-right: none;
+    border: none;
+    border-left: 1px solid white; 
     float: left;
 }
 

@@ -17,13 +17,18 @@ if (!$projekt->isLoggedIn()) {
                     <!-- TODO: collapse out anstatt collapse in Klasse -->
                     <div id="collapseListengruppe1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="collapseListengruppeÜberschrift1" aria-expanded="true">
                         <ul class="list-group list-unstyled">
-                            <li class="list-group-item">
+                            <li class="">
                                 <div class="row">
                                     <div class="col-sm-2">
-                                        Messreihe 1
+                                        <div class="list-content">
+                                            Messreihe 1
+                                        </div>
                                     </div>
                                     <div class="col-sm-2">
-                                        01.01.1970
+                                        <div class="list-content">
+                                            <!-- TODO: <data> -->
+                                            01.01.1970
+                                        </div>
                                     </div>
                                     <div class="col-sm-1 pull-right controls">
                                         <ul class="list-unstyled list-inline">
@@ -33,7 +38,7 @@ if (!$projekt->isLoggedIn()) {
                                     </div>
                                 </div>
                             </li>
-                            <li class="list-group-item">
+                            <li class="">
                                 <div class="row">
                                     <div class="col-sm-2">
                                         Messreihe 2
@@ -43,7 +48,7 @@ if (!$projekt->isLoggedIn()) {
                                     </div>
                                 </div>
                             </li>
-                            <li class="list-group-item">
+                            <li class="">
                                 <div class="row">
                                     <div class="col-sm-2">
                                         Messreihe 3
