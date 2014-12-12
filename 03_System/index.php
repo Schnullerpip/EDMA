@@ -7,7 +7,7 @@ if (!$projekt->isLoggedIn()) {
 }
 
 ?>
-    <p>Projekt: <?php echo escape($projekt->data()->name); ?></p> 
+    <p>Projekt: <?php echo escape($projekt->data()->projektname); ?></p> 
 
     <ul>
         <li><a href="logout.php">Ausloggen</a></li>

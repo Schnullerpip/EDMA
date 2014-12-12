@@ -6,7 +6,7 @@ $GLOBALS['config'] = array(
         'host' => 'localhost',
         'username' => 'root',
         'password' => '',
-        'db' => 'teamprojekt'
+        'db' => 'EDMA'
     ),
     'remember' => array(
         'cookie_name' => 'hash',

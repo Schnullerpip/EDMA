@@ -47,9 +47,9 @@ if (Input::exists()) {
                     <?php
                     $db = DB::getInstance();
 
-                    $db->query('SELECT name, id FROM projekte');
+                    $db->query('SELECT projektname, id FROM projekt');
                     foreach ($db->results() as $projekt) {
-                        echo '<option value="' . $projekt->id . '">' . escape($projekt->name) . '</option>';
+                        echo '<option value="' . $projekt->id . '">' . escape($projekt->projektname) . '</option>';
                     }
                     ?>
                 </select>

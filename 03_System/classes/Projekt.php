@@ -41,9 +41,9 @@ class Projekt {
 
                 return true;
             } else {
-                $field = (is_numeric($projekt)) ? 'id' : 'name';
+                $field = (is_numeric($projekt)) ? 'id' : 'projektname';
 
-                $data = $this->_db->get('projekte', array($field, '=', $projekt));
+                $data = $this->_db->get('projekt', array($field, '=', $projekt));
 
                 if ($data->count()) {
                     $this->_data = $data->first();
@@ -60,16 +60,31 @@ class Projekt {
             $projekt = $this->find($projekt);
 
             if ($projekt) {
-                // TODO: Hash         
-                if ($password === 'master') {
-                    Session::put($this->_sessionName, $this->data()->id);
-                    Session::put('master', 1);
+                $data = $this->_db->get('passwort', array('id', '=', $this->data()->passwort_id));
 
-                    return true;
-                } else if ($password === $this->data()->password) {
-                    Session::put($this->_sessionName, $this->data()->id);
+                if ($data->count()) {
+                    $masterpw = $data->first();
+                    
+                    if ($masterpw->hash == Hash::make($password, $masterpw->salt)) {
+                        Session::put($this->_sessionName, $this->data()->id);
+                        Session::put('master', 1);
 
-                    return true;
+                        return true;
+                    }
+                }
+                
+                $data = $this->_db->get('passwort', array('projekt_id', '=', $this->data()->id));
+                
+                if ($data->count()) {
+                    $pws = $data->results();
+    
+                    foreach ($pws as $pw) {
+                        if ($pw->hash === Hash::make($password, $pw->salt)) {
+                            Session::put($this->_sessionName, $this->data()->id);
+                            
+                            return true;
+                        }
+                    }
                 }
             }
         }
