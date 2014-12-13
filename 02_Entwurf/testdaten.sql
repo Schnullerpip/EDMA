@@ -7,24 +7,20 @@ VALUES ('Testprojekt zum Testen');
 INSERT INTO `passwort` (hash, projekt_id, salt)
 VALUES (SHA2('TestprojektA3G57VsJ^8Ch*5$pqRsTuvWXzY!F#$%^', 256), (SELECT id FROM `projekt` WHERE projektname = 'Testprojekt zum Testen'), 'A3G57VsJ^8Ch*5$pqRsTuvWXzY!F#$%^'); 
 
-INSERT INTO `messreihe` (projekt_id)
-VALUES ((SELECT id FROM `projekt` WHERE projektname = 'Testprojekt zum Testen')); 
+INSERT INTO `messreihe` (messreihenname, datum, projekt_id)
+VALUES ('Trocknungslauf kont. Förderung', '2014-10-14', (SELECT id FROM `projekt` WHERE projektname = 'Testprojekt zum Testen')); 
 
 INSERT INTO `datentyp` (typ)
-VALUES ('datum'), ('string'), ('int'), ('float'); 
+VALUES ('datum'), ('string'), ('numerisch'); 
 
 INSERT INTO `metainfo` (metaname, datentyp_id)
-VALUES ('Name', (SELECT id FROM `datentyp` where typ = 'string')),
-       ('Datum', (SELECT id FROM `datentyp` where typ = 'datum')),
-       ('Material', (SELECT id FROM `datentyp` where typ = 'string')),
+VALUES ('Material', (SELECT id FROM `datentyp` where typ = 'string')),
        ('Trocknungstemp', (SELECT id FROM `datentyp` where typ = 'string')),
        ('Taupunkt', (SELECT id FROM `datentyp` where typ = 'string')),
        ('Masse', (SELECT id FROM `datentyp` where typ = 'string'));
 
 INSERT INTO `messreihe_metainfo` (messreihe_id, metainfo_id, metawert)
-VALUES ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Name'), 'Trocknungslauf kont. Förderung'),
-       ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Datum'), '14.10.2014'),
-       ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Material'), 'PA6'),
+VALUES ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Material'), 'PA6'),
        ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Trocknungstemp'), '80'),
        ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Taupunkt'), '-15'),
        ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Masse'), 'kont. Förderung	kg');
