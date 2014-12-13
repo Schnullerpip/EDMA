@@ -26,6 +26,8 @@ if (Input::exists()) {
             } else {
                 Session::flash('error', 'Sie haben ein falsches Passwort eingegeben oder keine Berechtigungen!');
                 Session::flash('inputProjekt', Input::get('projekt'));
+                
+                // Auskommentieren, um Weiterleitung zu verhindern und Fehler anzuzeigen
                 Redirect::to('login.php');
             }
         } else {
