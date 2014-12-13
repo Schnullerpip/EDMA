@@ -61,11 +61,14 @@ MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
 
 CREATE TABLE `messreihe` (
 `id` bigint(20) unsigned NOT NULL,
+  `messreihenname` varchar(80) NOT NULL,
+  `datum` date NOT NULL,
   `projekt_id` bigint(20) unsigned NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `messreihe`
 ADD CONSTRAINT pk_messreihe PRIMARY KEY (id),
+ADD CONSTRAINT unique_messreihenname UNIQUE (messreihenname),
 MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
 
 -- --------------------------------------------------------
