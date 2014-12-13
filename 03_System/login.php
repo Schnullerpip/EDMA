@@ -4,6 +4,7 @@ require_once 'header.php';
 $projekt->logout();
 
 if (Input::exists()) {
+
     if (Token::check(Input::get('token'))) {
 
         $validate = new Validate();
@@ -24,6 +25,7 @@ if (Input::exists()) {
                 }
             } else {
                 Session::flash('error', 'Sie haben ein falsches Passwort eingegeben oder keine Berechtigungen!');
+                Session::flash('inputProjekt', Input::get('projekt'));
                 Redirect::to('login.php');
             }
         } else {
@@ -44,11 +46,22 @@ if (Input::exists()) {
                 <select class="form-control" id="projekt" name="projekt">
                     <option value="new">Projekt hinzuf&uuml;gen</option>
                     <?php
+                    $inputProjekt = null;
+                    if (Session::exists('inputProjekt')) {
+                        $inputProjekt = Session::flash('inputProjekt');
+                    }
+                    
                     $db = DB::getInstance();
 
                     $db->query('SELECT projektname, id FROM projekt');
                     foreach ($db->results() as $projekt) {
-                        echo '<option value="' . $projekt->id . '">' . escape($projekt->projektname) . '</option>';
+                        if ($projekt->id === $inputProjekt) {
+                            $selected = ' selected';
+                        } else {
+                            $selected = '';
+                        }
+                        
+                        echo '<option value="' . $projekt->id . '"' . $selected  . '>' . escape($projekt->projektname) . '</option>';
                     }
                     ?>
                 </select>
