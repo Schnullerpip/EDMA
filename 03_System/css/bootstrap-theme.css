@@ -5,9 +5,7 @@
 /* ------------------------------- */
 
 th,
-label,
-b,
-strong{
+label{
     font-weight: normal;
     font-family: 'RobotoMedium', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
