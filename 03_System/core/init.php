@@ -16,9 +16,6 @@ $GLOBALS['config'] = array(
     'session' => array(
         'session_name' => 'projekt',
         'token_name' => 'token'
-    ),
-    'settings' => array(
-        'masterpassword' => 'master'
     )
 );
 
