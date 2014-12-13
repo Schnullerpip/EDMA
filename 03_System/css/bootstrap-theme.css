@@ -406,3 +406,29 @@ table tr:hover .glyphicon {
     font-weight: 600;
     text-align: center;
 }
+
+
+/* Popovers */
+/* ------------------------------- */
+
+.popover {
+    padding: 0;
+    border-color: white;
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: white;
+}
+
+.popover .popover-title {
+    background-color: #224565;
+    border-bottom: none;
+    color: white;
+}
+
+.popover.left > .arrow {
+    border-left-color: white;
+}
+.popover.left > .arrow:after {
+    border-left-color: #36a7eb;
+}

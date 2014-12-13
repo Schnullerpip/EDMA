@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of newPHPClass
+ * Description of Projekt
  *
  * @author sandro
  */
