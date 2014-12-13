@@ -8,7 +8,7 @@
                         <img src="images/logo_de.png">
                         <ul class="list-unstyled pull-right">
                             <li>
-                                <a href="impressum.php">Impressum</a>
+                                <a href="http://www.htwg-konstanz.de/Impressum.17.0.html" target="_blank" title="Neue Seite: Das Impressum der HTWG-Konstanz">Impressum</a>
                             </li>
                         </ul>
                     </div>
