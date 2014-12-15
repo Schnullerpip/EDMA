@@ -59,6 +59,10 @@ body {
     color: #224565;
 }
 
+h2 {
+    margin-bottom: 25px;
+}
+
 /* Helpers */
 /* ------------------------------- */
 
@@ -209,7 +213,11 @@ table {
     line-height: 1.65;
 }
 
-table td:last-child {
+.table > thead > tr > th {
+    border-bottom-color: white;
+}
+
+table td.hidden-close {
     width: 5%;
     min-width: 15px;
 }
@@ -220,6 +228,15 @@ table td .glyphicon {
 table tr:hover .glyphicon {
     visibility: visible;
     cursor: pointer;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+    border-top-color: white;
 }
 
 

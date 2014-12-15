@@ -1,10 +1,5 @@
 <?php
 require_once 'header.php';
-
-if (!$projekt->isLoggedIn()) {
-    Redirect::to('logout.php');
-}
-
 ?>
 
     <p>Projekt: <?php echo escape($projekt->data()->projektname); ?></p>

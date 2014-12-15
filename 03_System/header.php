@@ -2,6 +2,9 @@
 require_once 'core/init.php';
 
 $projekt = new Projekt();
+if (!$projekt->isLoggedIn() && curPageName() !== 'login.php') {
+    Redirect::to('logout.php');
+}
 
 ?>
 
@@ -78,7 +81,7 @@ $projekt = new Projekt();
                             <?php if ($projekt->isMaster()) : ?>
                                 <li><a href="index.php">Startseite</a></li>
                                 <li><a href="projekt.php">Projektverwaltung</a></li>
-                                <li><a href="messreihe.php">Messreihenverwaltung</a></li>
+                                <li><a href="messreihen.php">Messreihenverwaltung</a></li>
                             <?php endif; ?>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">

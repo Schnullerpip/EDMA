@@ -58,7 +58,6 @@ function autoload($class, $dir = null) {
     }
 }
 
-
 /**
  * Kann leider nicht so wie oben gemacht werden, da functions keine Klasse ist.
  */

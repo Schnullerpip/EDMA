@@ -55,10 +55,7 @@ if (Input::exists()) {
 }
 ?>
 
-<h2>
-    <?php echo ($projekt->data() ? $projekt->data()->name . ' bearbeiten' : 'Neues Projekt anlegen'); ?>
-</h2>
-<br>
+<h2><?php echo ($projekt->data() ? $projekt->data()->projektname . ' bearbeiten' : 'Neues Projekt anlegen'); ?></h2>
 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label for="projektname" class="col-sm-4 control-label">Projektname<sup>*</sup></label>
@@ -94,19 +91,19 @@ if (Input::exists()) {
                             <td>1</td>
                             <td>Mark</td>
                             <td class="text-right">01.01.1970</td>
-                            <td><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="0"></span></td>
+                            <td class="hidden-close"><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="0"></span></td>
                         </tr>
                         <tr>
                             <td>2</td>
                             <td>Jacob</td>
                             <td class="text-right">01.01.1970</td>
-                            <td><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="1"></span></td>
+                            <td class="hidden-close"><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="1"></span></td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td>Larry</td>
                             <td class="text-right">01.01.1970</td>
-                            <td><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="2"></span></td>
+                            <td class="hidden-close"><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="2"></span></td>
                         </tr>
                     </tbody>
                 </table>
