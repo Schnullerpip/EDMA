@@ -60,7 +60,7 @@ if (Input::exists()) {
     <div class="form-group">
         <label for="projektname" class="col-sm-4 control-label">Projektname<sup>*</sup></label>
         <div class="col-sm-5">
-            <input type="text" class="form-control" name="projektname" id="projektname" placeholder="Projektname">
+            <input type="text" class="form-control" name="projektname" id="projektname" placeholder="Projektname" value="<?php echo ($projektname = $projekt->data()->projektname) ? $projektname : ''; ?>">
         </div>
     </div>
     <div class="form-group">
@@ -112,7 +112,7 @@ if (Input::exists()) {
                     <div class="row form-group">
                         <label class="col-xs-12" for="files">Projektbeschreibung hochladen <small>(Max: <?php echo ini_get('post_max_size'); ?>)</small></label>
                         <div class="form-horizontal" role="form">
-                            <input class="col-md-9 control-label" name="file[]" id="files" type="file" id="projektbeschreibung" multiple="multiple" data-maxsize="<?php echo Utils::convertBytes(ini_get('post_max_size')); ?>">
+                            <input class="col-md-9 control-label" name="file[]" id="files" type="file" multiple="multiple" data-maxsize="<?php echo Utils::convertBytes(ini_get('post_max_size')); ?>">
                             <div class="col-md-3">
                                 <button type="button" name="upload" id="upload" class="btn btn-primary btn-sm pull-right form-control">Upload</button>
                             </div>

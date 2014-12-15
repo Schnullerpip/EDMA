@@ -5,7 +5,6 @@ $projekt = new Projekt();
 if (!$projekt->isLoggedIn() && curPageName() !== 'login.php') {
     Redirect::to('logout.php');
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -94,4 +93,3 @@ if (!$projekt->isLoggedIn() && curPageName() !== 'login.php') {
 
         <div class="container page-wrap">
             <!-- Content begins -->
-
