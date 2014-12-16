@@ -19,7 +19,7 @@ if (!$projekt->isLoggedIn() && curPageName() !== 'login.php') {
         <title>EDMA - HTWG-Konstanz</title>
 
         <!-- Favicon -->
-        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
         <!-- Bootstrap-CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
