@@ -69,7 +69,7 @@ if (Input::exists()) {
                 </select>
             </div>
             <label for="password" class="sr-only">Passwort</label>
-            <div class="form-group no-margin-bottom">
+            <div class="form-group mb-0">
                 <div class="input-group">
                     <input type="password" name="password" class="form-control" placeholder="Passwort" id="password" required>
                     <span class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>

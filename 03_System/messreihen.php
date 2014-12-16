@@ -92,23 +92,37 @@ $db = DB::getInstance();
                 <thead>
                     <tr>
                         <th>Messreihe</th>
-                        <th>Datum</th>
-                        <th>Verwaltung</th>
+                        <th>
+                            <span class="pull-right">Datum</span>
+                        </th>
+                        <th class="table-controls"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($messreihen as $messreihe) : ?>
                         <tr>
                             <td><?php echo escape($messreihe->messreihenname); ?></td>
-                            <td><?php echo escape($messreihe->datum); ?></td>
-                            <td><a href="?id=<?php echo escape($messreihe->id); ?>">bearbeiten</a> / löschen</td>
+                            <td>
+                                <span class="pull-right"><?php echo date("d.m.Y", strtotime(escape($messreihe->datum))); ?></span>
+                            </td>
+                            <td class="controls-wrapper">
+                                <div class="pull-right controls">
+                                    <ul class="list-unstyled pull-right mb-0">
+                                        <li>
+                                            <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe &quot;<?php echo escape($messreihe->messreihenname); ?>&quot; bearbeiten">
+                                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" title="Messreihe &quot;<?php echo escape($messreihe->messreihenname); ?>&quot; löschen">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
-                    <tr>
-                        <td>Testreihe</td>
-                        <td>Date</td>
-                        <td>Test</td>
-                    </tr>
                 </tbody>
             </table>
         </div>

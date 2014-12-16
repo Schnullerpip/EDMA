@@ -66,7 +66,11 @@ h2 {
 /* Helpers */
 /* ------------------------------- */
 
-.no-margin-bottom {
+.mb-0 {
+    margin-bottom: 0px;
+}
+
+.mb-5 {
     margin-bottom: 5px;
 }
 
@@ -243,6 +247,14 @@ table tr:hover .glyphicon {
     border-top-color: white;
 }
 
+.table .controls-wrapper {
+    padding: 0;
+}
+
+.table .table-controls {
+    width: 100px;
+}
+
 
 /* Accordeon */
 /* ------------------------------- */
@@ -326,7 +338,8 @@ table tr:hover .glyphicon {
 .accordeon .controls {
     height: 100%;
 }
-.accordeon .controls li {
+.accordeon .controls li,
+.controls-wrapper .controls li {
     width: 40px;
     height: 40px;
     display: block;
@@ -336,20 +349,28 @@ table tr:hover .glyphicon {
     float: left;
     padding: 0;
 }
-.accordeon .controls li a {
+.accordeon .controls li a,
+.controls-wrapper .controls li a {
     display: block;
+    color: white;
 }
 .accordeon .controls li a:hover,
+.controls-wrapper .controls li a:hover,
 .accordeon .controls li a:focus,
-.accordeon .controls li a:active {
+.controls-wrapper .controls li a:focus,
+.accordeon .controls li a:active,
+.controls-wrapper .controls li a:active {
     background-color: white;
     color: #224565;
     border-bottom: none;
 }
-.accordeon .controls li a .glyphicon {
-    font-size: 15px;
+.accordeon .controls li a .glyphicon,
+.controls-wrapper .controls li a .glyphicon {
+    font-size: 16px;
     top: 0;
-    padding: 14px 12px 12px;
+    padding: 12px;
+    padding-right: 11px;
+    visibility: visible;
 }
 
 
