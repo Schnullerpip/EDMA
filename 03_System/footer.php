@@ -15,6 +15,9 @@
                 </div>
             </div>
         </footer>
+        
+        <!-- EDMA Custom-Scripts -->
+        <script src="js/custom-scripts.js"></script>
     </body>
 </html>
 

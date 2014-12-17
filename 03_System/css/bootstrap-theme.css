@@ -247,7 +247,7 @@ table tr:hover .glyphicon {
     border-top-color: white;
 }
 
-.table .controls-wrapper {
+.table.controlled-table tr td:last-child {
     padding: 0;
 }
 
@@ -339,7 +339,7 @@ table tr:hover .glyphicon {
     height: 100%;
 }
 .accordeon .controls li,
-.controls-wrapper .controls li {
+.controlled-table tr td:last-child .controls li {
     width: 40px;
     height: 40px;
     display: block;
@@ -350,22 +350,22 @@ table tr:hover .glyphicon {
     padding: 0;
 }
 .accordeon .controls li a,
-.controls-wrapper .controls li a {
+.controlled-table tr td:last-child .controls li a {
     display: block;
     color: white;
 }
 .accordeon .controls li a:hover,
-.controls-wrapper .controls li a:hover,
+.controlled-table tr td:last-child .controls li a:hover,
 .accordeon .controls li a:focus,
-.controls-wrapper .controls li a:focus,
+.controlled-table tr td:last-child .controls li a:focus,
 .accordeon .controls li a:active,
-.controls-wrapper .controls li a:active {
+.controlled-table tr td:last-child .controls li a:active {
     background-color: white;
     color: #224565;
     border-bottom: none;
 }
 .accordeon .controls li a .glyphicon,
-.controls-wrapper .controls li a .glyphicon {
+.controlled-table tr td:last-child .controls li a .glyphicon {
     font-size: 16px;
     top: 0;
     padding: 12px;

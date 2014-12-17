@@ -73,7 +73,7 @@ $db = DB::getInstance();
     <div class="row mb-30">
         <div class="form-group">
             <div class="col-sm-2 col-sm-offset-8">
-                <input type="text" class="form-control" id="beispielFeld1" placeholder="Suche">
+                <input type="text" class="form-control" id="suche-messreihen" data-dynatable-query="suche-messreihen" placeholder="Suche">
             </div>
             <div class="col-sm-2">
                 <a href="?id=neu" class="btn btn-primary" value="neu">Messreihe hinzufügen</a>
@@ -88,7 +88,7 @@ $db = DB::getInstance();
     ?>
     <div class="panel panel-default">
         <div class="table-responsive">
-            <table class="table" id="projektbeschreibungen" data-count="3">
+            <table class="table controlled-table" id="messreihen-tabelle">
                 <thead>
                     <tr>
                         <th>Messreihe</th>
@@ -127,6 +127,29 @@ $db = DB::getInstance();
             </table>
         </div>
     </div>
+    <script>
+        $('#messreihen-tabelle')
+            .bind('dynatable:init', function(e, dynatable) {
+                dynatable.queries.functions['suche-messreihen'] = function(record, queryValue) {
+                    return record.messreihe.toLowerCase().indexOf(queryValue) >= 0;
+                };
+            })
+            .dynatable({
+                features: {
+                    paginate: false,
+                    search: false,
+                    pushState: false,
+                    recordCount: false,
+                    perPageSelect: false,
+                    sort: false
+                },
+                inputs: {
+                    queries: $('#suche-messreihen'),
+                    processingText: '',
+                    queryEvent: 'keyup'
+                }
+            });
+    </script>
 <?php endif; ?>
 
 <?php
