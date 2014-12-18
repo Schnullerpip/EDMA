@@ -73,10 +73,15 @@ $db = DB::getInstance();
     <div class="row mb-30">
         <div class="form-group">
             <div class="col-sm-2 col-sm-offset-8">
-                <input type="text" class="form-control" id="suche-messreihen" data-dynatable-query="suche-messreihen" placeholder="Suche">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="suche-messreihen" data-dynatable-query="suche-messreihen" placeholder="Suche">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary datepicker-init" type="button"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></button>
+                    </span>
+                </div>
             </div>
             <div class="col-sm-2">
-                <a href="?id=neu" class="btn btn-primary" value="neu">Messreihe hinzufügen</a>
+                <a href="?id=neu" class="btn btn-default" value="neu">Messreihe hinzufügen</a>
             </div>
         </div>
     </div>

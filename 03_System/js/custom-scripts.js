@@ -2,6 +2,9 @@ $(document).ready(function () {
     $(function () {
         $('[data-toggle="popover"]').popover();
     });
+    
+    $('.datepicker-init').datepicker({
+    });
 });
 
 // Upload-Funktionalitaet

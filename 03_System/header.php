@@ -22,8 +22,11 @@ if (!$projekt->isLoggedIn() && curPageName() !== 'login.php') {
         <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
         <!-- Bootstrap-CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
+        
+        <!-- Bootstrap-Datepicker -->
+        <link href="css/vendor/datepicker.css" rel="stylesheet">
 
-        <!-- Besondere Stile für diese Vorlage -->
+        <!-- EDMA CSS -->
         <link href="css/bootstrap-theme.css" rel="stylesheet">
 
         <!-- Bootstrap-JavaScript -->
