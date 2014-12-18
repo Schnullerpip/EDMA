@@ -69,14 +69,13 @@ if (Input::exists()) {
                 </select>
             </div>
             <label for="password" class="sr-only">Passwort</label>
-            <div class="form-group mb-0">
+            <div class="form-group">
                 <div class="input-group">
                     <input type="password" name="password" class="form-control" placeholder="Passwort" id="password" required>
-                    <span class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" tabindex="0" id="password-popover" data-html="true" data-toggle="popover" data-placement="right" title="Passwort vergessen?" data-trigger="" data-content="Wenn Sie ihr Passwort für ein Projekt vergessen haben, wenden Sie sich bitte telefonisch oder per E-Mail an das Kunstofflabor der HTWG-Konstanz.<br><br>Tel.: 202-555-0114<br><br><a href='mailto:bla@mail.com'>mail@bla.com</a>">?</button>
+                    </span>
                 </div>
-            </div>
-            <div class="form-group">
-                <a href="#" tabindex="0" id="password-popover" data-html="true" role="button" data-toggle="popover" data-placement="left" title="Passwort vergessen?" data-trigger="focus" data-content="Wenn Sie ihr Passwort für ein Projekt vergessen haben, wenden Sie sich bitte telefonisch oder per E-Mail an das Kunstofflabor der HTWG-Konstanz.<br><br>Tel.: 202-555-0114<br><br><a href='mailto:bla@mail.com'>mail@bla.com</a>">Passwort vergessen?</a>
             </div>
             <input name="token" type="hidden" value="<?php echo Token::generate(); ?>">
             <input class="btn btn-lg btn-primary btn-block" type="submit" value="&Ouml;ffnen">
