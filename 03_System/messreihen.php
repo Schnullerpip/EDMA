@@ -73,7 +73,7 @@ $db = DB::getInstance();
     <div class="row mb-30">
         <div class="form-group">
             <div class="col-sm-2 col-sm-offset-8">
-                <input type="text" class="form-control" id="beispielFeld1" placeholder="Suche">
+                <input type="text" class="form-control" id="suche-messreihen" data-dynatable-query="suche-messreihen" placeholder="Suche">
             </div>
             <div class="col-sm-2">
                 <a href="?id=neu" class="btn btn-primary" value="neu">Messreihe hinzufügen</a>
@@ -88,31 +88,68 @@ $db = DB::getInstance();
     ?>
     <div class="panel panel-default">
         <div class="table-responsive">
-            <table class="table" id="projektbeschreibungen" data-count="3">
+            <table class="table controlled-table" id="messreihen-tabelle">
                 <thead>
                     <tr>
                         <th>Messreihe</th>
-                        <th>Datum</th>
-                        <th>Verwaltung</th>
+                        <th>
+                            <span class="pull-right">Datum</span>
+                        </th>
+                        <th class="table-controls"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($messreihen as $messreihe) : ?>
                         <tr>
                             <td><?php echo escape($messreihe->messreihenname); ?></td>
-                            <td><?php echo escape($messreihe->datum); ?></td>
-                            <td><a href="?id=<?php echo escape($messreihe->id); ?>">bearbeiten</a> / löschen</td>
+                            <td>
+                                <span class="pull-right"><?php echo date("d.m.Y", strtotime(escape($messreihe->datum))); ?></span>
+                            </td>
+                            <td class="controls-wrapper">
+                                <div class="pull-right controls">
+                                    <ul class="list-unstyled pull-right mb-0">
+                                        <li>
+                                            <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe &quot;<?php echo escape($messreihe->messreihenname); ?>&quot; bearbeiten">
+                                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" title="Messreihe &quot;<?php echo escape($messreihe->messreihenname); ?>&quot; löschen">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
-                    <tr>
-                        <td>Testreihe</td>
-                        <td>Date</td>
-                        <td>Test</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
+    <script>
+        $('#messreihen-tabelle')
+            .bind('dynatable:init', function(e, dynatable) {
+                dynatable.queries.functions['suche-messreihen'] = function(record, queryValue) {
+                    return record.messreihe.toLowerCase().indexOf(queryValue) >= 0;
+                };
+            })
+            .dynatable({
+                features: {
+                    paginate: false,
+                    search: false,
+                    pushState: false,
+                    recordCount: false,
+                    perPageSelect: false,
+                    sort: false
+                },
+                inputs: {
+                    queries: $('#suche-messreihen'),
+                    processingText: '',
+                    queryEvent: 'keyup'
+                }
+            });
+    </script>
 <?php endif; ?>
 
 <?php
