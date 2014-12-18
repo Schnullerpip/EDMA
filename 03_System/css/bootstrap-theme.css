@@ -168,6 +168,12 @@ a:active,
     color: white;
 }
 
+.btn:active,
+.btn.active {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
 .btn-40 {
     height: 40px;
 }
