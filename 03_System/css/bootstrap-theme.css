@@ -133,16 +133,32 @@ a:active,
 /* Buttons */
 /* ------------------------------- */
 
-.btn-primary {
+.btn-default {
     background-color: transparent;
     border-color: white;
+    color: white;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active {
+    background-color: white;
+    border-color: white;
+    color: #36a7eb;
+}
+
+.btn-primary {
+    background-color: #224565;
+    border-color: #224565;
 }
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active {
+    color: #224565;
     background-color: white;
     border-color: white;
-    color: #36a7eb;
+    outline: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
 
 .btn-link,
@@ -154,6 +170,11 @@ a:active,
 
 .btn-40 {
     height: 40px;
+}
+
+.input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle) {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 
@@ -374,15 +395,6 @@ table tr:hover .glyphicon {
 }
 
 
-/* Popover */
-/* ------------------------------- */
-
-.popover-title,
-.popover {
-    color: black;
-}
-
-
 /* Messages */
 /* ------------------------------- */
 
@@ -460,6 +472,7 @@ table tr:hover .glyphicon {
     -webkit-box-shadow: none;
     box-shadow: none;
     color: white;
+    width: 300px;
 }
 
 .popover .popover-title {
@@ -468,9 +481,9 @@ table tr:hover .glyphicon {
     color: white;
 }
 
-.popover.left > .arrow {
-    border-left-color: white;
+.popover.right > .arrow {
+    border-right-color: white;
 }
-.popover.left > .arrow:after {
-    border-left-color: #36a7eb;
+.popover.right > .arrow:after {
+    border-right-color: #36a7eb;
 }
