@@ -5,7 +5,7 @@ require_once 'core/init.php';
 /**
  * Description of DB
  *
- * @author Sandro
+ * @author satonon, julmayer
  */
 class DB {
 
