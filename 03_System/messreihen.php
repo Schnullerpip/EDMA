@@ -21,7 +21,7 @@ $db = DB::getInstance();
             <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-5">
-                    <button type="submit" class="btn btn-primary">Speichern</button>
+                    <button type="submit" class="btn btn-default">Speichern</button>
                     <a href="messreihen.php" class="btn btn-link">Abbrechen</a>
                 </div>
             </div>
@@ -57,7 +57,7 @@ $db = DB::getInstance();
                 <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-5">
-                        <button type="submit" class="btn btn-primary">Speichern</button>
+                        <button type="submit" class="btn btn-default">Speichern</button>
                         <a href="messreihen.php" class="btn btn-link">Abbrechen</a>
                     </div>
                 </div>

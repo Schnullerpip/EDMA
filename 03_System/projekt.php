@@ -114,7 +114,7 @@ if (Input::exists()) {
                         <div class="form-horizontal" role="form">
                             <input class="col-md-9 control-label" name="file[]" id="files" type="file" multiple="multiple" data-maxsize="<?php echo Utils::convertBytes(ini_get('post_max_size')); ?>">
                             <div class="col-md-3">
-                                <button type="button" name="upload" id="upload" class="btn btn-primary btn-sm pull-right form-control">Upload</button>
+                                <button type="button" name="upload" id="upload" class="btn btn-default btn-sm pull-right form-control">Upload</button>
                             </div>
                             <div class="col-md-3">
                                 <div id="progress-circle" style="display: none;">
@@ -138,7 +138,7 @@ if (Input::exists()) {
     <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
     <div class="form-group">
         <div class="col-sm-offset-4 col-sm-5">
-            <button type="submit" class="btn btn-primary">Speichern</button>
+            <button type="submit" class="btn btn-default">Speichern</button>
             <a href="index.php" class="btn btn-link">Abbrechen</a>
         </div>
     </div>
