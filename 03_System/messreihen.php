@@ -11,7 +11,7 @@ $db = DB::getInstance();
                 <h2>Messreihe importieren</h2>
             </div>
         </div>
-        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+        <form class="form-horizontal" role="form" method="post" action="parser.php" nctype="multipart/form-data">
             <div class="form-group">
                 <label for="datei" class="col-sm-4 control-label">Datei auswählen</label>
                 <div class="col-sm-5">
@@ -21,7 +21,7 @@ $db = DB::getInstance();
             <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-5">
-                    <button type="submit" class="btn btn-primary">Speichern</button>
+                    <button type="submit" class="btn btn-primary">Import</button>
                     <a href="messreihen.php" class="btn btn-link">Abbrechen</a>
                 </div>
             </div>
