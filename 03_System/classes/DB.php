@@ -62,8 +62,6 @@ class DB {
                     $x++;
                 }
             }
-            
-            print_r($this->_query);
 
             if ($this->_query->execute()) {
                 $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
@@ -182,18 +180,10 @@ class DB {
         }
         
         $sql = "SELECT id FROM {$table} WHERE {$where}";
-        echo "query " . $sql;
-        echo "fields ";
-        print_r($fields);
-        echo "<br><br>";
         $this->query($sql, $fields);
         if (!$this->error() and $this->count()) {
-            echo "found";
-            echo "<br/><br/>";
             return $this->first()->id;
         } else {
-            echo "not found, insert";
-            echo "<br/><br/>";
             if ($this->insert($table, $fields)) {
                 return $this->getIdBySelectOrInsert($table, $fields);
             }
