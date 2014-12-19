@@ -70,7 +70,7 @@ if (Input::exists()) {
         </div>
     </div>
     <div class="form-group">
-        <label for="projektbeschreibung" class="col-sm-4 control-label">Projektbeschreibung</label>
+        <label for="files" class="col-sm-4 control-label">Projektbeschreibung</label>
         <div class="col-sm-5">
             <div class="panel panel-default">
                 <!-- Standard-Panel-Inhalt -->
@@ -117,14 +117,6 @@ if (Input::exists()) {
                             <input class="col-md-9 control-label" name="file[]" id="files" type="file" multiple="multiple" data-maxsize="<?php echo Utils::convertBytes(ini_get('post_max_size')); ?>">
                             <div class="col-md-3">
                                 <button type="button" name="upload" id="upload" class="btn btn-default btn-sm btn-block">Upload</button>
-                            </div>
-                            <div class="col-md-3">
-                                <div id="progress-circle" style="display: none;">
-                                    <div class="progress-circle-bar">
-                                        <canvas id="activeProgress" class="progress-active"  height="55px" width="55px"></canvas>
-                                        <p>0%</p>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
