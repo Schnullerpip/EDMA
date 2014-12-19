@@ -62,7 +62,7 @@ var app = app || {};
     };
 
     setProgress = function (percent) {
-        drawProgress(o.options.aProgress, percent / 100, o.options.pCaption);
+        o.options.progress.width(percent);
     };
 
     o.uploader = function (options) {
@@ -73,42 +73,6 @@ var app = app || {};
         }
     };
 }(app));
-
-function drawInactive(iProgressCTX) {
-    iProgressCTX.lineCap = 'square';
-
-    //progress bar
-    iProgressCTX.beginPath();
-    iProgressCTX.lineWidth = 0;
-    iProgressCTX.fillStyle = 'transparent';
-    iProgressCTX.arc(27.5, 27.5, 24.4, 0, 2 * Math.PI);
-    iProgressCTX.fill();
-
-    //progressbar caption
-    iProgressCTX.beginPath();
-    iProgressCTX.lineWidth = 0;
-    iProgressCTX.fillStyle = 'transparent';
-    iProgressCTX.arc(27.5, 27.5, 20, 0, 2 * Math.PI);
-    iProgressCTX.fill();
-
-}
-function drawProgress(bar, percentage, $pCaption) {
-    var barCTX = bar.getContext("2d");
-    var quarterTurn = Math.PI / 2;
-    var endingAngle = ((2 * percentage) * Math.PI) - quarterTurn;
-    var startingAngle = 0 - quarterTurn;
-
-    bar.width = bar.width;
-    barCTX.lineCap = 'square';
-
-    barCTX.beginPath();
-    barCTX.lineWidth = 4;
-    barCTX.strokeStyle = 'white';
-    barCTX.arc(27.5, 27.5, 22.2, startingAngle, endingAngle);
-    barCTX.stroke();
-
-    $pCaption.text((parseInt(percentage * 100, 10)) + '%');
-}
 
 function checkMaxsize(size, files) {
     var sizeTmp = 0;
