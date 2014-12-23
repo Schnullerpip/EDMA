@@ -70,7 +70,7 @@ if (Input::exists()) {
         </div>
     </div>
     <div class="form-group">
-        <label for="projektbeschreibung" class="col-sm-4 control-label">Projektbeschreibung</label>
+        <label for="files" class="col-sm-4 control-label">Projektbeschreibung</label>
         <div class="col-sm-5">
             <div class="panel panel-default">
                 <!-- Standard-Panel-Inhalt -->
@@ -107,6 +107,8 @@ if (Input::exists()) {
                         </tr>
                     </tbody>
                 </table>
+                
+                <div class="upload-progress"></div>
 
                 <div class="panel-body">
                     <div class="row form-group">
@@ -114,15 +116,7 @@ if (Input::exists()) {
                         <div class="form-horizontal" role="form">
                             <input class="col-md-9 control-label" name="file[]" id="files" type="file" multiple="multiple" data-maxsize="<?php echo Utils::convertBytes(ini_get('post_max_size')); ?>">
                             <div class="col-md-3">
-                                <button type="button" name="upload" id="upload" class="btn btn-default btn-sm pull-right form-control">Upload</button>
-                            </div>
-                            <div class="col-md-3">
-                                <div id="progress-circle" style="display: none;">
-                                    <div class="progress-circle-bar">
-                                        <canvas id="activeProgress" class="progress-active"  height="55px" width="55px"></canvas>
-                                        <p>0%</p>
-                                    </div>
-                                </div>
+                                <button type="button" name="upload" id="upload" class="btn btn-default btn-sm btn-block">Upload</button>
                             </div>
                         </div>
                     </div>
@@ -146,25 +140,23 @@ if (Input::exists()) {
     <script>
         $('#upload').click(function (event) {
             var f = $('#files')[0];
-            var pie = $('#progress-circle');
             var errorBox = $('#upload-errors');
-            var button = $(this);
+            var button = $('#upload');
             var maxSize = $('#files').data('maxsize');
+            var progressBar = $('.upload-progress');
 
             event.preventDefault();
+            button.blur();
 
             var msg = checkMaxsize(maxSize, f);
             if (msg !== '') {
                 errorBox.show();
                 $('#upload-errors .alert-danger').html('');
                 $('#upload-errors .alert-danger').append(msg);
-                button.blur();
                 return false;
             } else {
                 errorBox.hide();
             }
-            button.toggle();
-            pie.toggle();
 
             app.uploader({
                 files: f,
@@ -172,13 +164,11 @@ if (Input::exists()) {
                 element: {
                     name: 'projektbeschreibung'
                 },
-                pCaption: $('.progress-circle-bar p'),
-                aProgress: $('#activeProgress'),
+                progress: progressBar,
                 maxsize: maxSize,
                 processor: 'ajaxHandler.php',
                 finished: function (data) {
-                    pie.toggle();
-                    button.toggle();
+                    progressBar.width(0);
                     // Fuege Element in Tabelle ein
                     var count = parseInt($('#projektbeschreibungen').data('count'));
                     $.each(data.succeeded, function (i) {
@@ -187,7 +177,7 @@ if (Input::exists()) {
                                 (count + (i + 1)) + 
                                 '</td><td>' 
                                 + data.succeeded[i].name + 
-                                '</td><td>' + 
+                                '</td><td class="text-right">' + 
                                 data.succeeded[i].date + 
                                 '</td><td>' +
                                 '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="' + data.succeeded[i].id + '"></span>' +
@@ -196,7 +186,6 @@ if (Input::exists()) {
                     });
                 },
                 error: function (data) {
-                    console.log(data);
                     $('#upload-errors').append('error');
                 }
             });

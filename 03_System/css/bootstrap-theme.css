@@ -168,6 +168,12 @@ a:active,
     color: white;
 }
 
+.btn:active,
+.btn.active {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
 .btn-40 {
     height: 40px;
 }
@@ -274,6 +280,16 @@ table tr:hover .glyphicon {
 
 .table .table-controls {
     width: 100px;
+}
+
+.table#projektbeschreibungen {
+    border-bottom: 2px solid white;
+}
+
+.panel .upload-progress {
+    height: 5px;
+    width: 0%;
+    background-color: white;
 }
 
 
@@ -425,40 +441,6 @@ table tr:hover .glyphicon {
 .footer ul {
     margin-bottom: 0;
     margin: 15px 0;
-}
-
-
-/* Uploader */
-/* ------------------------------- */
-
-.btn#upload {
-    height: 28px;
-}
-
-#progress-circle {
-    width: 55px;
-    top: -10px;
-    position: absolute;
-    line-height: 0.28;
-    font-size: 12px;
-}
-.progress-circle-bar {
-    display: inline-block;
-    width: 55px;
-    height: 55px;
-    padding: 0;
-    background: none;
-    box-shadow: none;
-}
-.progress-circle-bar p {
-    position: relative;
-    margin: 0;
-    padding: 0;
-    width: 55px;
-    top: -28px;
-    font-size: 11px;
-    font-weight: 600;
-    text-align: center;
 }
 
 
