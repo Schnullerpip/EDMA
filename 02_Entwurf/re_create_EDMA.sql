@@ -80,7 +80,7 @@ MODIFY `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT;
 CREATE TABLE `messreihe_metainfo` (
   `messreihe_id` bigint(20) unsigned NOT NULL,
   `metainfo_id` bigint(20) unsigned NOT NULL,
-  `metawert` varchar(50) NOT NULL
+  `metawert` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `messreihe_metainfo`
@@ -125,7 +125,7 @@ ADD CONSTRAINT pk_messung PRIMARY KEY (messreihe_id, sensor_id, zeitpunkt);
 
 CREATE TABLE `metainfo` (
 `id` bigint(20) unsigned NOT NULL,
-  `metaname` varchar(30) NOT NULL,
+  `metaname` varchar(80) NOT NULL,
   `datentyp_id` bigint(20) unsigned NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -15,6 +15,12 @@
                 </div>
             </div>
         </footer>
+        
+        <!-- Bootstrap Datepicker -->
+        <script src="js/vendor/bootstrap-datepicker.min.js"></script>
+        
+        <!-- EDMA Custom-Scripts -->
+        <script src="js/custom-scripts.js"></script>
     </body>
 </html>
 

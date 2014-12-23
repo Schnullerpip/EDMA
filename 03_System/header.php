@@ -22,8 +22,11 @@ if (!$projekt->isLoggedIn() && curPageName() !== 'login.php') {
         <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
         <!-- Bootstrap-CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
+        
+        <!-- Bootstrap-Datepicker -->
+        <link href="css/vendor/datepicker.css" rel="stylesheet">
 
-        <!-- Besondere Stile für diese Vorlage -->
+        <!-- EDMA CSS -->
         <link href="css/bootstrap-theme.css" rel="stylesheet">
 
         <!-- Bootstrap-JavaScript -->
@@ -39,8 +42,9 @@ if (!$projekt->isLoggedIn() && curPageName() !== 'login.php') {
 
         <!-- IE10-Anzeigefenster-Hack für Fehler auf Surface und Desktop-Windows-8 -->
         <script src="js/ie10-viewport-bug-workaround.js"></script>
-        <!-- EDMA Scripts -->
-        <script src="js/custom-scripts.js"></script>
+        
+        <!-- Dynatable für Suche/Filter bei Tabellen-->
+        <script src="js/dynatable.min.js"></script>
     </head>
 
     <body>

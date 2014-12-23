@@ -21,7 +21,7 @@ $db = DB::getInstance();
             <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-5">
-                    <button type="submit" class="btn btn-primary">Import</button>
+                    <button type="submit" class="btn btn-default">Importieren</button>
                     <a href="messreihen.php" class="btn btn-link">Abbrechen</a>
                 </div>
             </div>
@@ -57,7 +57,7 @@ $db = DB::getInstance();
                 <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-5">
-                        <button type="submit" class="btn btn-primary">Speichern</button>
+                        <button type="submit" class="btn btn-default">Speichern</button>
                         <a href="messreihen.php" class="btn btn-link">Abbrechen</a>
                     </div>
                 </div>
@@ -73,10 +73,15 @@ $db = DB::getInstance();
     <div class="row mb-30">
         <div class="form-group">
             <div class="col-sm-2 col-sm-offset-8">
-                <input type="text" class="form-control" id="beispielFeld1" placeholder="Suche">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="suche-messreihen" data-dynatable-query="suche-messreihen" placeholder="Suche">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary datepicker-init" type="button"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></button>
+                    </span>
+                </div>
             </div>
             <div class="col-sm-2">
-                <a href="?id=neu" class="btn btn-primary" value="neu">Messreihe hinzufügen</a>
+                <a href="?id=neu" class="btn btn-default" value="neu">Messreihe hinzufügen</a>
             </div>
         </div>
     </div>
@@ -88,7 +93,7 @@ $db = DB::getInstance();
     ?>
     <div class="panel panel-default">
         <div class="table-responsive">
-            <table class="table" id="projektbeschreibungen" data-count="3">
+            <table class="table controlled-table" id="messreihen-tabelle">
                 <thead>
                     <tr>
                         <th>Messreihe</th>
@@ -127,6 +132,29 @@ $db = DB::getInstance();
             </table>
         </div>
     </div>
+    <script>
+        $('#messreihen-tabelle')
+            .bind('dynatable:init', function(e, dynatable) {
+                dynatable.queries.functions['suche-messreihen'] = function(record, queryValue) {
+                    return record.messreihe.toLowerCase().indexOf(queryValue) >= 0;
+                };
+            })
+            .dynatable({
+                features: {
+                    paginate: false,
+                    search: false,
+                    pushState: false,
+                    recordCount: false,
+                    perPageSelect: false,
+                    sort: false
+                },
+                inputs: {
+                    queries: $('#suche-messreihen'),
+                    processingText: '',
+                    queryEvent: 'keyup'
+                }
+            });
+    </script>
 <?php endif; ?>
 
 <?php

@@ -5,7 +5,7 @@ require_once 'core/init.php';
 /**
  * Description of DB
  *
- * @author Sandro
+ * @author satonon, julmayer
  */
 class DB {
 
@@ -24,6 +24,10 @@ class DB {
         }
     }
 
+    /**
+     * Gibt die aktuelle Instanz des Singelton zurück.
+     * @return type
+     */
     public static function getInstance() {
         if (!isset(self::$_instance)) {
             self::$_instance = new DB();
@@ -31,8 +35,25 @@ class DB {
         return self::$_instance;
     }
 
+    /**
+     * Führt eine Query auf der Datanbank aus.
+     * Dazu wird der SELECT in $sql übergeben. Alle Parameterwerte für 
+     * die WHERE-Bedinung werden durch ein Fragezeichen ersetzt. 
+     * Die eigentlich Werte werden seperat in einem array übergeben. 
+     * Der erste Eintrag erstzt dabei das erste Fragezeichen
+     * in der WHERE-Bedingung.
+     * 
+     * Im Fehlerfall wird das Error-Flag gesetzt.
+     * @param type $sql Komplettes Statement mit ? statt Parameterwerte
+     * @param type $params array mit Parameterwerten, welche die ? ersetzen.
+     * @return \DB Gibt die Referenz auf sich selber zurück.
+     */
     public function query($sql, $params = array()) {
+        // Felder zurücksetzen
         $this->_error = false;
+        $this->_count = 0;
+        $this->_results = array();
+        
         if ($this->_query = $this->_pdo->prepare($sql)) {
             $x = 1;
             if (count($params)) {
@@ -48,6 +69,8 @@ class DB {
             } else {
                 $this->_error = true;
             }
+        } else {
+            $this->_error = true;
         }
         return $this;
     }
@@ -77,7 +100,17 @@ class DB {
     public function delete($table, $where) {
         return $this->action('DELETE', $table, $where);
     }
-
+    
+    /**
+     * Wrapper-Funktion für INSERT-Statements.
+     * Alle Felder und ihre neuen Werte werden als array übergeben.
+     * Dazu dient der Feldname als Key und der neue Wert als Value.
+     * Für Beispiele siehe auch 
+     * @see getIdBySelectOrInsert
+     * @param type $table Tabelle in die Datan eingefügt werden.
+     * @param type $fields Array mit Spaltennamen und dem neuen Inhalt. 
+     * @return boolean Gibt True zurück, wenn der INSERT erfolgreich war.
+     */
     public function insert($table, $fields = array()) {
         $keys = array_keys($fields);
         $values = '';
@@ -116,6 +149,46 @@ class DB {
         if (!$this->query($sql, $fields)->error()) {
             return true;
         }
+        return false;
+    }
+    
+    /**
+     * Gibt die ID von einem Datensatz zurück.
+     * Ist der Datensatz noch nicht vorhanden, wird er per INSERT eingefügt.
+     * In $fields müssen alle Felder angegeben werden, die für einen 
+     * möglichen INSERT erforderlich sind.
+     * 
+     * Ein Aufruf könnte wie folgt aussehen:
+     * $messreihenFelder = array (
+     *     "messreihenname" => "Trocknungslauf kont. Förderung",
+     *     "datum" => "2014-10-14",
+     *     "projekt_id" => $projektId,
+     * );
+     * $id = $db->getIdBySelectOrInsert("messreihe", $messreihenFelder);
+     * 
+     * @param type $table Name der Tabell in welcher der Datensatz liegt.
+     * @param type $fields Array mit Felder für WHERE oder INSERT,
+     * wobei KEY = Feldname und VALUE = Wert z.B. array['metaname'] = 'Datum'.
+     */
+    public function getIdBySelectOrInsert($table, $fields) {
+        $where = "";
+        foreach ($fields as $fieldname => $value) {
+            if (!empty($where)) {
+                $where .= " and ";
+            }
+            $where .= "{$fieldname} = ?"; 
+        }
+        
+        $sql = "SELECT id FROM {$table} WHERE {$where}";
+        $this->query($sql, $fields);
+        if (!$this->error() and $this->count()) {
+            return $this->first()->id;
+        } else {
+            if ($this->insert($table, $fields)) {
+                return $this->getIdBySelectOrInsert($table, $fields);
+            }
+        }
+        
         return false;
     }
 
