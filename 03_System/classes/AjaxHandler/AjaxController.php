@@ -10,7 +10,7 @@ abstract class AjaxController {
     public $_succeeded = [];
     public $_failed = [];
 
-    abstract protected function process($name, $id);
+    abstract protected function process($id);
 
     public function toString($ajax) {
         if ($ajax) {
