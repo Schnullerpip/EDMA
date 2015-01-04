@@ -21,22 +21,74 @@ if (Input::exists()) {
         if ($validation->passed()) {
             $salt = Hash::salt(32);
 
-            if ($projekt->data()->id > 0) {
+            $db = DB::getInstance();
+            if (is_object($projekt->data()) and $projekt->data()->id > 0) {
+                try {                
                 // Projekt updaten
+            
+                    if (Input::get('projektname') !== $projekt->data()->projektname) {
+                        $projektData = array(
+                            'projektname' => Input::get('projektname')
+                        );
+
+                        $db->update('projekt', $projekt->data()->id, $projektData);
+
+                        if ($db->error()) {
+                            throw new Exception("Projektname konnte nicht aktualisiert werden.");
+                        }
+                        $projekt = new Projekt();
+                    }
+
+                    // Neues Passwort
+                    if (Input::get('passwort')) {
+                        $passwordData = array(
+                            'salt' => $salt,
+                            'hash' => Hash::make(Input::get('passwort'), $salt),
+                            'projekt_id' => $projekt->data()->id
+                        );
+
+                        $db->insert('passwort', $passwordData);
+
+                        if ($db->error()) {
+                            throw new Exception("Passwort konnte nicht angelegt werden.");
+                        }
+                    }
+                } catch (Exception $ex) {
+                    die($ex->getMessage());
+                }
+
             } else {
                 // Neues Projekt
                 try {
-                    /*
-                      $projekt->create(array(
-                      'name' => Input::get('projektname'),
-                      'passwort' => Hash::make(Input::get('passwort'), $salt),
-                      'salt' => $salt,
-                      'erstellt' => date('Y-m-d H:i:s'),
-                      ));
-                     */
+                    
+                    $projektData = array(
+                        'projektname' => Input::get('projektname'),
+                    );
+                            
+                    $projekt_id = $db->getIdBySelectOrInsert('projekt', $projektData);
+                    
+                    if (!$projekt_id) {
+                        throw new Exception("Projekt konnte nicht angelegt werden!");
+                    }
+                    
+                    Session::put(Config::get('session/session_name'), $projekt_id);
+                    
+                    $passwordData = array(
+                        'salt' => $salt,
+                        'hash' => Hash::make(Input::get('passwort'), $salt),
+                        'projekt_id' => $projekt_id
+                    );
+                    
+                    $db->insert('passwort', $passwordData);
+                    
+                    if ($db->error()) {
+                        throw new Exception("Passwort konnte nicht angelegt werden.");
+                    }
+                    
+                    $projekt = $projekt_id;
 
-                    // Session::flash('message', 'Projekt erfolgreich angelegt!');
-                    // Redirect::to('index.php');
+                    Session::flash('message', 'Projekt erfolgreich angelegt!');
+                     Redirect::to('index.php');
                 } catch (Exception $ex) {
                     die($ex->getMessage());
                 }
@@ -60,7 +112,7 @@ if (Input::exists()) {
     <div class="form-group">
         <label for="projektname" class="col-sm-4 control-label">Projektname<sup>*</sup></label>
         <div class="col-sm-5">
-            <input type="text" class="form-control" name="projektname" id="projektname" placeholder="Projektname" value="<?php echo ($projektname = $projekt->data()->projektname) ? $projektname : ''; ?>">
+            <input type="text" class="form-control" name="projektname" id="projektname" placeholder="Projektname" value="<?php echo is_object($projekt->data()) ? $projekt->data()->projektname : ''; ?>">
         </div>
     </div>
     <div class="form-group">

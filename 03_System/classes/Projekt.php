@@ -25,7 +25,7 @@ class Projekt {
                     $this->_isMaster = true;
                 }
 
-                if ($this->find($projekt)) {
+                if ($projekt === 'Neues Projekt' or $this->find($projekt)) {
                     $this->_isLoggedIn = true;
                 }
             }
@@ -60,8 +60,12 @@ class Projekt {
             $projekt = $this->find($projekt);
 
             if ($projekt) {
-                $data = $this->_db->get('passwort', array('id', '=', $this->data()->passwort_id));
-
+                if ($this->_data->id === 'Neues Projekt') {
+                    $data = $this->_db->query("SELECT * FROM passwort WHERE projekt_id IS NULL");
+                } else {
+                    $data = $this->_db->get('passwort', array('id', '=', $this->data()->passwort_id));
+                }
+                
                 if ($data->count()) {
                     $masterpw = $data->first();
                     
