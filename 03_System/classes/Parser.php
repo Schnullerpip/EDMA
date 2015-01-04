@@ -166,7 +166,7 @@ class Parser {
                     "zeitpunkt" => $j,
                     "messwert" => str_replace(",", ".", $messspalten[$i][$j]),
                     // TODO:
-        //            "datum_und_zeit" => "STR_TO_DATE(\"" . messspalten[0][$j] . messspalten[1][$j] . "\"%d.%m.%Y %h:%i:%s\")",
+        //            "datum_uhrzeit" => "STR_TO_DATE(\"" . messspalten[0][$j] . messspalten[1][$j] . "\"%d.%m.%Y %h:%i:%s\")",
                 );
                 $this->$db->getIdBySelectOrInsert('messung', $messung);
             }

@@ -111,7 +111,8 @@ CREATE TABLE `messung` (
   `messreihe_id` bigint(20) unsigned NOT NULL,
   `sensor_id` bigint(20) unsigned NOT NULL,
   `zeitpunkt` int(10) unsigned NOT NULL,
-  `messwert` double NOT NULL
+  `messwert` double NOT NULL,
+  `datum_uhrzeit` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `messung`
@@ -144,7 +145,7 @@ CREATE TABLE `passwort` (
 `id` bigint(20) unsigned NOT NULL,
   `hash` varchar(64) NOT NULL,
   `projekt_id` bigint(20) unsigned DEFAULT NULL,
-  `salt` varchar(32) NOT NULL
+  `salt` binary(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `passwort`
