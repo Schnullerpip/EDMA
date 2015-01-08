@@ -12,15 +12,15 @@ class UploadController extends AjaxController {
             $_files;
 
     public function __construct($element, $files) {
-        $name = $element;
         $this->_files = $files;
         $this->_maxSize = Input::get('maxsize');
 
-        switch ($name) {
+        switch ($element) {
             case 'projektbeschreibung':
-                $this->process('anhang');
+                $this->process();
                 break;
             case 'messreihe':
+                $this->import();
                 break;
 
             default:
@@ -50,7 +50,7 @@ class UploadController extends AjaxController {
         // TODO: DB Insert
     }
 
-    protected function process($name, $id = null) {
+    protected function process($id = null) {
         foreach ($this->_files['file']['name'] as $key => $filename) {
             if ($this->_files['file']['error'][$key] === 0) {
 
@@ -80,6 +80,30 @@ class UploadController extends AjaxController {
                     'error' => $this->_files['file']['error'][$key]
                 );
             }
+        }
+    }
+    
+    protected function import() {
+        if ($this->_files['file']['size'] >= 0) {
+            $parser = new Parser($_FILES['file']['tmp_name'], Input::get('projektid'));
+        }
+        
+        // TODO: Errorhandling / Successhandling
+        // So in der Art:
+        // der Parser hält ein Array "errors" in dem Fehler gespeichert werden
+        if (count($parser->errors()) == 0) {
+            $this->_succeeded[] = array(
+                'name' => $this->_files['file']['name'],
+                'message' => 'Die Datei wurde erfolgreich importiert!'
+            );
+        } else {
+            $this->_failed[] = array(
+                'name' => $this->_files['file']['name'],
+                'message' => 'Fehler beim Importieren der Datei!',
+                'error' => array(
+                    $parser->errors()
+                )
+            );
         }
     }
 

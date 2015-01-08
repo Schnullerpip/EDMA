@@ -8,10 +8,12 @@ class Parser {
     
     private $_file;
     private $db;
+    private $_projektID;
     
-    public function __construct($file) {
+    public function __construct($file, $projekt_id) {
         $this->_file = $file;
         $this->db = DB::getInstance();
+        $this->_projektID = $projekt_id;
         $this->parse();
     }
     
@@ -39,13 +41,6 @@ class Parser {
             // TODO: errorhandling
         }
 
-        // projekt_id holen
-        // TODO: wie geht das über $projekt->data()->projektname?
-        $projektname = array(
-            "projektname" => "Testprojekt zum Testen",
-        );
-        $projekt_id = $this->$db->getIdBySelectOrInsert('projekt', $projektname);
-
         $messreihenname = array_search("Name", $matches[1]);
         $datum_index = array_search("Datum", $matches[1]);
         // TODO: STR_TO_DATE funktioniert nicht, noch nicht genauer angeschaut
@@ -57,7 +52,7 @@ class Parser {
         $messreihe = array (
             "messreihenname" => $matches[3][$messreihenname],
             "datum" => $datum_mysql,
-            "projekt_id" => $projekt_id,
+            "projekt_id" => $this->_projektID,
         );
         $messreihe_id = $this->$db->getIdBySelectOrInsert('messreihe', $messreihe);
 

@@ -15,6 +15,6 @@ if (Input::get('function') !== '') {
             break;
     }
 
-    $controller->toString(Input::get('element'));
+    $controller->toString(Input::get('ajax'));
 }
 
