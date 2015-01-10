@@ -11,11 +11,14 @@ $db = DB::getInstance();
                 <h2>Messreihe importieren</h2>
             </div>
         </div>
-        <form class="form-horizontal" role="form" method="post" nctype="multipart/form-data">
+        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="datei" class="col-sm-4 control-label">Datei auswählen</label>
                 <div class="col-sm-5">
                     <input class="control-label" name="file" id="files" type="file" data-maxsize="<?php echo Utils::convertBytes(ini_get('post_max_size')); ?>" data-projektid="<?php echo $projekt->data()->id ?>">
+                </div>
+                <div class="col-sm-5 col-sm-offset-4">
+                    <small>Max: <?php echo ini_get('post_max_size'); ?></small>
                 </div>
             </div>
             <div class="form-group">
@@ -37,7 +40,7 @@ $db = DB::getInstance();
             $('#upload').click(function (event) {
                 var f = $('#files')[0];
                 var responseBox = $('#response-box');
-                var button = $('#import');
+                var button = $('#upload');
                 var maxSize = $('#files').data('maxsize');
                 var progressBar = $('.upload-progress');
                 var projektID = $('#files').data('projektid');

@@ -8,6 +8,18 @@
 class UploadController extends AjaxController {
 
     private $_allowed = ['.pdf', '.doc', '.csv'],
+            $_csv_mimetypes = array(
+                'text/csv',
+                'text/plain',
+                'application/csv',
+                'text/comma-separated-values',
+                'application/excel',
+                'application/vnd.ms-excel',
+                'application/vnd.msexcel',
+                'text/anytext',
+                'application/octet-stream',
+                'application/txt',
+                    ),
             $_maxSize,
             $_files;
 
@@ -82,28 +94,37 @@ class UploadController extends AjaxController {
             }
         }
     }
-    
+
     protected function import() {
-        if ($this->_files['file']['size'] >= 0) {
-            $parser = new Parser($_FILES['file']['tmp_name'], Input::get('projektid'));
-        }
-        
-        // TODO: Errorhandling / Successhandling
-        // So in der Art:
-        // der Parser hält ein Array "errors" in dem Fehler gespeichert werden
-        if (count($parser->errors()) == 0) {
-            $this->_succeeded[] = array(
-                'name' => $this->_files['file']['name'],
-                'message' => 'Die Datei wurde erfolgreich importiert!'
-            );
-        } else {
-            $this->_failed[] = array(
-                'name' => $this->_files['file']['name'],
-                'message' => 'Fehler beim Importieren der Datei!',
-                'error' => array(
-                    $parser->errors()
-                )
-            );
+        print_r($this->_files);
+        if ($this->_files['file']['size'][0] >= 0) {
+            if (in_array($this->_files['file']['type'][0], $this->_csv_mimetypes)) {
+                $parser = new Parser($this->_files['file']['tmp_name'][0], Input::get('projektid'));
+
+                // TODO: Errorhandling / Successhandling
+                // So in der Art:
+                // der Parser hält ein Array "errors" in dem Fehler gespeichert werden
+                if (count($parser->errors()) == 0) {
+                    $this->_succeeded[] = array(
+                        'name' => $this->_files['file']['name'],
+                        'message' => 'Die Datei wurde erfolgreich importiert!'
+                    );
+                } else {
+                    $this->_failed[] = array(
+                        'name' => $this->_files['file']['name'],
+                        'message' => 'Fehler beim Importieren der Datei!',
+                        'error' => array(
+                            $parser->errors()
+                        )
+                    );
+                }
+            } else {
+                $this->_failed[] = array(
+                    'name' => $this->_files['file']['name'],
+                    'message' => 'Die Datei ist keine CSV Datei! : '
+                );
+                return;
+            }
         }
     }
 

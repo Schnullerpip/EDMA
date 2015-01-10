@@ -13,7 +13,7 @@ abstract class AjaxController {
     abstract protected function process($id);
 
     public function toString($ajax) {
-        if ($ajax) {
+        if ($ajax !== '') {
             echo json_encode(array(
                 'succeeded' => $this->_succeeded,
                 'failed' => $this->_failed
