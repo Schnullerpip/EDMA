@@ -96,7 +96,6 @@ class UploadController extends AjaxController {
     }
 
     protected function import() {
-        print_r($this->_files);
         if ($this->_files['file']['size'][0] >= 0) {
             if (in_array($this->_files['file']['type'][0], $this->_csv_mimetypes)) {
                 $parser = new Parser($this->_files['file']['tmp_name'][0], Input::get('projektid'));
@@ -113,9 +112,7 @@ class UploadController extends AjaxController {
                     $this->_failed[] = array(
                         'name' => $this->_files['file']['name'],
                         'message' => 'Fehler beim Importieren der Datei!',
-                        'error' => array(
-                            $parser->errors()
-                        )
+                        'error' => $parser->errors()
                     );
                 }
             } else {

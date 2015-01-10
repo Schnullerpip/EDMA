@@ -39,11 +39,13 @@ class Parser {
         $stringFile = str_replace("\r", "", $stringFile);
         $stringFile = explode("###", $stringFile);
         $metadaten = $stringFile[0];
-        $messdaten = $stringFile[1];
+        // TODO: Error: Undefined Index 1 handling $stringFile[1]
+        // wenn kein Trennzeichen gefunden wurde
+        //$messdaten = $stringFile[1];
         
         $this->db->beginTransaction();
         $this->parseMetaDaten($metadaten);
-        $this->parseMessDaten($messdaten);
+        //$this->parseMessDaten($messdaten);
         $this->db->commit();
     }
     
@@ -79,13 +81,13 @@ class Parser {
         $messreihenname = array_search("Name", $matches[1]);
         if ($messreihenname === FALSE) {
             $this->errors("Metainfo 'Name' nicht gefunden!");
-            die();
+            return;
         }
         
         $datum_index = array_search("Datum", $matches[1]);
         if ($datum_index === FALSE) {
             $this->errors("Metainfo 'Datum' nicht gefunden!");
-            die();
+            return;
         }        
 
         $datum_german = $matches[3][$datum_index];
@@ -155,7 +157,7 @@ class Parser {
             $this->db->executeStatement($preapredInsert, $messreihe_metainfo);
             if ($this->db->error()) {
                 $this->errors("Fehler beim Import von Metainfo " . $metainfo_id);
-                die();
+                return;
             }
         }
     }
@@ -212,7 +214,7 @@ class Parser {
                     continue;
                 } else {
                     $this->errors("Falsche Anzahl Spalten in Zeile " . $j . ", " . count($messungsSpalte) . " statt " . $spaltenanzahl);
-                    die();        
+                    return;        
                 }
             }
             $datum = $messungsSpalte[0];
@@ -239,16 +241,19 @@ class Parser {
             
             if ($this->db->error()) {
                 $this->errors("Fehler bei INSERT von messung");
-                die();
+                return;
             }
         }
         ini_set('max_execution_time', $saveExTime);
     }
 
     public function errors($msg) {
+        // TODO: privates Array in dem mehrere Fehler gespeichert werden können?
+        // Momentan tritt ein Fehler auf und das Script wird abgebrochen?
         $this->db->rollback();
-        Session::flash("error", $msg);
-        Redirect::to("messreihen.php?id=neu");
-        return true;
+        $errors = array(
+            'error' => $msg
+        );
+        return $errors;
     }
 }
