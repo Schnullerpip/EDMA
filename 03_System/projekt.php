@@ -122,6 +122,9 @@ if (Input::exists()) {
         <div class="col-sm-5">
             <input type="password" class="form-control" name="passwort" id="eingabefeldPasswort3" placeholder="Passwort">
         </div>
+        <div class="col-sm-5 col-sm-offset-4">
+            <small>Wenn Sie ein Passwort in dieses Feld eingeben und auf "Speichern" klicken, wird ein neues Passwort zu den bestehenden Passwörtern für externe hinzugefügt.</small>
+        </div>
     </div>
     <div class="form-group">
         <label for="files" class="col-sm-4 control-label">Projektbeschreibung</label>

@@ -17,17 +17,17 @@ class Parser {
     
     private $_file;
     private $db;
-    private $_messreihe_id;
+    private $_projektID;
+    private $_messreiheID;
     
-    public function __construct($projekt_id, $file) {
-        $this->_projekt_id = $projekt_id;
+    public function __construct($file, $projekt_id) {
         $this->_file = $file;
         $this->db = DB::getInstance();
+        $this->_projektID = $projekt_id;
         $this->parse();
     }
     
     private function parse() {
-        echo "<p> start ".time()."</p>";
         $stringFile = file_get_contents($this->_file);
         
         $charset = mb_detect_encoding($stringFile, "UTF-8, ISO-8859-1");
@@ -44,9 +44,7 @@ class Parser {
         $this->db->beginTransaction();
         $this->parseMetaDaten($metadaten);
         $this->parseMessDaten($messdaten);
-        echo "<p>before commit ".time()."</p>";
         $this->db->commit();
-        echo "<p>finish ".time()."</p>";
     }
     
     private function parseMetaDaten($metadaten) {        
@@ -74,18 +72,10 @@ class Parser {
         $metalines = explode("\n", $metadaten);
         // -1 wegen Leerzeile am Schluss.
         $lines = count($metalines) - 1;
-        echo "<pre> Metadaten\n";
-        print_r($metadaten);
-        echo "</pre>";
         if ($count != $lines) {
             // TODO: errorhandling, kann abweichen wegen Leerzeile in metainfo, evtl. $count -1
-            echo "<pre> Weicht ab count " . $count . " lines " . $lines . "</pre>";
         }
-        
-        echo "<pre>";
-        print_r($matches);
-        echo "</pre>";
-        
+
         $messreihenname = array_search("Name", $matches[1]);
         if ($messreihenname === FALSE) {
             $this->errors("Metainfo 'Name' nicht gefunden!");
@@ -105,10 +95,10 @@ class Parser {
         $messreihe = array (
             "messreihenname" => $matches[3][$messreihenname],
             "datum" => $datum_mysql,
-            "projekt_id" => $this->_projekt_id,
+            "projekt_id" => $this->_projektID,
         );
         $messreihe_id = $this->db->getIdBySelectOrInsert('messreihe', $messreihe);
-        $this->_messreihe_id = $messreihe_id;
+        $this->_messreiheID = $messreihe_id;
         
         // alle Indizes außer Indizes von "Name" und "Datum"
         $meta_indizes = array();
@@ -164,7 +154,7 @@ class Parser {
             
             $this->db->executeStatement($preapredInsert, $messreihe_metainfo);
             if ($this->db->error()) {
-                $this->errors("Fehler beim Import von Metainfo " . $messreihe_id);
+                $this->errors("Fehler beim Import von Metainfo " . $metainfo_id);
                 die();
             }
         }
@@ -228,7 +218,7 @@ class Parser {
             $datum = $messungsSpalte[0];
             $uhrzeit = $messungsSpalte[1];
                         
-            $defaults = array($this->_messreihe_id, $j, $datum, $uhrzeit);
+            $defaults = array($this->_messreiheID, $j, $datum, $uhrzeit);
             $values = array();
             
             for ($i = 2; $i < count($messungsSpalte); ++$i) {
@@ -258,7 +248,7 @@ class Parser {
     public function errors($msg) {
         $this->db->rollback();
         Session::flash("error", $msg);
-        //Redirect::to("messreihen.php?id=neu");
+        Redirect::to("messreihen.php?id=neu");
         return true;
     }
 }
