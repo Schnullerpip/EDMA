@@ -11,7 +11,7 @@ $db = DB::getInstance();
                 <h2>Messreihe importieren</h2>
             </div>
         </div>
-        <form class="form-horizontal" role="form" method="post" action="parser.php" nctype="multipart/form-data">
+        <form class="form-horizontal" role="form" method="post" action="parser.php" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="datei" class="col-sm-4 control-label">Datei auswählen</label>
                 <div class="col-sm-5">

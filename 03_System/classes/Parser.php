@@ -2,54 +2,102 @@
 /**
  * Description of Parser
  *
+ * Parsed die Datei mit RegularExpression.
+ * Ergebniss ist ein Array mit Groesse 7:
+ * [0]: Array mit alle gefundenen Zeilen (komplett)
+ * [1]: Array mit allen Metanamen (ohne _TYP)
+ * [2]: Array mit dem Typ (n, s oder d)
+ * [3]: Array mit allen Metawerten (gemischt)
+ * [4]: Array mit allen Metawerten von Typ String
+ * [5]: Array mit allen Metawerten von Typ Datum
+ * [6]: Array mit allen Metawerten von Typ Nummer
  * @author phwachte
  */
 class Parser {
     
     private $_file;
     private $db;
+    private $_messreihe_id;
     
-    public function __construct($file) {
+    public function __construct($projekt_id, $file) {
+        $this->_projekt_id = $projekt_id;
         $this->_file = $file;
         $this->db = DB::getInstance();
         $this->parse();
     }
     
     private function parse() {
+        echo "<p> start ".time()."</p>";
         $stringFile = file_get_contents($this->_file);
-        $eol_unix = str_replace("\r", "", $stringFile);
-        $file_array = explode("###", $eol_unix);
-        $metadaten = $file_array[0];
-        $messdaten = $file_array[1];
         
+        $charset = mb_detect_encoding($stringFile, "UTF-8, ISO-8859-1");
+        // falls Datei in ISO Format ist muss konvertiert werden.
+        // falls weitere charsets vorkommen muss iconv() statt utf8_encode benutzt werden
+        if ($charset === "ISO-8859-1") {
+            $stringFile = utf8_encode($stringFile);
+        }
+        $stringFile = str_replace("\r", "", $stringFile);
+        $stringFile = explode("###", $stringFile);
+        $metadaten = $stringFile[0];
+        $messdaten = $stringFile[1];
+        
+        $this->db->beginTransaction();
         $this->parseMetaDaten($metadaten);
         $this->parseMessDaten($messdaten);
+        echo "<p>before commit ".time()."</p>";
+        $this->db->commit();
+        echo "<p>finish ".time()."</p>";
     }
     
-    private function parseMetaDaten($metadaten) {
+    private function parseMetaDaten($metadaten) {        
+        // Metanamen besteht aus beliebiger Anzahl von 
+        // Buchstaben, Zahlen, Leerzeichen, Prozentzeichen, 
+        // Gradzeichen, Slash / und Unterstrich _
         $metaNamePattern = "([\p{L}\p{N} \x{00B0}\x{0025}/\-]+)_([dns])";
-        $stringPattern = "((?<=s:\t)[\p{L}\p{N}\. ,/\-]+)";
+        
+        // String Pattern nach s:\t beliebige Anzahl von
+        // Buchstaben /p{L}, Zahlen /p{N}, Punkt, Leerzeichen, Komma, Slash / 
+        // und Unterstrich _
+        $stringPattern = "((?<=s:\t)[\p{L}\p{N}\. ,_/\-]+)";
+        
+        // Datum Pattern nach d:\t DD.MM.YYYY
         $datePattern = "((?<=d:\t)\p{N}{2}\.\p{N}{2}\.\p{N}{4})";
-        $numberPattern = "((?<=n:\t)[,\p{N}\.-]+)";
-        $pattern = "#^" . $metaNamePattern . ":\t(" . $stringPattern . "|" . $datePattern . "|" . $numberPattern . ")$#um";
+        
+        // Nummer Pattern nach n:\t 
+        // Optional -, beliebig viele Zahlen \p{N}, Optional Punkt oder Komma
+        // Danach Optional beliebig viele Zahlen
+        $numberPattern = "((?<=n:\t)-?\p{N}+[\.,]?\p{N}*)";
+ 
+        $pattern = "#^" . $metaNamePattern . ":\t(" . $stringPattern . "|" . $datePattern . "|" . $numberPattern . ")\t*$#mu";
+        $matches = array();
         $count = preg_match_all($pattern, $metadaten, $matches);
         $metalines = explode("\n", $metadaten);
-        $lines = count($metalines);
+        // -1 wegen Leerzeile am Schluss.
+        $lines = count($metalines) - 1;
+        echo "<pre> Metadaten\n";
+        print_r($metadaten);
+        echo "</pre>";
         if ($count != $lines) {
-            // TODO: errorhandling
+            // TODO: errorhandling, kann abweichen wegen Leerzeile in metainfo, evtl. $count -1
+            echo "<pre> Weicht ab count " . $count . " lines " . $lines . "</pre>";
         }
-
-        // projekt_id holen
-        // TODO: wie geht das über $projekt->data()->projektname?
-        $projektname = array(
-            "projektname" => "Testprojekt zum Testen",
-        );
-        $projekt_id = $this->$db->getIdBySelectOrInsert('projekt', $projektname);
-
+        
+        echo "<pre>";
+        print_r($matches);
+        echo "</pre>";
+        
         $messreihenname = array_search("Name", $matches[1]);
+        if ($messreihenname === FALSE) {
+            $this->errors("Metainfo 'Name' nicht gefunden!");
+            die();
+        }
+        
         $datum_index = array_search("Datum", $matches[1]);
-        // TODO: STR_TO_DATE funktioniert nicht, noch nicht genauer angeschaut
-        //$datum_mysql = "STR_TO_DATE(\"" . $matches[3][$datum_index] . "\", '%d.%m.%Y')";
+        if ($datum_index === FALSE) {
+            $this->errors("Metainfo 'Datum' nicht gefunden!");
+            die();
+        }        
+
         $datum_german = $matches[3][$datum_index];
         $datum_mysql = Utils::convertDate($datum_german);
 
@@ -57,15 +105,15 @@ class Parser {
         $messreihe = array (
             "messreihenname" => $matches[3][$messreihenname],
             "datum" => $datum_mysql,
-            "projekt_id" => $projekt_id,
+            "projekt_id" => $this->_projekt_id,
         );
-        $messreihe_id = $this->$db->getIdBySelectOrInsert('messreihe', $messreihe);
-
+        $messreihe_id = $this->db->getIdBySelectOrInsert('messreihe', $messreihe);
+        $this->_messreihe_id = $messreihe_id;
+        
         // alle Indizes außer Indizes von "Name" und "Datum"
         $meta_indizes = array();
-        foreach ($matches[1] as $metarow) {
+        foreach ($matches[1] as $meta_index => $metarow) {
             if ($metarow != "Name" && $metarow != "Datum") {
-                $meta_index = array_search($metarow, $matches[1]);
                 array_push($meta_indizes, $meta_index);
             }
         }
@@ -74,17 +122,18 @@ class Parser {
         $datentyp_s = array(
             "typ" => "string",
         );
-        $datentyp_id_s = $this->$db->getIdBySelectOrInsert('datentyp', $datentyp_s);
+        $datentyp_id_s = $this->db->getIdBySelectOrInsert('datentyp', $datentyp_s);
         $datentyp_d = array(
             "typ" => "datum",
         );
-        $datentyp_id_d = $this->$db->getIdBySelectOrInsert('datentyp', $datentyp_d);
+        $datentyp_id_d = $this->db->getIdBySelectOrInsert('datentyp', $datentyp_d);
         $datentyp_n = array(
             "typ" => "numerisch",
         );
-        $datentyp_id_n = $this->$db->getIdBySelectOrInsert('datentyp', $datentyp_n);
+        $datentyp_id_n = $this->db->getIdBySelectOrInsert('datentyp', $datentyp_n);
 
         // insert metainfo und messreihe_metainfo
+        $preapredInsert = $this->db->createStatement("INSERT INTO messreihe_metainfo (messreihe_id, metainfo_id, metawert) VALUES (?, ?, ?)");
         foreach ($meta_indizes as $index) {
             if ($matches[4][$index] != null) {
                 $metainfo = array(
@@ -105,75 +154,111 @@ class Parser {
                 );
                 $metawert = $matches[6][$index];
             }
-            $metainfo_id = $this->$db->getIdBySelectOrInsert('metainfo', $metainfo);
-
+            $metainfo_id = $this->db->getIdBySelectOrInsert('metainfo', $metainfo);
+            
             $messreihe_metainfo = array(
-                "messreihe_id" => $messreihe_id,
-                "metainfo_id" => $metainfo_id,
-                "metawert" => $metawert,
+                $messreihe_id,
+                $metainfo_id,
+                $metawert,
             );
-            $this->$db->getIdBySelectOrInsert('messreihe_metainfo', $messreihe_metainfo);
+            
+            $this->db->executeStatement($preapredInsert, $messreihe_metainfo);
+            if ($this->db->error()) {
+                $this->errors("Fehler beim Import von Metainfo " . $messreihe_id);
+                die();
+            }
         }
     }
     
     private function parseMessDaten($messdaten) {
-        $messzeilen0 = preg_split("/\n/", $messdaten);
-        $messzeilen = array_slice($messzeilen0, 1);	// array_slice() löscht erstes Element, da leer
+        $saveExTime = ini_get('max_execution_time');
+        ini_set('max_execution_time', 1000);
+        $messdaten = preg_split("/\n/", $messdaten);
+        $messdaten = array_slice($messdaten, 1, -1);	// array_slice() löscht erstes und letztes Element, da leer
 
-        $messspalten = array();
-        $spaltennamen = preg_split("/:[\t]*/", $messzeilen[0]);
-        $elem_col = count($spaltennamen) - 1;   // letztes Element leer aufgrund der preg_split-Bedingung
-
+        $spaltennamen = preg_split("/:[\t]?/", $messdaten[0]);
+        $spaltenanzahl = count($spaltennamen) - 1;   // letztes Element leer aufgrund der preg_split-Bedingung
+        
         // insert sensor und messreihe_sensor
         $sensor_id_array = array();
-        for ($i = 0; $i < $elem_col; $i++) {
-            array_push($messspalten, array($spaltennamen[$i]));
-            if ($i > 1) {
-                $sensorname = $spaltennamen[$i];
-                $sensor = array(
-                    "sensorname" => $sensorname,
-                );
-                $sensor_id = $this->$db->getIdBySelectOrInsert('sensor', $sensor);
-                array_push($sensor_id_array, $sensor_id);
-                print_r("sensor_id: " . $sensor_id);
-                echo "<br/><br/>";
-                $messreihe_sensor = array(
-                    "messreihe_id" => 2, //$messreihe_id,
-                    "sensor_id" => $sensor_id,
-                    "anzeigename" => $sensorname,
-                );
-                $this->$db->getIdBySelectOrInsert('messreihe_sensor', $messreihe_sensor);
-            }
-        }
-        $messungen = array_slice($messzeilen, 1);	// löschen des Elements mit Sensornamen, da nicht mehr benötigt
+        $statement_messreihe_sensor = $this->db->createStatement("INSERT INTO messreihe_sensor (messreihe_id, sensor_id, anzeigename) VALUES (?, ?, ?)");
+        // ab Spalte 2, ohne Datum und Uhrzeit
+        for ($i = 2; $i < $spaltenanzahl; $i++) {
+            $sensorname = $spaltennamen[$i];
+            $sensor = array(
+                "sensorname" => $sensorname,
+            );
+            $sensor_id = $this->db->getIdBySelectOrInsert('sensor', $sensor);
+            array_push($sensor_id_array, $sensor_id);
 
-        foreach ($messungen as $messungszeile) {
-            $tmp_row = preg_split("/\t/", $messungszeile);
-            // TODO: undefined offset, falls letzer Messwert der Zeile nicht vorhanden
-            // nicht vorhandene Werte in DB als Zahl 0 gespeichert - Problem?
-            for ($i = 0; $i < $elem_col; $i++) {
-                    array_push($messspalten[$i], $tmp_row[$i]);
+            $messreihe_sensor = array(
+                $this->_messreihe_id,
+                $sensor_id,
+                $sensorname,
+            );
+            $this->db->executeStatement($statement_messreihe_sensor, $messreihe_sensor);
+        }
+        $messdaten = array_slice($messdaten, 1);	// löschen des Elements mit Sensornamen, da nicht mehr benötigt
+        
+        // Sql Statement fuer eine Zeile erstellen
+        $sql = "INSERT INTO messung (messreihe_id, zeitpunkt, datum_uhrzeit, sensor_id, messwert) VALUES ";
+        for ($i = 2; $i < $spaltenanzahl; ++$i) {
+            if ($i != 2) {
+                $sql = $sql . ",";
+            }
+            $sql = $sql . "(?, ?, STR_TO_DATE(? ?, '%d.%m.%Y %H:%i:%s'), ?, ?)";
+        }
+        
+        $statement_messung = $this->db->createStatement($sql);
+        
+        // Iteration ueber alle Zeilen
+        for ($j = 0; $j < count($messdaten); ++$j) {
+            $messungsSpalte = preg_split("/\t/", $messdaten[$j]);
+            
+            // Pruefung auf zu wenig Zeilen
+            if (count($messungsSpalte) !== $spaltenanzahl) {
+                // Pruefung auf Leerzeile in letzter Zeile
+                if ($j === count($messdaten) - 1 and count($messungsSpalte) === 0) {
+                    continue;
+                } else {
+                    $this->errors("Falsche Anzahl Spalten in Zeile " . $j . ", " . count($messungsSpalte) . " statt " . $spaltenanzahl);
+                    die();        
+                }
+            }
+            $datum = $messungsSpalte[0];
+            $uhrzeit = $messungsSpalte[1];
+                        
+            $defaults = array($this->_messreihe_id, $j, $datum, $uhrzeit);
+            $values = array();
+            
+            for ($i = 2; $i < count($messungsSpalte); ++$i) {
+                $messwert = $messungsSpalte[$i];
+                // Ersetze NaN mit 0
+                if ($messwert === "NaN") {
+                    $messwert = "0";
+                }
+                // Ersetze Komma durch Punkt
+                $messwert = str_replace(",", ".",$messwert);
+                
+                $values = array_merge($values, $defaults);
+                array_push($values, $sensor_id_array[$i - 2]);
+                array_push($values, $messwert);
+            }
+            
+            $this->db->executeStatement($statement_messung, $values);
+            
+            if ($this->db->error()) {
+                $this->errors("Fehler bei INSERT von messung");
+                die();
             }
         }
-
-        // insert messung
-        $elem_row = count($messspalten[0]);
-        for ($i = 2; $i < $elem_col; $i++) {
-            for ($j = 1; $j < $elem_row; $j++) {
-                $messung = array(
-                    "messreihe_id" => 2, //$messreihe_id,
-                    "sensor_id" => $sensor_id_array[$i - 2],
-                    "zeitpunkt" => $j,
-                    "messwert" => str_replace(",", ".", $messspalten[$i][$j]),
-                    // TODO:
-        //            "datum_uhrzeit" => "STR_TO_DATE(\"" . messspalten[0][$j] . messspalten[1][$j] . "\"%d.%m.%Y %h:%i:%s\")",
-                );
-                $this->$db->getIdBySelectOrInsert('messung', $messung);
-            }
-        }
+        ini_set('max_execution_time', $saveExTime);
     }
 
-    public function errors() {
+    public function errors($msg) {
+        $this->db->rollback();
+        Session::flash("error", $msg);
+        //Redirect::to("messreihen.php?id=neu");
         return true;
     }
 }
