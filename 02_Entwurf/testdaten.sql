@@ -15,9 +15,9 @@ VALUES ('datum'), ('string'), ('numerisch');
 
 INSERT INTO `metainfo` (metaname, datentyp_id)
 VALUES ('Material', (SELECT id FROM `datentyp` where typ = 'string')),
-       ('Trocknungstemp', (SELECT id FROM `datentyp` where typ = 'string')),
-       ('Taupunkt', (SELECT id FROM `datentyp` where typ = 'string')),
-       ('Masse', (SELECT id FROM `datentyp` where typ = 'string'));
+       ('Trocknungstemp', (SELECT id FROM `datentyp` where typ = 'numerisch')),
+       ('Taupunkt', (SELECT id FROM `datentyp` where typ = 'numerisch')),
+       ('Masse', (SELECT id FROM `datentyp` where typ = 'numerisch'));
 
 INSERT INTO `messreihe_metainfo` (messreihe_id, metainfo_id, metawert)
 VALUES ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Material'), 'PA6'),
@@ -38,7 +38,7 @@ VALUES ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `
 
 INSERT INTO `messung` (sensor_id, messreihe_id, zeitpunkt, messwert, datum_uhrzeit)
 VALUES ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.882503, '2014-10-14 12:30:01'),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.379281, '2014-10-14 12:30:02'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.379281, '2014-10-14 13:30:02'),
        ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.378268, '2014-10-14 12:30:03'),
        ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.980477, '2014-10-14 12:30:01'),
        ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.865348, '2014-10-14 12:30:02'),
