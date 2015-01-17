@@ -158,17 +158,8 @@ class DB {
     }
 
     public function update($table, $id, $fields) {
-        $set = '';
-        $x = 1;
-
-        foreach ($fields as $name => $value) {
-            $set .= "{$name} = ?";
-            if ($x < count($fields)) {
-                $set .= ', ';
-            }
-            $x++;
-        }
-
+        $set = $this->prepareArray($fields, ',');
+        
         $sql = "UPDATE {$table} SET {$set} WHERE id = {$id}";
 
         if (!$this->query($sql, $fields)->error()) {
@@ -196,13 +187,7 @@ class DB {
      * wobei KEY = Feldname und VALUE = Wert z.B. array['metaname'] = 'Datum'.
      */
     public function getIdBySelectOrInsert($table, $fields) {
-        $where = "";
-        foreach ($fields as $fieldname => $value) {
-            if (!empty($where)) {
-                $where .= " and ";
-            }
-            $where .= "{$fieldname} = ?"; 
-        }
+        $where = preareArray($fields, "and");
         
         $sql = "SELECT id FROM {$table} WHERE {$where}";
         $this->query($sql, $fields);
@@ -215,6 +200,54 @@ class DB {
         }
         
         return false;
+    }
+    
+    public function insertOrUpdate($table, $fields) {
+        $result = -1;
+        
+        $where = $this->prepareArray($fields, "and");
+        $sql = "SELECT id FROM {$table} WHERE {$where}";
+       
+        $this->query($sql, $fields);
+        if(!$this->error() and $this->count()) {
+            $id = $this->first()->id;
+            if ($this->update($table, $id, $fields)) {
+                $result = $id;
+            }
+        } else {
+            if ($this->insert($table, $fields)) {
+                $result = $this->_pdo->lastInsertId();
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Bereitet ein Array als WHERE oder SET Bedingung vor.
+     * Alle Key => Value Paare werden gesplitte in :
+     * Key = ? $delimiter.
+     * So koennen die Felder per 'and' oder ',' getrennt werden.
+     * 
+     * Beispiel:
+     * prepareArray(array( 'name' => 'Test', 'id' => '5', 'a' => b), 'and')
+     * wird zu
+     * "name = ? and id = ? and a = ?"
+     * 
+     * @param type $array Array mit Feldern mit Feldname => Wert
+     * @param type $delimiter Trennzeichen fuer die Felder
+     * @return string Vorbereiteter String
+     */
+    private function prepareArray($array, $delimiter) {
+        $result = "";
+        foreach ($array as $fieldname => $value) {
+            if (!empty($result)) {
+                $result .= " " . $delimiter . " ";
+            }
+            $result .= "{$fieldname} = ?"; 
+        }
+        
+        return $result;
     }
 
     public function results() {

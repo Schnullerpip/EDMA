@@ -139,29 +139,24 @@ if (Input::exists()) {
                         <tr>
                             <th>#</th>
                             <th>Dateiname</th>
-                            <th class="text-right">Datum</th>
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Mark</td>
-                            <td class="text-right">01.01.1970</td>
-                            <td class="hidden-close"><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="0"></span></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Jacob</td>
-                            <td class="text-right">01.01.1970</td>
-                            <td class="hidden-close"><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="1"></span></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Larry</td>
-                            <td class="text-right">01.01.1970</td>
-                            <td class="hidden-close"><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="2"></span></td>
-                        </tr>
+                    <tbody id="projektbeschreibungen_body">
+                        
+                        <?php
+                        $db = DB::getInstance();
+
+                        $db->query('SELECT dateiname, id FROM anhang WHERE projekt_id = ' . $projekt->data()->id);
+                        foreach ($db->results() as $index => $anhang) {
+                            printf(
+                            '<tr>
+                                <td>%d</td>
+                                <td>%s</td>
+                                <td class="hidden-close"><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="%d"></span></td>
+                            </tr>', $index+1, strlen($anhang->dateiname) > 49 ? substr($anhang->dateiname, 0, 49) . "..." : $anhang->dateiname, $anhang->id);                            
+                        }
+                        ?>
                     </tbody>
                 </table>
                 
@@ -171,15 +166,13 @@ if (Input::exists()) {
                     <div class="row form-group">
                         <label class="col-xs-12" for="files">Projektbeschreibung hochladen <small>(Max: <?php echo ini_get('post_max_size'); ?>)</small></label>
                         <div class="form-horizontal" role="form">
-                            <input class="col-md-9 control-label" name="file[]" id="files" type="file" multiple="multiple" data-maxsize="<?php echo Utils::convertBytes(ini_get('post_max_size')); ?>">
+                            <input class="col-md-9 control-label" name="file[]" id="files" type="file" multiple="multiple" data-maxsize="<?php echo Utils::convertBytes(ini_get('post_max_size')); ?>" data-projektid="<?php echo $projekt->data()->id ?>">
                             <div class="col-md-3">
                                 <button type="button" name="upload" id="upload" class="btn btn-default btn-sm btn-block">Upload</button>
                             </div>
                         </div>
                     </div>
-                    <div id="upload-errors" style="display: none;">
-                        <div class="alert alert-danger"></div>
-                    </div>
+                    <div id="upload-errors" style="display: none;" class="alert alert-danger"></div>
                     <p><strong>Achtung:</strong> Wenn der Name der Datei schon vorhanden ist, wird die existierende Datei überschrieben.</p>
 
                 </div>
@@ -201,18 +194,19 @@ if (Input::exists()) {
             var button = $('#upload');
             var maxSize = $('#files').data('maxsize');
             var progressBar = $('.upload-progress');
+            var projektID = $('#files').data('projektid');
 
             event.preventDefault();
             button.blur();
+            errorBox.empty();
+            errorBox.hide();
 
             var msg = checkMaxsize(maxSize, f);
             if (msg !== '') {
                 errorBox.show();
-                $('#upload-errors .alert-danger').html('');
-                $('#upload-errors .alert-danger').append(msg);
+                errorBox.append(msg);
+                reset($('#files'));
                 return false;
-            } else {
-                errorBox.hide();
             }
 
             app.uploader({
@@ -224,26 +218,36 @@ if (Input::exists()) {
                 progress: progressBar,
                 maxsize: maxSize,
                 processor: 'ajaxHandler.php',
+                projektID: projektID,
                 finished: function (data) {
                     progressBar.width(0);
                     // Fuege Element in Tabelle ein
-                    var count = parseInt($('#projektbeschreibungen').data('count'));
-                    $.each(data.succeeded, function (i) {
+                    var count = $('#projektbeschreibungen_body tr').length;
+                            parseInt($('#projektbeschreibungen').data('count'));
+                    $.each(data, function (i) {
+                        var name = data[i].name;
+                        if (name.length > 49) {
+                            name = name.substr(0,49) + "..."; 
+                        }
+                        
                         $('#projektbeschreibungen').append(
                                 '<tr><td>' + 
                                 (count + (i + 1)) + 
                                 '</td><td>' 
-                                + data.succeeded[i].name + 
-                                '</td><td class="text-right">' + 
-                                data.succeeded[i].date + 
+                                + name + 
                                 '</td><td>' +
-                                '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="' + data.succeeded[i].id + '"></span>' +
+                                '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="' + data[i].id + '"></span>' +
                                 '</td></tr>'
                                 );
                     });
+                    reset($('#files'));
                 },
                 error: function (data) {
-                    $('#upload-errors').append('error');
+                    var errorMsg = convertArray(data);
+                    progressBar.width(0);
+                    errorBox.show();
+                    errorBox.append(errorMsg);
+                    reset($('#files'));
                 }
             });
         });
@@ -268,6 +272,11 @@ if (Input::exists()) {
               // TODO: Fehler in $('#upload-errors') anzeigen
             });
         });
+        
+        window.reset = function (e) {
+            e.wrap('<form>').closest('form').get(0).reset();
+            e.unwrap();
+        }
     </script>
 </form>
 

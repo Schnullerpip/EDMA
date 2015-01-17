@@ -1,6 +1,50 @@
 <?php
 require_once 'header.php';
 $db = DB::getInstance();
+
+// Javascript Includes definieren. Werden in Footer eingebunden.
+$includes = array('messreihen');
+
+// Wurden Daten im bearbeiten Formular geändert?
+if (Input::exists('post')) {
+    if (Token::check(Input::get('token'))) {
+        // Name geändert
+        if ($name = Input::get('name')) {
+            if (!$db->update('messreihe', Input::get('messreihenid'), array('messreihenname' => $name))) {
+                // Error
+            }
+        }
+        // Datum geändert
+        if ($datum = Input::get('datum')) {
+            $datum = Utils::convertDate($datum);
+            if (!$db->update('messreihe', Input::get('messreihenid'), array('datum' => $datum))) {
+                // Error
+            }
+        }
+        // Anzeigenamen bearbeitet
+        if ($sensoren = Input::get('sensoren')) {
+            foreach ($sensoren as $key => $sensorname) {                
+                if (!empty($sensorname)) {
+                    $db->query("UPDATE messreihe_sensor SET anzeigename = ? WHERE messreihe_sensor.messreihe_id = ? AND messreihe_sensor.sensor_id = ?", array($sensorname, Input::get('messreihenid'), $key));
+                    if ($db->error()) {
+                        // Error
+                    }
+                }
+            }
+        }
+        // Metadaten geändert
+        if ($metadaten = Input::get('metaeintrag')) {
+            foreach ($metadaten as $key => $metaeintrag) {
+                if (!empty($metaeintrag)) {
+                    $db->query("UPDATE messreihe_metainfo SET metawert = ? WHERE messreihe_metainfo.messreihe_id = ? AND messreihe_metainfo.metainfo_id = ?", array($metaeintrag, Input::get('messreihenid'), $key));
+                    if ($db->error()) {
+                        // Error
+                    }
+                }
+            }
+        }
+    }
+}
 ?>
 
 <?php if (Input::exists('get')) : ?>
@@ -31,7 +75,7 @@ $db = DB::getInstance();
             <hr>
             <div class="form-group">
                 <div class="col-sm-5 col-sm-offset-4">
-                    <button type="button" class="btn btn-default">Zurück zur Übersicht</button>
+                    <a href="messreihen.php" type="button" class="btn btn-default">Zurück zur Übersicht</a>
                 </div>
             </div>
         </form>
@@ -60,12 +104,13 @@ $db = DB::getInstance();
                     processor: 'ajaxHandler.php',
                     projektID: projektID,
                     finished: function (data) {
+                        var msg = convertArray(data);
                         progressBar.width(0);
-                        responseBox.append(data);
+                        responseBox.append(msg);
                     },
                     error: function (data) {
-                        responseBox.append(data);
-                        console.log(data);
+                        var errorMsg = convertArray(data);
+                        responseBox.append(errorMsg);
                     }
                 });
             });
@@ -78,26 +123,80 @@ $db = DB::getInstance();
         </div>
         <?php
         $messreihe = $db->get('messreihe', array('id', '=', $inp));
+        
         if (!$messreihe->error()) :
-            ?>
+        ?>
             <div class="row">
                 <div class="col-sm-12">
                     <h3>Metadaten</h3>
                 </div>
             </div>
-            <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+            <form class="form-horizontal" role="form" action="messreihen.php" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="name" class="col-sm-4 control-label">Name<sup>*</sup></label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" name="name" id="name" placeholder="Name" value="<?php echo ($messreiheName = $messreihe->first()->messreihenname) ? $messreiheName : ''; ?>">
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Name" value="<?php echo ($messreiheName = $messreihe->first()->messreihenname) ? escape($messreiheName) : ''; ?>">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="datum" class="col-sm-4 control-label">Datum<sup>*</sup></label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" name="datum" id="datum" placeholder="Datum">
+                        <div class="input-group date">
+                            <input type="text" class="form-control" name="datum" id="datum" placeholder="Datum" value="<?php echo escape($datum = $messreihe->first()->datum) ? escape(Utils::convertDate($datum)) : ''; ?>">
+                            <span class="btn btn-primary input-group-addon"><i class="glyphicon glyphicon-calendar" aria-hidden="true"></i></span>
+                        </div>
                     </div>
                 </div>
+                <?php 
+                // Hole alle anderen Metadaten
+                $sql = "SELECT metainfo.metaname, metainfo.id, messreihe_metainfo.metawert FROM metainfo INNER JOIN messreihe_metainfo ON metainfo.id = messreihe_metainfo.metainfo_id WHERE messreihe_metainfo.messreihe_id = ?";
+                $db->query($sql, array($messreihe->first()->id));
+                $metadaten = $db->results();
+                ?>
+                
+                <?php if (!empty($metadaten)) : ?>
+                    <?php foreach ($metadaten as $metaeintrag) : ?>
+                    <div class="form-group">
+                        <label for="metaeintrag[<?php echo escape($metaeintrag->id); ?>]" class="col-sm-4 control-label"><?php echo escape($metaeintrag->metaname); ?></label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" name="metaeintrag[<?php echo escape($metaeintrag->id); ?>]" id="metaeintrag[<?php echo escape($metaeintrag->id); ?>]" placeholder="<?php echo escape($metaeintrag->metawert) ?>" >
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                <?php endif ?>
+                
+                
+                
+                
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4>Anzeigenamen</h4>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-sm-4 text-right">
+                        Sensorname
+                    </div>
+                    <div class="col-sm-5">
+                        Anzeigename
+                    </div>
+                </div>
+                <?php
+                $db->query('SELECT sensor.sensorname, sensor.id, messreihe_sensor.anzeigename FROM messreihe_sensor INNER JOIN sensor on messreihe_sensor.sensor_id = sensor.id WHERE messreihe_sensor.messreihe_id = ?', array($projekt->data()->id));
+                $sensoren = $db->results();
+                ?>
+                <?php foreach ($sensoren as $sensor) : ?>
+                <div class="form-group">
+                    <label for="sensoren[<?php echo $sensor->id; ?>]" class="col-sm-4 control-label"><?php echo escape($sensor->sensorname); ?></label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" name="sensoren[<?php echo $sensor->id; ?>]" id="sensoren[<?php echo $sensor->id; ?>]" placeholder="<?php echo $sensor->anzeigename; ?>" >
+                    </div>
+                </div>
+                <?php endforeach; ?>
+                
+                <br>
+                <input type="hidden" name="messreihenid" value="<?php echo $inp; ?>">
                 <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-5">
@@ -132,7 +231,6 @@ $db = DB::getInstance();
 
     <?php
     $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
-
     $messreihen = $db->results();
     ?>
     <div class="panel panel-default">
@@ -152,7 +250,7 @@ $db = DB::getInstance();
                         <tr>
                             <td><?php echo escape($messreihe->messreihenname); ?></td>
                             <td>
-                                <span class="pull-right"><?php echo date("d.m.Y", strtotime(escape($messreihe->datum))); ?></span>
+                                <span class="pull-right"><?php echo escape(Utils::convertDate($messreihe->datum)); ?></span>
                             </td>
                             <td class="controls-wrapper">
                                 <div class="pull-right controls">
@@ -163,7 +261,7 @@ $db = DB::getInstance();
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" title="Messreihe &quot;<?php echo escape($messreihe->messreihenname); ?>&quot; löschen">
+                                            <a href="#" class="delete" data-messreihenid="<?php echo escape($messreihe->id); ?>" title="Messreihe &quot;<?php echo escape($messreihe->messreihenname); ?>&quot; löschen">
                                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                             </a>
                                         </li>
