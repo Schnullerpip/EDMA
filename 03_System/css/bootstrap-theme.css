@@ -472,3 +472,12 @@ table tr:hover .glyphicon {
 .popover.right > .arrow:after {
     border-right-color: #36a7eb;
 }
+
+
+/* Bootstrap Datepicker */
+/* ------------------------------- */
+
+.datepicker table tr td.active.active, .datepicker table tr td.active:hover.active {
+    background-color: #224565;
+    background-image: none;
+}

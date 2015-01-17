@@ -230,16 +230,16 @@ if (Input::exists()) {
                     var count = parseInt($('#projektbeschreibungen').data('count'));
                     $.each(data.succeeded, function (i) {
                         $('#projektbeschreibungen').append(
-                                '<tr><td>' + 
-                                (count + (i + 1)) + 
-                                '</td><td>' 
-                                + data.succeeded[i].name + 
-                                '</td><td class="text-right">' + 
-                                data.succeeded[i].date + 
-                                '</td><td>' +
-                                '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="' + data.succeeded[i].id + '"></span>' +
-                                '</td></tr>'
-                                );
+                            '<tr><td>' + 
+                            (count + (i + 1)) + 
+                            '</td><td>' 
+                            + data.succeeded[i].name + 
+                            '</td><td class="text-right">' + 
+                            data.succeeded[i].date + 
+                            '</td><td>' +
+                            '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="' + data.succeeded[i].id + '"></span>' +
+                            '</td></tr>'
+                        );
                     });
                 },
                 error: function (data) {

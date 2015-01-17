@@ -23,7 +23,7 @@ class DeleteController extends AjaxController {
         }
     }
 
-    public function process($name, $id) {
+    public function process($id) {
         // delete from anhang where id = $id
         $this->_succeeded[] = array(
             'id' => 0
