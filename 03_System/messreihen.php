@@ -60,12 +60,13 @@ $db = DB::getInstance();
                     processor: 'ajaxHandler.php',
                     projektID: projektID,
                     finished: function (data) {
+                        var msg = convertArray(data);
                         progressBar.width(0);
-                        responseBox.append(data);
+                        responseBox.append(msg);
                     },
                     error: function (data) {
-                        responseBox.append(data);
-                        console.log(data);
+                        var errorMsg = convertArray(data);
+                        responseBox.append(errorMsg);
                     }
                 });
             });
