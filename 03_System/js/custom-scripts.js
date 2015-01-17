@@ -3,7 +3,10 @@ $(document).ready(function () {
         $('[data-toggle="popover"]').popover();
     });
     
-    $('.datepicker-init').datepicker({
+    $('.input-group.date').datepicker({
+        format: "dd.mm.yyyy",
+        language: "de",
+        autoclose: true
     });
 });
 
