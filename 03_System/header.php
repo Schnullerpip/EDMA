@@ -29,6 +29,9 @@ if (!$projekt->isLoggedIn() && curPageName() !== 'login.php') {
         <!-- EDMA CSS -->
         <link href="css/bootstrap-theme.css" rel="stylesheet">
 
+        <!-- TODO bessere Lösung finden Julistuff -->
+        <link href="css/julicss.css" rel="stylesheet">
+
         <!-- Bootstrap-JavaScript -->
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>

@@ -1,0 +1,19 @@
+.dontbewhite {
+    color: black;
+}
+
+option {
+    color: black;
+}
+
+select {
+    color: black
+}
+
+input {
+    color: black;
+}
+
+.meta-element-size {
+    line-height: 30px;
+}
