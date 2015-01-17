@@ -133,7 +133,7 @@ require_once 'header.php';
 		//
         //-----------------------Variablen zur Auswahl aus dem Select----
 		var select = <?php echo $jsonselect; ?>;    //enthält den select
-        var selectedValue = 0;	                    //Zeigt an welche Art von Metadatenfilter aus der Selectbox gewählt wurde
+		var selectedMetafeld;
 		var select_copy = [];		
 
 
@@ -155,10 +155,33 @@ require_once 'header.php';
 			}
 		}
 		select = select_copy;
-		
+
+		//Durch den folgenden Code ist nun eine array verfügbar, welche ausschließlich die verschiedenen Messreihen aufzeigt
+		var messreihen = [];
+		var messreihennamen = [];
 		for(i = 0; i < select_copy.length; i++){
-			console.log(select_copy[i]);
+			if($.inArray(select_copy[i].messreihenname, messreihennamen) < 0){
+				messreihennamen.push(select_copy[i].messreihenname);
+				var tmp_array = [select_copy[i].messreihenname];
+				messreihen.push(tmp_array);
+				var o;
+				for(o = i; o < select_copy.length; o++){
+					var mname = select_copy[o].metaname;
+					if((select_copy[o].messreihenname == select_copy[i].messreihenname) && ($.inArray(mname, messreihen[messreihen.length-1]) < 0)){
+						messreihen[messreihen.length-1].push({name:mname, typ:select_copy[o].typ});
+					}					
+				}
+				console.log("adding new 'messreihe' -->"+select_copy[i].messreihenname+"<-- to array 'messreihen'");
+			}
 		}
+
+
+		var messreihen_copy = $.extend(true, [], messreihen);
+
+		//only for debug
+		/*for(i = 0; i < messreihen.length; i++){
+			console.log(messreihen[i][0]);
+		}*/
         //---------------------------------------------------------------
 		//
 		//
@@ -172,6 +195,7 @@ require_once 'header.php';
         //----------------------Variablen zum Schutz der Selectbox und dem Auswahlbutton -> button zündet nur wenn etwas legales gewählt wurde----------
         var old_value = 0;
         var selectFlag = false; //nur falls eine Option aus dem select tag gewählt wurde darf der entsprechende button getriggert werden
+		var selectChangedCount = 0;
         //----------------------------------------------------------------------------------------------------------------------------------------------
         //
         //
@@ -183,7 +207,10 @@ require_once 'header.php';
         //
         //
         //------------------------------------Variablen, mit deren Hilfe unique-Ids erstellt werden können----------------------------------------------------------
-        var uniqueId = 0; //Diese Variable sollte nach erstellen eines neuen Metafilters inkrementiert werden
+        var uniqueId = 0; //Diese Variable sollte nach erstellen eines neuen Metafilters inkrementiert werden	
+		var look_up_unique_id = []; //Mit dieser Array kann die delMeta Funktion anhand der uniqueId zurückverfolgen
+									//welches Metafeld in die Arbeitskopie messreihen_copy zurückgeführt werden muss
+		var uniquei = 0; //für die <option> tagsim metafilterselect "#selectBox"
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
         //
         //
@@ -247,34 +274,67 @@ require_once 'header.php';
 
 <script>
 	function selectChanged(val){
-		selectedValue = val;
+		var io = val.split("");
+		selectedMetafeld = messreihen_copy[io[0]][io[1]];
 		selectFlag=true;
+		selectChangedCount++;
 	}
 
 	function addMeta(){
-		if(selectFlag==false && old_value!=selectedValue){
-            old_value = selectedValue;
+		if((selectFlag==false && old_value!=selectedMetafeld) || (selectChangedCount == 0)){
+            old_value = selectedMetafeld;
 			return;
 		}
-		var obj = select_copy[selectedValue];
-		$("#meta_name_operator_div").append("<div class='col-sm-8 text-right'> <textfield id='metaNameField"+uniqueId+"' class='meta-element-size'>" + obj.metaname + "</textfield> </div>");
-		addOperatorMenu(obj.typ);
+
+		$("#meta_name_operator_div").append("<div id='metaNameField"+uniqueId+"' class='col-sm-8 text-right'> <textfield class='meta-element-size'>" + selectedMetafeld["name"] + "</textfield> </div>");
+		
+		addOperatorMenu(selectedMetafeld.typ);
 		addDefaultValueField();
 		selectFlag = false;
-        old_value = selectedValue;
+        old_value = selectedMetafeld;
 
-		//Falls eine andere Messreihe das gewählte Metafeld nicht hat s
+		//Falls eine andere Messreihe das gewählte Metafeld nicht hat sollte diese (ihre eigenen, die wiederum kein anderer hat)aus der auswahl entfernt werden
+						var to_delete = [];
+						for(i = 0; i < messreihen_copy.length; i++){
+							var exists_in_messreihe = false;
+							for(o = 0; o < messreihen_copy[i].length; o++){
+								if(messreihen_copy[i][o]["name"] == selectedMetafeld["name"]){
+									exists_in_messreihe = true;
+								}
+							}
+							if(!exists_in_messreihe){
+								to_delete.push(messreihen[i]);
+							}
+						}
+						//Jetzt wissen wir (in to_delete) welche messreihen von messreihen_copy (der Arbeitskopie)
+						//gelöscht werden müssen -> anschließend muss das MetafilterSelect neu generiert werden
+						var tmp_new_array = [];
+						for(i = 0; i < messreihen.length; i++){
+							if($.inArray(messreihen[i], to_delete) < 0){
+								tmp_new_array.push(messreihen[i]);
+							}
+						}
+						messreihen_copy = tmp_new_array;
+						//Nun das SelectFeld neu generieren
+						regenerateMetaSelect();
+						look_up_unique_id.push(to_delete);//Für delMeta(argid) Funktion
 	}
+
+
+
+
+
+
 
 	function addOperatorMenu(type){
 		var appendString;
 		switch(type){
 			case 'string':
-				appendString = "<div class='col-sm-4' ><textfield id='metaOperatorField"+uniqueId+"' class='meta-element-size'>equals: </textfield> </div>";
+				appendString = "<div id='metaOperatorField"+uniqueId+"' class='col-sm-4'> <textfield class='meta-element-size'>equals: </textfield> </div>";
 				break;
 
 			case 'numerisch':
-				appendString = "<div class='col-xs-4'><select id='operatorSelect"+uniqueId+"' onchange='addValueField(passMultipleArgsForSelect(this));' class='meta-element-size'><option></option><option value='==' selected>equals</option><option value='<'>less than</option><option value='>'>greater than</option><option value='<='>less/equals</option><option value='>='>greater/equals</option></select></div>";
+				appendString = "<div id='metaOperatorField"+uniqueId+"' class='col-xs-4'><select id='operatorSelect"+uniqueId+"' onchange='addValueField(passMultipleArgsForSelect(this));' class='meta-element-size'><option></option><option value='==' selected>equals</option><option value='<'>less than</option><option value='>'>greater than</option><option value='<='>less/equals</option><option value='>='>greater/equals</option></select></div>";
 					/*<select id='operatorSelect"+selectedValue+"' onchange='operatorSelectChanged(value);' class='meta-element-size'>
 					<option></option>
 					<option value='=='>equals</option>
@@ -291,6 +351,13 @@ require_once 'header.php';
 		$("#meta_name_operator_div").append(appendString);
 	}
 
+
+
+
+
+
+
+
 	function addValueField(param){
 		var appendString;
         var singleFieldOperators = ["==", "<", ">", "<=", ">="];
@@ -302,7 +369,7 @@ require_once 'header.php';
         //Das gefundene bereits vorhandene ValueField muss nun mit der neuen Auswahlersetzt
         //werden, falls es sich die Anzahl der angeforderten Inputfelder unterscheiden
         var isSingleValueFieldOperator = $.inArray(param.value, singleFieldOperators);
-        if($(valueFieldExists).hasClass("singleValueField") && isSingleValueFieldOperator){
+        if($(valueFieldExists).hasClass("singleValueFieldH") && isSingleValueFieldOperator){
             //Feld muss nicht erneuert werden
 			console.log("valueField already exists (single)");
             return;
@@ -311,25 +378,65 @@ require_once 'header.php';
 			console.log("valueField already exists (double)");
             return;
         }
-
-        
         //In deisem Fall muss das bestehende Feld gelöscht werden und mit einem neuen ersetzt werden!
         var previousMetaValueFieldId = $(valueFieldExists).attr('id');
-		console.log("prev id: "+previousMetaValueFieldId);
-		console.log("prev class: "+$(valueFieldExists).attr('class'));
 		if($.inArray(param.value, singleFieldOperators) > -1){
-				appendString = "<div id='metaValueField"+previousMetaValueFieldId+"' style='margin-right:10px' class='col-xs-12 singleValueField valueField'><input class='dontbewhite' type='text' placeholder='insert Value' name='stringInput"+previousMetaValueFieldId+"'></input></div>";
+				appendString = "<div id='metaValueField"+previousMetaValueFieldId+"' class='col-xs-12 singleValueField valueField'><input class='dontbewhite' type='text' placeholder='insert Value' name='stringInput"+previousMetaValueFieldId+"'></input> <a type='btn' onclick='delMeta("+previousMetaValueFieldId+");'>X</a></div>";
         }
         //TODO #######Datum####### /*vielleicht kommt noch weiterer Bedarf für andere Felder wie between in welchem Fall dann zwei Textfelder geadded werden müssen */
 		$(valueFieldExists).replaceWith(appendString);
 	}
 
+
+
+
+
+
+
+
+
+
     function addDefaultValueField(){
 		var appendString;
-		appendString = "<div id='metaValueField"+uniqueId+"' class='col-xs-12 singleValueField valueField'><input class='dontbewhite' type='text' placeholder='insert Value' name='stringInput"+uniqueId+"'></input></div>";
+		appendString = "<div id='metaValueField"+uniqueId+"' class='col-xs-12 singleValueField valueField'><input class='dontbewhite' type='text' placeholder='insert Value' name='stringInput"+uniqueId+"'></input><a class='btn' onclick='delMeta("+uniqueId+");'>X</a></div>";
 		$("#meta_value_div").append(appendString);
         ++uniqueId;
     }
+
+
+
+
+
+
+
+	function delMeta(argid){	
+		var tmp_str = "metaNameField"+argid;
+		var element_to_delete = document.getElementById(tmp_str);	
+		console.log("########## deleted:");
+		console.log(element_to_delete);
+		element_to_delete.parentNode.removeChild(element_to_delete);
+		
+		tmp_str = "metaOperatorField"+argid;
+		element_to_delete = document.getElementById(tmp_str);
+		console.log(element_to_delete);
+		element_to_delete.parentNode.removeChild(element_to_delete);
+		
+		tmp_str = "metaValueField"+argid;
+		element_to_delete = document.getElementById(tmp_str);
+		console.log(element_to_delete);
+		console.log("##########");
+		element_to_delete.parentNode.removeChild(element_to_delete);
+
+		//TODO regenerate #selectBox da nun vorherig weggefallene messreihen wieder erlaubt sein können
+		for(i = 0; i < look_up_unique_id; i++){
+			messreihen_copy.push(look_up_unique_id[i]);
+		}
+		regenerateMetaSelect();
+	}	
+
+
+
+
 
 
     function passMultipleArgsForSelect(param){
@@ -337,21 +444,38 @@ require_once 'header.php';
         return obj;
     }
 
+
+
+
+
 	function regenerateMetaSelect(){
 		var replace_string = "<select id='selectBox' class='dontbewhite' onchange='selectChanged(value);'><option></option>";
-
+		var tmp_array = [];
 		var i;
-		for(i = 0; i < select_copy.length; i++){
-			replace_string += "<option id='selectOption"+i+" class='dontbewhite' value='"+i+"'>"+select_copy[i].metaname+"</option>";
+		for(i = 0; i < messreihen_copy.length; i++){
+			var o;
+			for(o = 1; o < messreihen_copy[i].length; o++){
+				if($.inArray(messreihen_copy[i][o]) < 0){
+					tmp_array.push(messreihen_copy[i][o]);
+					replace_string += "<option id='selectOption"+(uniquei++)+" class='dontbewhite' value='"+i+""+o+"'>"+messreihen_copy[i][o]["name"]+"</option>";
+				}
+			}
 		}
 		replace_string += "</select>";
 
 		$("#selectBox").replaceWith(replace_string);
 	}
 
+
+
+
+
+
+
 	$(function(){
 		regenerateMetaSelect();
 	});
+
 </script>
 
 <?php
