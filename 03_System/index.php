@@ -127,17 +127,53 @@ require_once 'header.php';
 		$jsonselect = json_encode($select);
 	?>
 	<script>
-        //-----------------------oft benutzt ----- ----------------------
+		//
+		//
+		//
+		//
+        //-----------------------Variablen zur Auswahl aus dem Select----
 		var select = <?php echo $jsonselect; ?>;    //enthält den select
         var selectedValue = 0;	                    //Zeigt an welche Art von Metadatenfilter aus der Selectbox gewählt wurde
+		var select_copy = [];		
+
+
+		//filter alle Metas heraus, die es doppelt gibt
+		var i;
+		for(i = 0; i < select.length; i++){
+			var o;
+			for(o = 0; o < select_copy.length; o++){
+				var already_exists = false;
+				if((select[i].metaname == select_copy[o].metaname)){
+					//metafield already exists!!!
+					already_exists = true;
+					break;
+				}
+			}
+			if(!already_exists){
+				console.log("adding new meta to select: "+select[i].metaname);
+				select_copy.push(select[i]);
+			}
+		}
+		select = select_copy;
+		
+		for(i = 0; i < select_copy.length; i++){
+			console.log(select_copy[i]);
+		}
         //---------------------------------------------------------------
-        //
-        //
+		//
+		//
+		//
+		//
+		//
+		//
+		//
+		//
         //
         //----------------------Variablen zum Schutz der Selectbox und dem Auswahlbutton -> button zündet nur wenn etwas legales gewählt wurde----------
         var old_value = 0;
         var selectFlag = false; //nur falls eine Option aus dem select tag gewählt wurde darf der entsprechende button getriggert werden
         //----------------------------------------------------------------------------------------------------------------------------------------------
+        //
         //
         //
         //
@@ -153,46 +189,57 @@ require_once 'header.php';
         //
         //
         //
+        //
+        //
+        //
+        //
+        //
+        //------------------------------------Die Strings, aus denen zuletzt der Select gebildet wird-------------
+		var QUERY_SELECT = " SELECT";
+		var QUERY_FROM = " FROM";
+		var QUERY_WHERE = " WHERE";
+        //--------------------------------------------------------------------------------------------------------
+        //
+        //
+        //
+        //
+        //
 	</script>				
 
 		<div class="form-horizontal" id="addMetaDiv">
-
-			<h2>Metadaten filtern</h1>
-			<!-- Anzeigefelder für die ausgewählten Metadatenfilter -->
-			<div class="form-group">
-				<div id="meta_name_operator_div" class="col-xs-6"></div>
-				<div id="meta_value_div" class="col-xs-6"></div>
-			</div>
-
-
-
-			<!-- Select element und Bestätigungsbutton -->
-			<div class="form-group">
-				<div class="col-sm-2 col-sm-offset-4">
-					<select id="selectBox" class="dontbewhite" onchange="selectChanged(value);">
-					<?php
-						echo "<option></option>";
-						foreach($select as $i => $value){
-							echo '<option id="selectOption'.$i.'" class="dontbewhite" value="'.$i.'">'.$value->metaname.'</option>';
-						}
-					?>
-					</select>
+			<div style="border:1px solid white; border-radius:5px;">
+				<!-- Anzeigefelder für die ausgewählten Metadatenfilter -->
+				<div class="form-group">
+					<h2 style="text-align:center">Metadaten filtern</h1>
+					<div class="row">
+						<div id="meta_name_operator_div" class="col-xs-6"></div>
+						<div id="meta_value_div" class="col-xs-6"></div>
+					</div>
 				</div>
 
-				<div class="col-sm-4">
-					<button id="meta_select_button" class="dontbewhite" onClick="addMeta();">new Metafilter</button>
+
+
+				<!-- Select element und Bestätigungsbutton -->
+				<div class="form-group">
+					<div class="col-sm-2 col-sm-offset-4">
+						<select id="selectBox" class="dontbewhite" onchange="selectChanged(value);">
+						</select>
+					</div>
+
+					<div class="col-sm-4">
+						<button id="meta_select_button" class="dontbewhite" onClick="addMeta();">new Metafilter</button>
+					</div>
 				</div>
 			</div>
-		
 
 			<!-- Rest -->
 			<div class="form-group">
-				<h2>Messreihe wählen</h1>
+				<h2 style="text-align:center">Messreihe wählen</h1>
 				<div class="col-sm-12 col-md-6 col-lg-4">
 				</div>
 			</div>
 			<div class="form-group">
-				<h2>Einstellungen</h1>
+				<h2 style="text-align:center">Einstellungen</h1>
 				<div class="col-sm-12 col-md-6 col-lg-4">
 				</div>
 			</div>
@@ -209,12 +256,14 @@ require_once 'header.php';
             old_value = selectedValue;
 			return;
 		}
-		var obj = select[selectedValue];
+		var obj = select_copy[selectedValue];
 		$("#meta_name_operator_div").append("<div class='col-sm-8 text-right'> <textfield id='metaNameField"+uniqueId+"' class='meta-element-size'>" + obj.metaname + "</textfield> </div>");
 		addOperatorMenu(obj.typ);
-        addDefaultValueField();
+		addDefaultValueField();
 		selectFlag = false;
         old_value = selectedValue;
+
+		//Falls eine andere Messreihe das gewählte Metafeld nicht hat s
 	}
 
 	function addOperatorMenu(type){
@@ -222,16 +271,15 @@ require_once 'header.php';
 		switch(type){
 			case 'string':
 				appendString = "<div class='col-sm-4' ><textfield id='metaOperatorField"+uniqueId+"' class='meta-element-size'>equals: </textfield> </div>";
-				addValueField('==');
 				break;
 
 			case 'numerisch':
-				appendString = "<div class='col-xs-4'><select id='operatorSelect"+uniqueId+"' onchange='addValueField(passMultipleArgsForSelect(this));' class='meta-element-size'><option></option><option value='==' selected>equals</option><option value='<'>less then</option><option value='>'>greater then</option><option value='<='>less/equals</option><option value='>='>greater/equals</option></select></div>";
+				appendString = "<div class='col-xs-4'><select id='operatorSelect"+uniqueId+"' onchange='addValueField(passMultipleArgsForSelect(this));' class='meta-element-size'><option></option><option value='==' selected>equals</option><option value='<'>less than</option><option value='>'>greater than</option><option value='<='>less/equals</option><option value='>='>greater/equals</option></select></div>";
 					/*<select id='operatorSelect"+selectedValue+"' onchange='operatorSelectChanged(value);' class='meta-element-size'>
 					<option></option>
 					<option value='=='>equals</option>
-					<option value='<'>less then</option>
-					<option value='>'>greater then</option>
+					<option value='<'>less than</option>
+					<option value='>'>greater than</option>
 					<option value='<='>less/equals</option>
 					<option value='>='>greater/equals</option></select>*/
 				break;
@@ -288,6 +336,22 @@ require_once 'header.php';
         var obj = {elem:param, value:param.value};
         return obj;
     }
+
+	function regenerateMetaSelect(){
+		var replace_string = "<select id='selectBox' class='dontbewhite' onchange='selectChanged(value);'><option></option>";
+
+		var i;
+		for(i = 0; i < select_copy.length; i++){
+			replace_string += "<option id='selectOption"+i+" class='dontbewhite' value='"+i+"'>"+select_copy[i].metaname+"</option>";
+		}
+		replace_string += "</select>";
+
+		$("#selectBox").replaceWith(replace_string);
+	}
+
+	$(function(){
+		regenerateMetaSelect();
+	});
 </script>
 
 <?php

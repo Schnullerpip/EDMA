@@ -23,7 +23,7 @@ INSERT INTO `messreihe_metainfo` (messreihe_id, metainfo_id, metawert)
 VALUES ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Material'), 'PA6'),
        ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Trocknungstemp'), '80'),
        ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Taupunkt'), '-15'),
-       ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Masse'), 'kont. Förderung	kg');
+       ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Masse'), '100');
 
 INSERT INTO `sensor` (sensorname)
 VALUE ('Material Eintritt'), ('Trichter 1'), ('Trichter 2'),	('Trichter 3'),
