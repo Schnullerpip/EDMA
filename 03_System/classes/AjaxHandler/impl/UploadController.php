@@ -105,20 +105,20 @@ class UploadController extends AjaxController {
                 // der Parser hält ein Array "errors" in dem Fehler gespeichert werden
                 if (count($parser->errors()) == 0) {
                     $this->_succeeded[] = array(
-                        'name' => $this->_files['file']['name'],
+                        'name' => $this->_files['file']['name'][0],
                         'message' => 'Die Datei wurde erfolgreich importiert!'
                     );
                 } else {
                     $this->_failed[] = array(
-                        'name' => $this->_files['file']['name'],
+                        'name' => $this->_files['file']['name'][0],
                         'message' => 'Fehler beim Importieren der Datei!',
                         'error' => $parser->errors()
                     );
                 }
             } else {
                 $this->_failed[] = array(
-                    'name' => $this->_files['file']['name'],
-                    'message' => 'Die Datei ist keine CSV Datei! : '
+                    'name' => $this->_files['file']['name'][0],
+                    'message' => 'Die Datei ist keine CSV Datei!'
                 );
                 return;
             }

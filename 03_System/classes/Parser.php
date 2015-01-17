@@ -19,6 +19,7 @@ class Parser {
     private $db;
     private $_projektID;
     private $_messreiheID;
+    private $_error = array();
     
     public function __construct($file, $projekt_id) {
         $this->_file = $file;
@@ -41,11 +42,17 @@ class Parser {
         $metadaten = $stringFile[0];
         // TODO: Error: Undefined Index 1 handling $stringFile[1]
         // wenn kein Trennzeichen gefunden wurde
-        //$messdaten = $stringFile[1];
+        $messdaten = $stringFile[1];
         
         $this->db->beginTransaction();
-        $this->parseMetaDaten($metadaten);
-        //$this->parseMessDaten($messdaten);
+        try {
+            $this->parseMetaDaten($metadaten);
+            $this->parseMessDaten($messdaten);
+        } catch (Exception $e) {
+            $this->_error[] = $e->getMessage();
+            $this->db->rollback();
+            return;
+        }
         $this->db->commit();
     }
     
@@ -67,7 +74,7 @@ class Parser {
         // Optional -, beliebig viele Zahlen \p{N}, Optional Punkt oder Komma
         // Danach Optional beliebig viele Zahlen
         $numberPattern = "((?<=n:\t)-?\p{N}+[\.,]?\p{N}*)";
- 
+        
         $pattern = "#^" . $metaNamePattern . ":\t(" . $stringPattern . "|" . $datePattern . "|" . $numberPattern . ")\t*$#mu";
         $matches = array();
         $count = preg_match_all($pattern, $metadaten, $matches);
@@ -184,7 +191,7 @@ class Parser {
             array_push($sensor_id_array, $sensor_id);
 
             $messreihe_sensor = array(
-                $this->_messreihe_id,
+                $this->_messreiheID,
                 $sensor_id,
                 $sensorname,
             );
@@ -247,13 +254,7 @@ class Parser {
         ini_set('max_execution_time', $saveExTime);
     }
 
-    public function errors($msg) {
-        // TODO: privates Array in dem mehrere Fehler gespeichert werden können?
-        // Momentan tritt ein Fehler auf und das Script wird abgebrochen?
-        $this->db->rollback();
-        $errors = array(
-            'error' => $msg
-        );
-        return $errors;
+    public function errors() {
+        return $this->_error;
     }
 }

@@ -88,19 +88,10 @@ if (Input::exists('post')) {
                 var maxSize = $('#files').data('maxsize');
                 var progressBar = $('.upload-progress');
                 var projektID = $('#files').data('projektid');
-
+                
+                responseBox.empty();
                 event.preventDefault();
                 button.blur();
-
-                var msg = checkMaxsize(maxSize, f);
-                if (msg !== '') {
-                    responseBox.show();
-                    $('#upload-errors .alert-danger').html('');
-                    $('#upload-errors .alert-danger').append(msg);
-                    return false;
-                } else {
-                    responseBox.hide();
-                }
 
                 app.uploader({
                     files: f,
@@ -114,11 +105,11 @@ if (Input::exists('post')) {
                     projektID: projektID,
                     finished: function (data) {
                         progressBar.width(0);
-                        // Fuege Element in Tabelle ein
-                        responseBox.append('File importiert!');
+                        responseBox.append(data);
                     },
                     error: function (data) {
-                        responseBox.append('error');
+                        responseBox.append(data);
+                        console.log(data);
                     }
                 });
             });

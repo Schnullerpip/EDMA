@@ -17,7 +17,7 @@ var app = app || {};
     "use strict";
 
     // private methods
-    var ajax, getFormData, setProgress;
+    var ajax, getFormData, setProgress, convertArray;
 
     ajax = function (data) {
         var xmlhttp = new XMLHttpRequest(), uploaded;
@@ -25,14 +25,32 @@ var app = app || {};
         xmlhttp.addEventListener('readystatechange', function () {
             if (this.readyState === 4) {
                 if (this.status === 200) {
-                    uploaded = JSON.parse(this.response);
-
-                    if (typeof o.options.finished === 'function') {
-                        o.options.finished(uploaded);
+                    try {
+                        uploaded = JSON.parse(this.response);
+                    } catch (error) {
+                        // wenn response kein JASON Objekt ist, ist ein unerwarterter Fehler passiert.
+                        // this. response ist plain html => convert to JSON
+                        uploaded = {
+                            succeeded: "",
+                            failed: this.response,
+                        };
+                    }
+                    
+                    if (uploaded.failed.length != 0) {
+                        if (typeof o.options.error === 'function') {
+                            o.options.error(convertArray(uploaded.failed), -1);
+                        }
+                    } else {
+                        if (typeof o.options.finished === 'function') {
+                            
+                            o.options.finished(convertArray(uploaded.succeeded));
+                        }
                     }
                 } else {
                     if (typeof o.options.error === 'function') {
-                        o.options.error(uploaded);
+                        console.log("status:" + this.status);
+                        console.log(this.repsonse);
+                        o.options.error(uploaded.failed = "Prozessor Skript ungültig.");
                     }
                 }
             }
@@ -71,10 +89,28 @@ var app = app || {};
     setProgress = function (percent) {
         o.options.progress.width(percent);
     };
+    
+    
+    convertArray = function (possibleArray, depth) {
+        var result = possibleArray;
+        if (Array.isArray(possibleArray) || typeof possibleArray === 'object') {
+            result = "";
+            for (var prop in possibleArray) {
+                if (possibleArray.hasOwnProperty(prop)) { 
+                    if (typeof possibleArray[prop] === 'object') {
+                        result += convertArray(possibleArray[prop]);
+                    } else {
+                        result += (prop + ": " + possibleArray[prop] + "<br>");
+                    }
+                }
+            }
+        }
+        return result;
+    }
 
     o.uploader = function (options) {
         o.options = options;
-
+        
         if (o.options.files !== undefined) {
             ajax(getFormData(o.options.files.files));
         }
