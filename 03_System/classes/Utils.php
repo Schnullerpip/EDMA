@@ -41,18 +41,20 @@ class Utils {
     }
     /**
      * Konvertiert ein deutschformatiges Datum in ein für die Datenbank
-     * geeignetes Format, z.B.:
+     * geeignetes Format und andersrum, z.B.:
      * 25.07.2014 --> 2014-07-25
      * 
      * @param deutschformatiges Datum $date
      * @return Datum in mysql-Format
      */
     public static function convertDate($date) {
-        $datum_array = explode(".", $date);
-        $datum_mysql = $datum_array[2] . "-" 
-                . $datum_array[1] . "-" 
-                . $datum_array[0];
-        return $datum_mysql;
+        if (strpos($date, '-')) {
+            $date = date("d.m.Y", strtotime($date));
+        } else {
+            $date = date("Y-m-d", strtotime($date));
+        }
+        
+        return $date;
     }
 
 }
