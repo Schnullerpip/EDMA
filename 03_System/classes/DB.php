@@ -34,7 +34,32 @@ class DB {
         }
         return self::$_instance;
     }
-
+    
+    public function beginTransaction() {
+        $this->_pdo->beginTransaction();
+    }
+    
+    public function commit() {
+        $this->_pdo->commit();
+    }
+    
+    public function rollback() {
+        $this->_pdo->rollBack();
+    }
+    
+    public function createStatement($sql) {
+        return $this->_pdo->prepare($sql);
+    }
+    
+    public function executeStatement(PDOStatement $statement, $values) {
+        if ($statement->execute($values)) {
+            $this->_results = $statement->fetchAll(PDO::FETCH_OBJ);
+            $this->_count = $this->_query->rowCount();
+        } else {
+            $this->_error = true;
+        }
+    }
+    
     /**
      * Führt eine Query auf der Datanbank aus.
      * Dazu wird der SELECT in $sql übergeben. Alle Parameterwerte für 
@@ -185,7 +210,7 @@ class DB {
             return $this->first()->id;
         } else {
             if ($this->insert($table, $fields)) {
-                return $this->getIdBySelectOrInsert($table, $fields);
+                return $this->_pdo->lastInsertId();
             }
         }
         
@@ -203,7 +228,7 @@ class DB {
     public function error() {
         return $this->_error;
     }
-
+    
     public function count() {
         return $this->_count;
     }

@@ -13,15 +13,16 @@ if (Input::exists()) {
                 'fieldname' => 'Projektname',
                 'required' => true,
                 'min' => 3,
-                'max' => 20,
+                'max' => 100,
                 'unique' => true
             )
         ));
-
+        
         if ($validation->passed()) {
             $salt = Hash::salt(32);
 
             $db = DB::getInstance();
+            
             if (is_object($projekt->data()) and $projekt->data()->id > 0) {
                 try {                
                 // Projekt updaten
@@ -46,7 +47,7 @@ if (Input::exists()) {
                             'hash' => Hash::make(Input::get('passwort'), $salt),
                             'projekt_id' => $projekt->data()->id
                         );
-
+                        
                         $db->insert('passwort', $passwordData);
 
                         if ($db->error()) {
@@ -54,6 +55,7 @@ if (Input::exists()) {
                         }
                     }
                 } catch (Exception $ex) {
+                    Session::flash("error", $ex->getMessage());
                     die($ex->getMessage());
                 }
 
@@ -99,8 +101,8 @@ if (Input::exists()) {
                 $message .= $error . '<br>';
             }
             if (!Session::exists('error')) {
-                // Session::flash('error', $message);
-                // Redirect::to('projekt.php');
+                Session::flash('error', $message);
+                Redirect::to('projekt.php');
             }
         }
     }
@@ -119,6 +121,9 @@ if (Input::exists()) {
         <label for="eingabefeldPasswort3" class="col-sm-4 control-label">Passwort für externe Besucher</label>
         <div class="col-sm-5">
             <input type="password" class="form-control" name="passwort" id="eingabefeldPasswort3" placeholder="Passwort">
+        </div>
+        <div class="col-sm-5 col-sm-offset-4">
+            <small>Wenn Sie ein Passwort in dieses Feld eingeben und auf "Speichern" klicken, wird ein neues Passwort zu den bestehenden Passwörtern für externe Besucher hinzugefügt.</small>
         </div>
     </div>
     <div class="form-group">

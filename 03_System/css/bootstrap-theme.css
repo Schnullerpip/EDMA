@@ -7,7 +7,7 @@
 th,
 b,
 strong,
-label{
+label {
     font-weight: normal;
     font-family: 'RobotoMedium', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -50,13 +50,14 @@ body {
         url('../fonts/Roboto-Medium.svg#svgFontName') format('svg'); /* Legacy iOS */
 }
 
-::-moz-selection {
-    background-color: white;
-    color: #224565;
-}
 ::selection {
-    background-color: white;
-    color: #224565;
+    background-color: #224565;
+    color: white;
+}
+
+::-moz-selection {
+    background-color: #224565;
+    color: white;
 }
 
 h2 {
@@ -189,6 +190,8 @@ a:active,
 
 .form-control {
     border: 1px solid #fff;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
 .form-control:focus {
     border-color: #224565;

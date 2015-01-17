@@ -11,21 +11,65 @@ $db = DB::getInstance();
                 <h2>Messreihe importieren</h2>
             </div>
         </div>
-        <form class="form-horizontal" role="form" method="post" action="parser.php" nctype="multipart/form-data">
+        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="datei" class="col-sm-4 control-label">Datei auswählen</label>
                 <div class="col-sm-5">
-                    <input class="control-label" name="datei" id="datei" type="file" data-maxsize="<?php echo Utils::convertBytes(ini_get('post_max_size')); ?>">
+                    <input class="control-label" name="file" id="files" type="file" data-maxsize="<?php echo Utils::convertBytes(ini_get('post_max_size')); ?>" data-projektid="<?php echo $projekt->data()->id ?>">
+                </div>
+                <div class="col-sm-5 col-sm-offset-4">
+                    <small>Max: <?php echo ini_get('post_max_size'); ?></small>
                 </div>
             </div>
-            <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-5">
-                    <button type="submit" class="btn btn-default">Importieren</button>
-                    <a href="messreihen.php" class="btn btn-link">Abbrechen</a>
+                    <button type="button" id="upload" class="btn btn-default">Importieren</button>
+                </div>
+            </div>
+            <div class="upload-progress"></div>
+            <div id="response-box"></div>
+            <hr>
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-4">
+                    <button type="button" class="btn btn-default">Zurück zur Übersicht</button>
                 </div>
             </div>
         </form>
+
+        <script>
+            $('#upload').click(function (event) {
+                var f = $('#files')[0];
+                var responseBox = $('#response-box');
+                var button = $('#upload');
+                var maxSize = $('#files').data('maxsize');
+                var progressBar = $('.upload-progress');
+                var projektID = $('#files').data('projektid');
+                
+                responseBox.empty();
+                event.preventDefault();
+                button.blur();
+
+                app.uploader({
+                    files: f,
+                    function: 'upload',
+                    element: {
+                        name: 'messreihe'
+                    },
+                    progress: progressBar,
+                    maxsize: maxSize,
+                    processor: 'ajaxHandler.php',
+                    projektID: projektID,
+                    finished: function (data) {
+                        progressBar.width(0);
+                        responseBox.append(data);
+                    },
+                    error: function (data) {
+                        responseBox.append(data);
+                        console.log(data);
+                    }
+                });
+            });
+        </script>
     <?php elseif (is_numeric($inp)) : ?>
         <div class="row">
             <div class="col-sm-12">
@@ -134,26 +178,26 @@ $db = DB::getInstance();
     </div>
     <script>
         $('#messreihen-tabelle')
-            .bind('dynatable:init', function(e, dynatable) {
-                dynatable.queries.functions['suche-messreihen'] = function(record, queryValue) {
-                    return record.messreihe.toLowerCase().indexOf(queryValue) >= 0;
-                };
-            })
-            .dynatable({
-                features: {
-                    paginate: false,
-                    search: false,
-                    pushState: false,
-                    recordCount: false,
-                    perPageSelect: false,
-                    sort: false
-                },
-                inputs: {
-                    queries: $('#suche-messreihen'),
-                    processingText: '',
-                    queryEvent: 'keyup'
-                }
-            });
+                .bind('dynatable:init', function (e, dynatable) {
+                    dynatable.queries.functions['suche-messreihen'] = function (record, queryValue) {
+                        return record.messreihe.toLowerCase().indexOf(queryValue) >= 0;
+                    };
+                })
+                .dynatable({
+                    features: {
+                        paginate: false,
+                        search: false,
+                        pushState: false,
+                        recordCount: false,
+                        perPageSelect: false,
+                        sort: false
+                    },
+                    inputs: {
+                        queries: $('#suche-messreihen'),
+                        processingText: '',
+                        queryEvent: 'keyup'
+                    }
+                });
     </script>
 <?php endif; ?>
 
