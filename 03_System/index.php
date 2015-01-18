@@ -498,11 +498,8 @@ $jsonselectsensor = json_encode($selectsensor);
 	function filterMessreihen(target, div_id){
 		var val2 = target.value;
 		var val1 = $("#"+div_id).parent().prev().children().attr("value");
-		console.log($("#"+div_id).parent().prev().children());
-		if($("#"+div_id).parent().prev().contents().length > 2){
-			console.log("[filterMessreihen]");
-			var val1 = {};
-			val1 = $("#"+div_id+"").children();
+		console.log(val2);
+		if(val1 != undefined){
 			console.log(val1);
 		}
 	}
