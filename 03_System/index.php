@@ -24,35 +24,35 @@ $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
                 <div id="collapseMessreihen" class="panel-collapse collapse out" role="tabpanel" aria-labelledby="collapseMessreihenLabel" aria-expanded="true">
                     <ul class="list-group list-unstyled">
                         <?php foreach ($messreihen as $key => $messreihe) : ?>
-                        <li>
-                            <div class="row">
-                                <div class="col-sm-8">
-                                    <div class="list-content">
-                                        <?php echo escape($messreihe->messreihenname); ?>
+                            <li>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <div class="list-content">
+                                            <?php echo escape($messreihe->messreihenname); ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 text-right">
+                                        <div class="list-content">
+                                            <?php echo escape($messreihe->datum); ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 pull-right controls">
+                                        <ul class="list-unstyled list-inline pull-right">
+                                            <li>
+                                                <a href="#graph">
+                                                    <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe bearbeiten">
+                                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 text-right">
-                                    <div class="list-content">
-                                        <?php echo escape($messreihe->datum); ?>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2 pull-right controls">
-                                    <ul class="list-unstyled list-inline pull-right">
-                                        <li>
-                                            <a href="#graph">
-                                                <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe bearbeiten">
-                                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                        <?php endforeach ; ?>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
@@ -115,7 +115,7 @@ $jsonselectsensor = json_encode($selectsensor);
         }
     }
     select = select_copy;
-	//jetzt befinden sich in select alle messreihen so oft, wie sie metafelder haben
+    //jetzt befinden sich in select alle messreihen so oft, wie sie metafelder haben
 
     //Durch den folgenden Code ist nun eine array verfügbar, welche ausschließlich die verschiedenen Messreihen (jede genau ein mal) mit allen metafeldern aufzeigt
     var messreihen = [];
@@ -123,43 +123,43 @@ $jsonselectsensor = json_encode($selectsensor);
     for (i = 0; i < select_copy.length; i++) {
         if ($.inArray(select_copy[i].messreihenname, messreihennamen) < 0) {
             messreihennamen.push(select_copy[i].messreihenname);
-            var tmp_messreihe = {messreihenname:select_copy[i].messreihenname};
-			tmp_messreihe.datum = select_copy[i].datum;
-			tmp_messreihe.metafields = [];			
+            var tmp_messreihe = {messreihenname: select_copy[i].messreihenname};
+            tmp_messreihe.datum = select_copy[i].datum;
+            tmp_messreihe.metafields = [];
             messreihen.push(tmp_messreihe);
             var o;
             for (o = i; o < select_copy.length; o++) {
                 var mname = select_copy[o].metaname;
                 if ((select_copy[o].messreihenname == select_copy[i].messreihenname) && ($.inArray(mname, messreihen[messreihen.length - 1]) < 0)) {
                 }
-				messreihen[messreihen.length-1].metafields.push({metaname: select_copy[o].metaname, typ:select_copy[o].typ, wert: select_copy[o].metawert});
+                messreihen[messreihen.length - 1].metafields.push({metaname: select_copy[o].metaname, typ: select_copy[o].typ, wert: select_copy[o].metawert});
             }
             console.log("adding new 'messreihe' -->" + select_copy[i].messreihenname + "<-- to array 'messreihen'");
         }
     }
 
-	//redundantes Datum zu messreihen metafields hinzufügen damit datum wie metafield gehandelt werden kann
-	for(i = 0; i < messreihen.length; i++){
-		var o;
-		var tmp_array = [];
-		for(o = 0; o < select_copy.length; o++){
-			if((messreihen[i]["messreihenname"] == select_copy[o]["messreihenname"]) && ($.inArray(messreihen[i], tmp_array) < 0)){
-				tmp_array.push(messreihen[i]);
-				messreihen[i].metafields.push({metaname: "datum", typ: "datum", wert: select_copy[o]["datum"]});
-			}
-		}
-	}
+    //redundantes Datum zu messreihen metafields hinzufügen damit datum wie metafield gehandelt werden kann
+    for (i = 0; i < messreihen.length; i++) {
+        var o;
+        var tmp_array = [];
+        for (o = 0; o < select_copy.length; o++) {
+            if ((messreihen[i]["messreihenname"] == select_copy[o]["messreihenname"]) && ($.inArray(messreihen[i], tmp_array) < 0)) {
+                tmp_array.push(messreihen[i]);
+                messreihen[i].metafields.push({metaname: "datum", typ: "datum", wert: select_copy[o]["datum"]});
+            }
+        }
+    }
 
-	//Arbeitskopie von messreihen erstellen
+    //Arbeitskopie von messreihen erstellen
     var messreihen_copy = $.extend(true, [], messreihen);
 
     //only for debug
     /*for(i = 0; i < messreihen.length; i++){
-		console.log(messreihen[i].metafields.length);
-		var o;
-		for(o = 0; o < messreihen[i].metafields.length; o++){
-			console.log(messreihen[i].metafields[o].metaname);	
-		}
+     console.log(messreihen[i].metafields.length);
+     var o;
+     for(o = 0; o < messreihen[i].metafields.length; o++){
+     console.log(messreihen[i].metafields[o].metaname);	
+     }
      }*/
     //----------------------------------------------------------------------------------
 
@@ -190,12 +190,12 @@ $jsonselectsensor = json_encode($selectsensor);
     }
 
     /* only for debug
-    console.log("##########");
-    console.log(sensors);
-    for(i = 0; i < sensors.length; i++){
-		console.log(sensors[i]);
-    }
-    console.log("##########");*/
+     console.log("##########");
+     console.log(sensors);
+     for(i = 0; i < sensors.length; i++){
+     console.log(sensors[i]);
+     }
+     console.log("##########");*/
     //-------------------------------------------------------------------------------------------
     //
     //
@@ -278,7 +278,7 @@ $jsonselectsensor = json_encode($selectsensor);
 <h2>Messreihe wählen</h2>
 <div id="messreihenSensorenFilterDiv">
     <div id="messreihenDiv" class="col-xs-12 col-xs-6">
-		<div id='messreihenListe' class='btn-group-vertical' role='group'></div>
+        <div id='messreihenListe' class='btn-group-vertical' role='group'></div>
     </div>
     <div id="sensorenDiv" class="col-xs-12 col-xs-6">
         <div id="sensorenListe" class="btn-group-vertical" role="group"></div>
@@ -300,7 +300,7 @@ $jsonselectsensor = json_encode($selectsensor);
         selectedMetafeld = messreihen_copy[io[0]].metafields[io[1]];
         selectFlag = true;
         selectChangedCount++;
-		$("#meta_select_button").html("<span class='glyphicon glyphicon-plus'></span>"+selectedMetafeld["metaname"] +"filter hinzufügen");
+        $("#meta_select_button").html("<span class='glyphicon glyphicon-plus'></span>" + selectedMetafeld["metaname"] + "filter hinzufügen");
     }
 
 
@@ -362,19 +362,19 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function addOperatorMenu(type, append) {
         var appendString = "<div id='metaOperatorField" + uniqueId + "' class='btn-group'>";
-        if(type=='string'){
-			appendString = appendString.concat("<label id='operatorButton"+uniqueId+"' class='btn btn-default'>");
-			appendString = appendString.concat("Ist</label></div>");
-		}else{
-			appendString = appendString.concat("<button id='operatorButton"+uniqueId+"' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
-			appendString = appendString.concat("Operator <span class='caret'></span></button>");
-			appendString = appendString.concat("<ul class='dropdown-menu' role='xmenu'>");
-			appendString = appendString.concat("<li><a class='btn' onclick='addValueField("+uniqueId+", \"==\", \"gleich\");'>gleich</a></li>");
-			appendString = appendString.concat("<li><a class='btn' onclick='addValueField("+uniqueId+", \"<\", \"kleiner\");'>kleiner</a></li>");
-			appendString = appendString.concat("<li><a class='btn' onclick='addValueField("+uniqueId+", \">\", \"größer\");'>größer</a></li>");
-			appendString = appendString.concat("<li><a class='btn' onclick='addValueField("+uniqueId+", \"<=\", \"kleiner gleich\");'>kleiner gleich</a></li>");
-			appendString = appendString.concat("<li><a class='btn' onclick='addValueField("+uniqueId+", \">=\", \"größer gleich\");'>größer gleich</a></li>");
-			appendString = appendString.concat("<li><a class='btn' onclick='addValueField("+uniqueId+", \"><\", \"zwischen\");'>zwischen</a></li></ul></div>");
+        if (type == 'string') {
+            appendString = appendString.concat("<label id='operatorButton" + uniqueId + "' class='btn btn-default'>");
+            appendString = appendString.concat("Ist</label></div>");
+        } else {
+            appendString = appendString.concat("<button id='operatorButton" + uniqueId + "' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
+            appendString = appendString.concat("Operator <span class='caret'></span></button>");
+            appendString = appendString.concat("<ul class='dropdown-menu' role='xmenu'>");
+            appendString = appendString.concat("<li><a class='btn' onclick='addValueField(" + uniqueId + ", \"==\", \"gleich\");'>gleich</a></li>");
+            appendString = appendString.concat("<li><a class='btn' onclick='addValueField(" + uniqueId + ", \"<\", \"kleiner\");'>kleiner</a></li>");
+            appendString = appendString.concat("<li><a class='btn' onclick='addValueField(" + uniqueId + ", \">\", \"größer\");'>größer</a></li>");
+            appendString = appendString.concat("<li><a class='btn' onclick='addValueField(" + uniqueId + ", \"<=\", \"kleiner gleich\");'>kleiner gleich</a></li>");
+            appendString = appendString.concat("<li><a class='btn' onclick='addValueField(" + uniqueId + ", \">=\", \"größer gleich\");'>größer gleich</a></li>");
+            appendString = appendString.concat("<li><a class='btn' onclick='addValueField(" + uniqueId + ", \"><\", \"zwischen\");'>zwischen</a></li></ul></div>");
 
         }
         $("#meta_name_operator_div").append(append + appendString);
@@ -387,38 +387,38 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
-    function addValueField(id, value, name) {	
+    function addValueField(id, value, name) {
         var appendString;
         var singleFieldOperators = ["==", "<", ">", "<=", ">="];
 
         var argsId = id;
         var valueFieldExists = $('#metaValueField' + argsId);
-		
-		//Den Beschriftung des OperatorenMenüs des Metafilters auf den ausgewählten Operator setzen
-		$("#operatorButton"+argsId).html(name + "<span class='caret'></span>");
+
+        //Den Beschriftung des OperatorenMenüs des Metafilters auf den ausgewählten Operator setzen
+        $("#operatorButton" + argsId).html(name + "<span class='caret'></span>");
 
         //Das gefundene bereits vorhandene ValueField muss nun mit der neuen Auswahlersetzt
         //werden, falls es sich die Anzahl der angeforderten Inputfelder unterscheiden
         var isSingleValueFieldOperator = $.inArray(value, singleFieldOperators);
-         
+
         //Unterscheide ob es sich um einen ein-Feld-/oder mehr-feld-operator handelt
         if ($.inArray(value, singleFieldOperators) > -1) {
-			if ($(valueFieldExists).hasClass("singleValueField") && isSingleValueFieldOperator) {
-		        //Feld muss nicht erneuert werden
-		        console.log("valueField already exists (single)");
-		        return;
-        	}
-            appendString = "<div id='metaValueField"+argsId+"' class='form-group singleValueField valueField'><div class='col-xs-8'><input class='form-control' type='text' placeholder='insert Value' name='stringInput"+argsId+"'></input></div><div class='col-xs-4'><a onclick='delMeta("+argsId+");'><span class='glyphicon glyphicon-remove'></span></a></div></div>";
-        }else{
-			//kann momentan nur "between sein"
-			if ($(valueFieldExists).hasClass("doubleValueField") && !(isSingleValueFieldOperator)) {
-		        //Feld muss nicht erneuert werden
-		        console.log("valueField already exists (double)");
-            	return;
-        	}
-			appendString = "<div id='metaValueField" + argsId + "' class='form-group doubleValueField valueField'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input class='form-control' type='text' placeholder='bis' name='stringInput"+argsId+"'></input></div><div class='col-xs-4'><a onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div></div>";
-		}
-        $('#metaValueField'+argsId).replaceWith(appendString);
+            if ($(valueFieldExists).hasClass("singleValueField") && isSingleValueFieldOperator) {
+                //Feld muss nicht erneuert werden
+                console.log("valueField already exists (single)");
+                return;
+            }
+            appendString = "<div id='metaValueField" + argsId + "' class='form-group singleValueField valueField'><div class='col-xs-8'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><a onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div></div>";
+        } else {
+            //kann momentan nur "between sein"
+            if ($(valueFieldExists).hasClass("doubleValueField") && !(isSingleValueFieldOperator)) {
+                //Feld muss nicht erneuert werden
+                console.log("valueField already exists (double)");
+                return;
+            }
+            appendString = "<div id='metaValueField" + argsId + "' class='form-group doubleValueField valueField'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input class='form-control' type='text' placeholder='bis' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><a onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div></div>";
+        }
+        $('#metaValueField' + argsId).replaceWith(appendString);
     }
 
 
@@ -466,10 +466,10 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function regenerateMetaSelect() {
-		var replace_string = "<div id='selectBox' class='btn-group'>";
-		replace_string = replace_string.concat("<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
-		replace_string = replace_string.concat("Metafeld auswählen<span class='caret'></span></button>");
-		replace_string = replace_string.concat("<ul class='dropdown-menu' role='xmenu'>");
+        var replace_string = "<div id='selectBox' class='btn-group'>";
+        replace_string = replace_string.concat("<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
+        replace_string = replace_string.concat("Metafeld auswählen<span class='caret'></span></button>");
+        replace_string = replace_string.concat("<ul class='dropdown-menu' role='xmenu'>");
 
         var tmp_array = [];
         for (i = 0; i < messreihen_copy.length; i++) {
@@ -477,10 +477,10 @@ $jsonselectsensor = json_encode($selectsensor);
             for (o = 0; o < messreihen_copy[i].metafields.length; o++) {
                 if ($.inArray(messreihen_copy[i].metafields[o]) < 0) {
                     tmp_array.push(messreihen_copy[i].metafields[o], tmp_array);
-					replace_string = replace_string.concat("<li id='selectOption"+(uniquei++)+"' class='btn'>");
-					var tmp_str = ""+i;
-					tmp_str = tmp_str.concat(""+o);	
-					replace_string = replace_string.concat("<a onclick='selectChanged(\""+tmp_str+"\");'>"+ messreihen_copy[i].metafields[o]["metaname"]+"</a></li>");
+                    replace_string = replace_string.concat("<li id='selectOption" + (uniquei++) + "' class='btn'>");
+                    var tmp_str = "" + i;
+                    tmp_str = tmp_str.concat("" + o);
+                    replace_string = replace_string.concat("<a onclick='selectChanged(\"" + tmp_str + "\");'>" + messreihen_copy[i].metafields[o]["metaname"] + "</a></li>");
                 }
             }
         }
@@ -490,29 +490,29 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
-	
-	
-	
-	function filterMessreihen(meta_value_div_id){
-		alert("ha");
-		if($("#metaValueField"+meta_value_div_id).hasClass("singleValueField")){
-			filterMessreihenOfSingleValueField(meta_value_div_id);
-		}else{
-			filterMessreihenOfDoubleValueField(meta_value_div_id);
-		}
-	}
 
 
 
-	function filterMessreihenOfSingleValueField(div_id){
-		var value = $("#metavalueField"+div_id).attr("value");
-		console.log(value);
-	}
+    function filterMessreihen(meta_value_div_id) {
+        alert("ha");
+        if ($("#metaValueField" + meta_value_div_id).hasClass("singleValueField")) {
+            filterMessreihenOfSingleValueField(meta_value_div_id);
+        } else {
+            filterMessreihenOfDoubleValueField(meta_value_div_id);
+        }
+    }
 
-	function filterMessreihenOfDoubleValueField(div_id){
-		var value = $("#metavalueField"+div_id).attr("value");
-		console.log(value);
-	}
+
+
+    function filterMessreihenOfSingleValueField(div_id) {
+        var value = $("#metavalueField" + div_id).attr("value");
+        console.log(value);
+    }
+
+    function filterMessreihenOfDoubleValueField(div_id) {
+        var value = $("#metavalueField" + div_id).attr("value");
+        console.log(value);
+    }
 
 
 
@@ -521,12 +521,12 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 //----------------------------------Funktionen zum Bearbeiten der "Messreihen/Sensoren-Filtern" Felder ------------------------------
-	/*<div class="btn-group-vertical" role="group" aria-label="...">*/
+    /*<div class="btn-group-vertical" role="group" aria-label="...">*/
 
     function regenerateMessreihenList() {
-        var replace_string = "<div id='messreihenListe' class='btn-group-vertical' role='group'>";
+        var replace_string = "<div id='messreihenListe'>";
         for (i = 0; i < messreihen_copy.length; i++) {
-            replace_string += "<button type='button' class='btn btn-default' onclick='showSensorsOf("+messreihen_copy[i]["messreihenname"]+");'>"+messreihen_copy[i]["messreihenname"]+"</button'>";
+            replace_string += "<button class='btn btn-default' data-messreihe='"+messreihen_copy[i]["messreihenname"]+"'>" + messreihen_copy[i]["messreihenname"] + "</button>";
         }
         replace_string += "</div>";
         $("#messreihenListe").replaceWith(replace_string);
@@ -534,13 +534,12 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
-
     function showSensorsOf(arg) {
-		console.log(arg);
-        var replace_string = "<div id='sensorListe' class='btn-group-vertical' role='group'>";
+        console.log(arg);
+        var replace_string = "<div id='sensorListe'>";
         for (i = 0; i < sensors.length; i++) {
             if (arg == sensors[i]["messreihenname"]) {
-                replace_string += "<button onclick='selectSensor("+sensors[i]["id"]+");'>"+sensors[i]["anzeigename"]+"</button>";
+                replace_string += "<button>" + sensors[i]["anzeigename"] + "</button>";
             }
             replace_string += "</div>";
             $("#sensorListe").replaceWith(replace_string);
@@ -564,8 +563,12 @@ $jsonselectsensor = json_encode($selectsensor);
             $(this).blur();
         });
 
-		 $('#meta_value_div').on("blur", ".valueField", function () {
+        $('#meta_value_div').on("blur", ".valueField", function () {
             console.log($(this).attr("id"));
+        });
+        
+        $('#messreihenDiv').on("click", ".btn", function (e) {
+            showSensorsOf($(e.target).data('messreihe'));
         });
     });
 
