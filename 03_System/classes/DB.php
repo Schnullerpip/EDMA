@@ -187,7 +187,7 @@ class DB {
      * wobei KEY = Feldname und VALUE = Wert z.B. array['metaname'] = 'Datum'.
      */
     public function getIdBySelectOrInsert($table, $fields) {
-        $where = preareArray($fields, "and");
+        $where = $this->prepareArray($fields, "and");
         
         $sql = "SELECT id FROM {$table} WHERE {$where}";
         $this->query($sql, $fields);
