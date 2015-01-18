@@ -332,11 +332,11 @@ require_once 'header.php';
 		var appendString;
 		switch(type){
 			case 'string':
-				appendString = "<div id='metaOperatorField"+uniqueId+"' class='col-sm-4'> <textfield class='meta-element-size'>equals: </textfield> </div>";
+				appendString = "<div id='metaOperatorField"+uniqueId+"' class='col-sm-4'> <textfield class='meta-element-size'>ist</textfield> </div>";
 				break;
 
 			case 'numerisch':
-				appendString = "<div id='metaOperatorField"+uniqueId+"' class='col-xs-4'><select id='operatorSelect"+uniqueId+"' onchange='addValueField(passMultipleArgsForSelect(this));' class='meta-element-size'><option></option><option value='==' selected>equals</option><option value='<'>less than</option><option value='>'>greater than</option><option value='<='>less/equals</option><option value='>='>greater/equals</option></select></div>";
+				appendString = "<div id='metaOperatorField"+uniqueId+"' class='col-xs-4'><select id='operatorSelect"+uniqueId+"' onchange='addValueField(passMultipleArgsForSelect(this));' class='meta-element-size'><option></option><option value='==' selected>gleich</option><option value='<'>kleiner</option><option value='>'>größer</option><option value='<='>kleiner gleich</option><option value='>='>größer gleich</option></select></div>";
 					/*<select id='operatorSelect"+selectedValue+"' onchange='operatorSelectChanged(value);' class='meta-element-size'>
 					<option></option>
 					<option value='=='>equals</option>
