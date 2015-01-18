@@ -50,10 +50,6 @@
             </div>
         </footer>
         
-        <!-- Bootstrap Datepicker -->
-        <script src="js/vendor/bootstrap-datepicker.min.js"></script>
-        <script src="js/vendor/locales/bootstrap-datepicker.de.js"></script>
-        
         <!-- EDMA Custom-Scripts -->
         <script src="js/custom-scripts.js"></script>
         

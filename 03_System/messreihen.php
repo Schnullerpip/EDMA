@@ -23,7 +23,7 @@ if (Input::exists('post')) {
         }
         // Anzeigenamen bearbeitet
         if ($sensoren = Input::get('sensoren')) {
-            foreach ($sensoren as $key => $sensorname) {                
+            foreach ($sensoren as $key => $sensorname) {
                 if (!empty($sensorname)) {
                     $db->query("UPDATE messreihe_sensor SET anzeigename = ? WHERE messreihe_sensor.messreihe_id = ? AND messreihe_sensor.sensor_id = ?", array($sensorname, Input::get('messreihenid'), $key));
                     if ($db->error()) {
@@ -71,8 +71,6 @@ if (Input::exists('post')) {
                 </div>
             </div>
             <div class="upload-progress"></div>
-            <div id="response-box" style="display: none;"></div>
-            <div id="error-box" class="alert alert-danger" style="display: none;"></div>
             <hr>
             <div class="form-group">
                 <div class="col-sm-5 col-sm-offset-4">
@@ -84,17 +82,11 @@ if (Input::exists('post')) {
         <script>
             $('#upload').click(function (event) {
                 var f = $('#files')[0];
-                var responseBox = $('#response-box');
-                var errorBox = $('#error-box');
                 var button = $('#upload');
                 var maxSize = $('#files').data('maxsize');
                 var progressBar = $('.upload-progress');
                 var projektID = $('#files').data('projektid');
-                
-                responseBox.empty();
-                responseBox.hide();
-                errorBox.empty();
-                errorBox.hide();
+
                 event.preventDefault();
                 button.blur();
 
@@ -109,16 +101,15 @@ if (Input::exists('post')) {
                     processor: 'ajaxHandler.php',
                     projektID: projektID,
                     finished: function (data) {
-                        var msg = convertArray(data);
-                        progressBar.width(0);                       
-                        responseBox.append(msg);
-                        responseBox.show();
++                        var succMsg = convertArray(data);
++                        progressBar.width(0);
++                        modalTextSuccess(succMsg);
++                        $('#infoModal').modal();
                     },
                     error: function (data) {
-                        var errorMsg = convertArray(data)
-                        errorBox.append(errorMsg);
-                        errorBox.show();
-                        console.log(data);
++                        var errorMsg = convertArray(data);
++                        modalTextError(errorMsg);
++                        $('#infoModal').modal();
                     }
                 });
             });
@@ -126,12 +117,12 @@ if (Input::exists('post')) {
     <?php elseif (is_numeric($inp)) : ?>
         <?php
         $messreihe = $db->get('messreihe', array('id', '=', $inp));
-        
+
         if (!$messreihe->error()) :
-        ?>
+            ?>
             <div class="row">
                 <div class="col-sm-12">
-                    <h2>Messreihe "<?php echo escape($messreihe->first()->messreihenname)?>" bearbeiten</h2>
+                    <h2>Messreihe "<?php echo escape($messreihe->first()->messreihenname) ?>" bearbeiten</h2>
                 </div>
             </div>
             <div class="row">
@@ -155,30 +146,30 @@ if (Input::exists('post')) {
                         </div>
                     </div>
                 </div>
-                <?php 
+                <?php
                 // Hole alle anderen Metadaten
                 $sql = "SELECT metainfo.metaname, metainfo.id, messreihe_metainfo.metawert FROM metainfo INNER JOIN messreihe_metainfo ON metainfo.id = messreihe_metainfo.metainfo_id WHERE messreihe_metainfo.messreihe_id = ?";
                 $db->query($sql, array($messreihe->first()->id));
                 $metadaten = $db->results();
                 ?>
-                
+
                 <?php if (!empty($metadaten)) : ?>
                     <?php foreach ($metadaten as $metaeintrag) : ?>
-                    <div class="form-group">
-                        <label for="metaeintrag[<?php echo escape($metaeintrag->id); ?>]" class="col-sm-4 control-label"><?php echo escape($metaeintrag->metaname); ?></label>
-                        <div class="col-sm-5">
-                            <input type="text" class="form-control" name="metaeintrag[<?php echo escape($metaeintrag->id); ?>]" id="metaeintrag[<?php echo escape($metaeintrag->id); ?>]" placeholder="<?php echo escape($metaeintrag->metawert) ?>" >
+                        <div class="form-group">
+                            <label for="metaeintrag[<?php echo escape($metaeintrag->id); ?>]" class="col-sm-4 control-label"><?php echo escape($metaeintrag->metaname); ?></label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" name="metaeintrag[<?php echo escape($metaeintrag->id); ?>]" id="metaeintrag[<?php echo escape($metaeintrag->id); ?>]" placeholder="<?php echo escape($metaeintrag->metawert) ?>" >
+                            </div>
                         </div>
-                    </div>
                     <?php endforeach; ?>
                 <?php endif ?>
-                
+
                 <div class="row">
                     <div class="col-sm-12">
                         <h4>Anzeigenamen</h4>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <div class="col-sm-4 text-right">
                         Sensorname
@@ -192,14 +183,14 @@ if (Input::exists('post')) {
                 $sensoren = $db->results();
                 ?>
                 <?php foreach ($sensoren as $sensor) : ?>
-                <div class="form-group">
-                    <label for="sensoren[<?php echo $sensor->id; ?>]" class="col-sm-4 control-label"><?php echo escape($sensor->sensorname); ?></label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" name="sensoren[<?php echo $sensor->id; ?>]" id="sensoren[<?php echo $sensor->id; ?>]" placeholder="<?php echo $sensor->anzeigename; ?>" >
+                    <div class="form-group">
+                        <label for="sensoren[<?php echo $sensor->id; ?>]" class="col-sm-4 control-label"><?php echo escape($sensor->sensorname); ?></label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" name="sensoren[<?php echo $sensor->id; ?>]" id="sensoren[<?php echo $sensor->id; ?>]" placeholder="<?php echo $sensor->anzeigename; ?>" >
+                        </div>
                     </div>
-                </div>
                 <?php endforeach; ?>
-                
+
                 <br>
                 <input type="hidden" name="messreihenid" value="<?php echo $inp; ?>">
                 <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
@@ -211,8 +202,8 @@ if (Input::exists('post')) {
                 </div>
             </form>
         <?php else: ?>
-        <p>Fehler beim Holen der Messreihendaten!</p>
-        <?php endif;?>
+            <p>Fehler beim Holen der Messreihendaten!</p>
+        <?php endif; ?>
     <?php endif; ?>
 <?php else : ?>
     <div class="row">
@@ -222,12 +213,13 @@ if (Input::exists('post')) {
     </div>
     <div class="row mb-30">
         <div class="form-group">
-            <div class="col-sm-2 col-sm-offset-8">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="suche-messreihen" data-dynatable-query="suche-messreihen" placeholder="Suche">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary datepicker-init" type="button"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></button>
-                    </span>
+            <div class="col-sm-2 col-sm-offset-6">
+                <input type="text" class="form-control" id="suche-messreihen-name" data-dynatable-query-event="input" data-dynatable-query="suche-messreihen-name" placeholder="Messreihen Suche">
+            </div>
+            <div class="col-sm-2">
+                <div class="input-group date">
+                    <input type="text" class="form-control" name="datum" id="suche-messreihen-datum" data-dynatable-query="suche-messreihen-datum" placeholder="Datum">
+                    <span class="btn btn-primary input-group-addon"><i class="glyphicon glyphicon-calendar" aria-hidden="true"></i></span>
                 </div>
             </div>
             <div class="col-sm-2">
@@ -245,10 +237,8 @@ if (Input::exists('post')) {
             <table class="table controlled-table" id="messreihen-tabelle">
                 <thead>
                     <tr>
-                        <th>Messreihe</th>
-                        <th>
-                            <span class="pull-right">Datum</span>
-                        </th>
+                        <th data-dynatable-column="name">Messreihe</th>
+                        <th data-dynatable-column="datum" class="text-right">Datum</th>
                         <th class="table-controls"></th>
                     </tr>
                 </thead>
@@ -256,9 +246,7 @@ if (Input::exists('post')) {
                     <?php foreach ($messreihen as $messreihe) : ?>
                         <tr>
                             <td><?php echo escape($messreihe->messreihenname); ?></td>
-                            <td>
-                                <span class="pull-right"><?php echo escape(Utils::convertDate($messreihe->datum)); ?></span>
-                            </td>
+                            <td class="text-right"><?php echo escape(Utils::convertDate($messreihe->datum)); ?></td>
                             <td class="controls-wrapper">
                                 <div class="pull-right controls">
                                     <ul class="list-unstyled pull-right mb-0">
@@ -281,29 +269,6 @@ if (Input::exists('post')) {
             </table>
         </div>
     </div>
-    <script>
-        $('#messreihen-tabelle')
-                .bind('dynatable:init', function (e, dynatable) {
-                    dynatable.queries.functions['suche-messreihen'] = function (record, queryValue) {
-                        return record.messreihe.toLowerCase().indexOf(queryValue) >= 0;
-                    };
-                })
-                .dynatable({
-                    features: {
-                        paginate: false,
-                        search: false,
-                        pushState: false,
-                        recordCount: false,
-                        perPageSelect: false,
-                        sort: false
-                    },
-                    inputs: {
-                        queries: $('#suche-messreihen'),
-                        processingText: '',
-                        queryEvent: 'keyup'
-                    }
-                });
-    </script>
 <?php endif; ?>
 
 <?php
