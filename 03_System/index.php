@@ -116,15 +116,23 @@ require_once 'header.php';
 
 		//Select für messreihenname, metadatenname, datentyp
 		$db->query("SELECT messreihe.messreihenname, metainfo.metaname, messreihe_metainfo.metawert, datentyp.typ
-					FROM messreihe INNER JOIN projekt ON messreihe.projekt_id = $projektid
+					FROM messreihe INNER JOIN projekt ON messreihe.projekt_id = projekt.id = $projektid
 					INNER JOIN messreihe_metainfo ON messreihe.id = messreihe_metainfo.messreihe_id
 					INNER JOIN metainfo ON metainfo.id = messreihe_metainfo.metainfo_id
-					INNER JOIN datentyp ON metainfo.datentyp_id = datentyp.id
-					");
+					INNER JOIN datentyp ON metainfo.datentyp_id = datentyp.id");
 
-		//store the select in a variable
+		//speichere den Select mit den Metafeldern in einer Variable
 		$select = $db->results();
-		$jsonselect = json_encode($select);
+		$jsonselectmeta = json_encode($select);
+
+		//select für sensoren
+		$db->query("SELECT messreihe.messreihenname, messreihe.id, messreihe_sensor.anzeigename, sensor.id
+					FROM messreihe INNER JOIN projekt ON messreihe.projekt_id = projekt.id = $projektid
+					INNER JOIN messreihe_sensor ON messreihe.id = messreihe_sensor.messreihe_id
+					INNER JOIN sensor ON messreihe_sensor.sensor_id = sensor.id");
+		
+		$selectsensor = $db->results();
+		$jsonselectsensor = json_encode($selectsensor);		
 	?>
 	<script>
 		//
@@ -132,12 +140,11 @@ require_once 'header.php';
 		//
 		//
         //-----------------------Variablen zur Auswahl aus dem Select----
-		var select = <?php echo $jsonselect; ?>;    //enthält den select
+		var select = <?php echo $jsonselectmeta; ?>;    //enthält den select
 		var selectedMetafeld;
 		var select_copy = [];		
 
-
-		//filter alle Metas heraus, die es doppelt gibt
+		//filter alle Metas heraus, die es doppelt gibt -----------------------------------
 		var i;
 		for(i = 0; i < select.length; i++){
 			var o;
@@ -150,7 +157,7 @@ require_once 'header.php';
 				}
 			}
 			if(!already_exists){
-				console.log("adding new meta to select: "+select[i].metaname);
+				console.log("adding new meta to select meta: "+select[i].metaname);
 				select_copy.push(select[i]);
 			}
 		}
@@ -174,14 +181,50 @@ require_once 'header.php';
 				console.log("adding new 'messreihe' -->"+select_copy[i].messreihenname+"<-- to array 'messreihen'");
 			}
 		}
-
-
 		var messreihen_copy = $.extend(true, [], messreihen);
 
 		//only for debug
 		/*for(i = 0; i < messreihen.length; i++){
 			console.log(messreihen[i][0]);
 		}*/
+		//----------------------------------------------------------------------------------
+		
+
+
+
+
+
+		//Variablen für den Sensorzugriff
+		var select_sensor = <?php echo $jsonselectsensor; ?>;
+		var sensors = [];
+
+		//keine doppelten sensoren zulassen-------------------------------
+		for(i = 0; i < select_sensor.length; i++){
+			var o;
+			for(o = 0; o < sensors.length; o++){
+				var already_exists = false;	
+				if((select_sensor[i].anzeigename == sensors[o].anzeigename)){
+					//metafield already exists!!!
+					already_exists = true;
+					break;
+				}
+			}
+			if(!already_exists){
+				console.log("adding new sensor to sensors[]: "+select_sensor[i].anzeigename);
+				sensors.push(select_sensor[i]);
+			}
+		}
+
+		/* only for debug
+		console.log("##########");
+		console.log(sensors);
+		for(i = 0; i < sensors.length; i++){
+			console.log(sensors[i]["anzeigename"]);
+		}
+		console.log("##########");*/
+		//-------------------------------------------------------------------------------------------
+
+
         //---------------------------------------------------------------
 		//
 		//
@@ -237,7 +280,7 @@ require_once 'header.php';
 			<div style="border:1px solid white; border-radius:5px;">
 				<!-- Anzeigefelder für die ausgewählten Metadatenfilter -->
 				<div class="form-group">
-					<h2 style="text-align:center">Metadaten filtern</h1>
+					<h2 style="text-align:center">Metadaten filtern</h2>
 					<div class="row">
 						<div id="meta_name_operator_div" class="col-xs-6"></div>
 						<div id="meta_value_div" class="col-xs-6"></div>
@@ -258,19 +301,30 @@ require_once 'header.php';
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<!-- Rest -->
-			<div class="form-group">
-				<h2 style="text-align:center">Messreihe wählen</h1>
-				<div class="col-sm-12 col-md-6 col-lg-4">
-				</div>
+
+
+
+		<!-- Filterung der Messreihen/Sensoren -->
+		<h2 style="text-align:center">Messreihe wählen</h2>
+		<div id="messreihenSensorenFilterDiv">
+			<div id="messreihenDiv" class="col-xs-12 col-xs-6">
+				<ul id="messreihenListe"></ul>
 			</div>
-			<div class="form-group">
-				<h2 style="text-align:center">Einstellungen</h1>
-				<div class="col-sm-12 col-md-6 col-lg-4">
-				</div>
+			<div id="sensorenDiv" class="col-xs-12 col-xs-6">
+				<ul id="sensorenListe"></ul>
 			</div>
-	</div>
+		</div>
+
+
+		<br>
+
+		<!-- Weitere Einstellungen -->
+		<h2 style="text-align:center">Einstellungen</h2>
+		<div class="form-group">
+			<div class="col-sm-12 col-md-6 col-lg-4"></div>
+		</div>
 
 <script>
 	function selectChanged(val){
@@ -279,6 +333,14 @@ require_once 'header.php';
 		selectFlag=true;
 		selectChangedCount++;
 	}
+
+
+
+
+
+
+
+
 
 	function addMeta(){
 		if((selectFlag==false && old_value!=selectedMetafeld) || (selectChangedCount == 0)){
@@ -315,11 +377,12 @@ require_once 'header.php';
 							}
 						}
 						messreihen_copy = tmp_new_array;
-						//Nun das SelectFeld neu generieren
-						regenerateMetaSelect();
 						for(i = 0; i < to_delete.length; i++){
 							look_up_unique_id.push(to_delete[i]);//Für delMeta(argid) Funktion
 						}
+
+						//Nun das SelectFeld neu generieren
+						regenerateDocument();
 	}
 
 
@@ -439,7 +502,7 @@ require_once 'header.php';
 		}
 		//look_up_unique_id aufräumen
 		look_up_unique_id = [];		
-		regenerateMetaSelect();
+		regenerateDocument();
 	}	
 
 
@@ -479,9 +542,42 @@ require_once 'header.php';
 
 
 
+//----------------------------------Funktionen zum Bearbeiten der "Messreihen/Sensoren-Filtern" Felder ------------------------------
+	function regenerateMessreihenList(){
+		var replace_string = "<ul id='messreihenListe' class='list-group list-unstyled'>";
+		for(i = 0; i < messreihen_copy.length; i++){
+			replace_string += "<li><div class='row'><div class='col-sm-4 col-sm-offset-4'><a onclick='showSensorsOf("+messreihen_copy[i][0]+");'>"+messreihen_copy[i][0]+"</a class='btn'></div></div></li>";
+		}
+		replace_string += "</ul>";
+		$("#messreihenListe").replaceWith(replace_string);
+	}	
+
+
+
+
+	function showSensorsOf(arg){
+		var replace_string = "ul id='sensorListe' class='list-group list-unstyled'>";
+		for(i = 0; i < sensors.length; i++){
+			if(arg == sensors[i]["messreihenname"]){
+				replace_string += "<li><div class='row'><div class='col-sm-4 col-sm-offset-4'><a onclick='selectSensor("+sensors[i]["id"]+");'>"+sensors[i]["anzeigename"]+"</a class='btn'></div></div></li>";
+			}
+			replace_string += "</ul>";
+			$("#sensorListe").replaceWith(replace_string);		
+		}
+	}
+//-----------------------------------------------------------------------------------------------------------------------------------
+
+
+
+	function regenerateDocument(){
+		regenerateMetaSelect();
+		regenerateMessreihenList();
+	}
+
+
 
 	$(function(){
-		regenerateMetaSelect();
+		regenerateDocument();
 	});
 
 </script>
