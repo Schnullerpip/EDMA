@@ -277,7 +277,7 @@ $jsonselectsensor = json_encode($selectsensor);
 </script>				
 
 <h2>Metadaten filtern</h2>
-<div class="form-horizontal" id="addMetaDiv">
+<div class="form-horizontal mb-15" id="addMetaDiv">
     <!-- Anzeigefelder für die ausgewählten Metadatenfilter -->
     <div class="form-group">
         <div class="col-sm-6" id="meta_name_operator_div"></div>
