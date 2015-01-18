@@ -27,7 +27,8 @@ $db = DB::getInstance();
                 </div>
             </div>
             <div class="upload-progress"></div>
-            <div id="response-box"></div>
+            <div id="response-box" style="display: none;"></div>
+            <div id="error-box" class="alert alert-danger" style="display: none;"></div>
             <hr>
             <div class="form-group">
                 <div class="col-sm-5 col-sm-offset-4">
@@ -40,12 +41,16 @@ $db = DB::getInstance();
             $('#upload').click(function (event) {
                 var f = $('#files')[0];
                 var responseBox = $('#response-box');
+                var errorBox = $('#error-box');
                 var button = $('#upload');
                 var maxSize = $('#files').data('maxsize');
                 var progressBar = $('.upload-progress');
                 var projektID = $('#files').data('projektid');
                 
                 responseBox.empty();
+                responseBox.hide();
+                errorBox.empty();
+                errorBox.hide();
                 event.preventDefault();
                 button.blur();
 
@@ -62,9 +67,11 @@ $db = DB::getInstance();
                     finished: function (data) {
                         progressBar.width(0);
                         responseBox.append(data);
+                        responseBox.show();
                     },
                     error: function (data) {
-                        responseBox.append(data);
+                        errorBox.append(data);
+                        errorBox.show();
                         console.log(data);
                     }
                 });

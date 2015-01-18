@@ -110,8 +110,8 @@ class UploadController extends AjaxController {
                     );
                 } else {
                     $this->_failed[] = array(
-                        'name' => $this->_files['file']['name'][0],
-                        'message' => 'Fehler beim Importieren der Datei!',
+                        'Name' => $this->_files['file']['name'][0],
+                        'Warnung' => "Importieren der Datei wird möglicherweise abgebrochen.",
                         'error' => $parser->errors()
                     );
                 }
