@@ -1,6 +1,13 @@
 $(document).ready(function () {
-    $(function () {
-        $('[data-toggle="popover"]').popover();
+    $('[data-toggle="popover"]').popover();
+    
+    clickcounter = 0;
+    $('#collapseMessreihenLabel').click(function() {
+        clickcounter++;
+        if (clickcounter == 2) {
+            clickcounter = 0;
+            $(this).blur();
+        }
     });
     
     $('.input-group.date').datepicker({
