@@ -121,16 +121,16 @@ if (Input::exists('post')) {
             });
         </script>
     <?php elseif (is_numeric($inp)) : ?>
-        <div class="row">
-            <div class="col-sm-12">
-                <h2>Messreihe bearbeiten</h2>
-            </div>
-        </div>
         <?php
         $messreihe = $db->get('messreihe', array('id', '=', $inp));
         
         if (!$messreihe->error()) :
         ?>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2>Messreihe "<?php echo escape($messreihe->first()->messreihenname)?>" bearbeiten</h2>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-sm-12">
                     <h3>Metadaten</h3>
@@ -170,9 +170,6 @@ if (Input::exists('post')) {
                     <?php endforeach; ?>
                 <?php endif ?>
                 
-                
-                
-                
                 <div class="row">
                     <div class="col-sm-12">
                         <h4>Anzeigenamen</h4>
@@ -188,7 +185,7 @@ if (Input::exists('post')) {
                     </div>
                 </div>
                 <?php
-                $db->query('SELECT sensor.sensorname, sensor.id, messreihe_sensor.anzeigename FROM messreihe_sensor INNER JOIN sensor on messreihe_sensor.sensor_id = sensor.id WHERE messreihe_sensor.messreihe_id = ?', array($projekt->data()->id));
+                $db->query('SELECT sensor.sensorname, sensor.id, messreihe_sensor.anzeigename FROM messreihe_sensor INNER JOIN sensor on messreihe_sensor.sensor_id = sensor.id WHERE messreihe_sensor.messreihe_id = ?', array($inp));
                 $sensoren = $db->results();
                 ?>
                 <?php foreach ($sensoren as $sensor) : ?>
@@ -210,7 +207,9 @@ if (Input::exists('post')) {
                     </div>
                 </div>
             </form>
-        <?php endif; ?>
+        <?php else: ?>
+        <p>Fehler beim Holen der Messreihendaten!</p>
+        <?php endif;?>
     <?php endif; ?>
 <?php else : ?>
     <div class="row">

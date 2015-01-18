@@ -1,28 +1,39 @@
 <?php
 require_once 'header.php';
+$db = DB::getInstance();
 ?>
 
 <p>Projekt: <?php echo escape($projekt->data()->projektname); ?></p>
-<div class="row">
-    <div class="col-xs-12">
+
+<?php
+$db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
+?>
+
+<?php if ($db->error()) : ?>
+    <p>Fehler beim holen der Messreihen!</p>
+<?php else: ?>
+
+    <?php $messreihen = $db->results(); ?>
+
+    <?php if (!empty($messreihen)) : ?>
         <div class="panel-group accordeon" role="tablist">
             <div class="panel panel-default">
-                <a class="btn btn-block panel-heading text-center collapsed" role="tab" href="#collapseListengruppe1" data-toggle="collapse" aria-expanded="true" aria-controls="collapseListengruppe1" id="collapseListengruppeÜberschrift1">
+                <a class="btn btn-block panel-heading text-center collapsed" role="tab" href="#collapseMessreihen" data-toggle="collapse" aria-expanded="true" aria-controls="collapseMessreihen" id="collapseMessreihenLabel">
                     Letzte Messreihenimporte anzeigen<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
                 </a>
-                <div id="collapseListengruppe1" class="panel-collapse collapse out" role="tabpanel" aria-labelledby="collapseListengruppeÜberschrift1" aria-expanded="true">
+                <div id="collapseMessreihen" class="panel-collapse collapse out" role="tabpanel" aria-labelledby="collapseMessreihenLabel" aria-expanded="true">
                     <ul class="list-group list-unstyled">
+                        <?php foreach ($messreihen as $key => $messreihe) : ?>
                         <li>
                             <div class="row">
-                                <div class="col-sm-2">
+                                <div class="col-sm-8">
                                     <div class="list-content">
-                                        Messreihe 1
+                                        <?php echo escape($messreihe->messreihenname); ?>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-2 text-right">
                                     <div class="list-content">
-                                        <!-- TODO: <data> -->
-                                        01.01.1970
+                                        <?php echo escape($messreihe->datum); ?>
                                     </div>
                                 </div>
                                 <div class="col-sm-2 pull-right controls">
@@ -33,7 +44,7 @@ require_once 'header.php';
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#">
+                                            <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe bearbeiten">
                                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                             </a>
                                         </li>
@@ -41,77 +52,19 @@ require_once 'header.php';
                                 </div>
                             </div>
                         </li>
-                        <li>
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <div class="list-content">
-                                        Messreihe 1
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="list-content">
-                                        <!-- TODO: <data> -->
-                                        01.01.1970
-                                    </div>
-                                </div>
-                                <div class="col-sm-2 pull-right controls">
-                                    <ul class="list-unstyled list-inline pull-right">
-                                        <li>
-                                            <a href="#graph">
-                                                <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <div class="list-content">
-                                        Messreihe 1
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="list-content">
-                                        <!-- TODO: <data> -->
-                                        01.01.1970
-                                    </div>
-                                </div>
-                                <div class="col-sm-2 pull-right controls">
-                                    <ul class="list-unstyled list-inline pull-right">
-                                        <li>
-                                            <a href="#graph">
-                                                <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
+                        <?php endforeach ; ?>
                     </ul>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    <?php endif; ?>
+<?php endif; ?>
 
 
 
 <?php
 //Vorbereitung für die Filter		
 //datenbank instanz erstellen
-$db = DB::getInstance();
 $projektid = $projekt->data()->id;
 
 //Select für messreihenname, metadatenname, datentyp
@@ -277,7 +230,7 @@ $jsonselectsensor = json_encode($selectsensor);
 </script>				
 
 <h2>Metadaten filtern</h2>
-<div class="form-horizontal" id="addMetaDiv">
+<div class="form-horizontal mb-15" id="addMetaDiv">
     <!-- Anzeigefelder für die ausgewählten Metadatenfilter -->
     <div class="form-group">
         <div class="col-sm-6" id="meta_name_operator_div"></div>
@@ -328,6 +281,7 @@ $jsonselectsensor = json_encode($selectsensor);
         selectedMetafeld = messreihen_copy[io[0]][io[1]];
         selectFlag = true;
         selectChangedCount++;
+		$("#meta_select_button").html("<span class='glyphicon glyphicon-plus'></span>"+messreihen_copy[io[0]][io[1]]["name"] +"filter hinzufügen");
     }
 
 
@@ -388,28 +342,43 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function addOperatorMenu(type, append) {
-        var appendString;
+        var appendString = "<div id='metaOperatorField" + uniqueId + "' class='btn-group'>";
         switch (type) {
             case 'string':
-                appendString = "<div id='metaOperatorField" + uniqueId + "' class='col-sm-4'> <label class='control-label'>ist</label></div></div>";
+				appendString = appendString.concat("<label id='operatorButton"+uniqueId+"' class='btn btn-default'>");
+				appendString = appendString.concat("Ist</label></div>");
                 break;
 
             case 'numerisch':
-                appendString = "<div id='metaOperatorField" + uniqueId + "' class='col-xs-4'><select id='operatorSelect" + uniqueId + "' onchange='addValueField(passMultipleArgsForSelect(this));' class='meta-element-size'><option></option><option value='==' selected>gleich</option><option value='<'>kleiner</option><option value='>'>größer</option><option value='<='>kleiner gleich</option><option value='>='>größer gleich</option></select></div></div>";
-                /*<select id='operatorSelect"+selectedValue+"' onchange='operatorSelectChanged(value);' class='meta-element-size'>
-                 <option></option>
-                 <option value='=='>equals</option>
-                 <option value='<'>less than</option>
-                 <option value='>'>greater than</option>
-                 <option value='<='>less/equals</option>
-                 <option value='>='>greater/equals</option></select>*/
+				appendString = appendString.concat("<button id='operatorButton"+uniqueId+"' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
+				appendString = appendString.concat("Operator <span class='caret'></span></button>");
+				appendString = appendString.concat("<ul class='dropdown-menu' role='xmenu'>");
+				appendString = appendString.concat("<li><a onclick='addValueField("+uniqueId+", \"==\", \"gleich\");'>gleich</a></li>");
+				appendString = appendString.concat("<li><a onclick='addValueField("+uniqueId+", \"<\", \"kleiner\");'>kleiner</a></li>");
+				appendString = appendString.concat("<li><a onclick='addValueField("+uniqueId+", \">\", \"größer\");'>größer</a></li>");
+				appendString = appendString.concat("<li><a onclick='addValueField("+uniqueId+", \"<=\", \"kleiner gleich\");'>kleiner gleich</a></li>");
+				appendString = appendString.concat("<li><a onclick='addValueField("+uniqueId+", \">=\", \"größer gleich\");'>größer gleich</a></li>");
+				appendString = appendString.concat("<li><a onclick='addValueField("+uniqueId+", \"><\", \"zwischen\");'>zwischen</a></li></ul></div>");
+
+                /*<div class='btn-group'>
+				  <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>
+					Metafeld <span class='caret'></span>
+				  </button>
+				  <ul class='dropdown-menu' role='xmenu'>
+					<li><a onclick='addValueField('==');'>gleich</a></li>
+					<li><a onclick='addValueField('< ');'>kleiner</a></li>
+					<li><a onclick='addValueField('> ');'>größer</a></li>
+					<li><a onclick='addValueField('<=');'>kleiner gleich</a></li>
+					<li><a onclick='addValueField('>=');'>größer gleich</a></li>
+					<li><a onclick='addValueField('><');'>zwischen</a></li>
+				  </ul>
+				</div>*/
                 break;
 
             case 'datum':
                 //TODO #######Datum########
                 break;
         }
-        
         $("#meta_name_operator_div").append(append + appendString);
     }
 
@@ -420,35 +389,38 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
-    function addValueField(param) {
+    function addValueField(id, value, name) {	
         var appendString;
         var singleFieldOperators = ["==", "<", ">", "<=", ">="];
 
-        var argsId = $(param.elem).attr('id');
-        argsId = argsId.slice(-1);
-        var valueFieldExists = $(param.elem).parent().parent().next().children('#metaValueField' + argsId);
+        var argsId = id;
+        var valueFieldExists = $('#metaValueField' + argsId);
+		
+		//Den Beschriftung des OperatorenMenüs des Metafilters auf den ausgewählten Operator setzen
+		$("#operatorButton"+argsId).html(name + "<span class='caret'></span>");
 
         //Das gefundene bereits vorhandene ValueField muss nun mit der neuen Auswahlersetzt
         //werden, falls es sich die Anzahl der angeforderten Inputfelder unterscheiden
-        var isSingleValueFieldOperator = $.inArray(param.value, singleFieldOperators);
-        if ($(valueFieldExists).hasClass("singleValueFieldERRORDELETETHIS") && isSingleValueFieldOperator) {
-            //Feld muss nicht erneuert werden
-            console.log("valueField already exists (single)");
-            return;
-        } else if ($(valueFieldExists).hasClass("doubleValuefField") && !isSingleValueFieldOperator) {
-            //Feld muss nicht erneuert werden
-            console.log("valueField already exists (double)");
-            return;
-        }
-        //In deisem Fall muss das bestehende Feld gelöscht werden und mit einem neuen ersetzt werden!
-        var previousMetaValueFieldId = $(valueFieldExists).attr('id');
-        if ($.inArray(param.value, singleFieldOperators) > -1) {
-            appendString = "<div id='metaValueField" + previousMetaValueFieldId + "' class='form-group'><div class='col-xs-8 singleValueField valueField'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + previousMetaValueFieldId + "'></input></div><a onclick='delMeta(" + previousMetaValueFieldId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
-        }
-        //TODO #######Datum####### /*vielleicht kommt noch weiterer Bedarf für andere Felder wie between in welchem Fall dann zwei Textfelder geadded werden müssen */
-        console.log("valueFieldExists: ");
-        console.log(valueFieldExists);
-        $('metaValueField' + previousMetaValueFieldId).replaceWith(appendString);
+        var isSingleValueFieldOperator = $.inArray(value, singleFieldOperators);
+         
+        //Unterscheide ob es sich um einen ein-Feld-/oder mehr-feld-operator handelt
+        if ($.inArray(value, singleFieldOperators) > -1) {
+			if ($(valueFieldExists).hasClass("singleValueField") && isSingleValueFieldOperator) {
+		        //Feld muss nicht erneuert werden
+		        console.log("valueField already exists (single)");
+		        return;
+        	}
+            appendString = "<div id='metaValueField" + argsId + "' class='form-group singleValueField valueField'><div class='col-xs-8'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><a onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div></div>";
+        }else{
+			//kann momentan nur "between sein"
+			if ($(valueFieldExists).hasClass("doubleValueField") && !isSingleValueFieldOperator) {
+		        //Feld muss nicht erneuert werden
+		        console.log("valueField already exists (double)");
+            	return;
+        	}
+			appendString = "<div id='metaValueField" + argsId + "' class='form-group doubleValueField valueField'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input class='form-control' type='text' placeholder='bis' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><a onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div></div>";
+		}
+        $('#metaValueField'+argsId).replaceWith(appendString);
     }
 
 
@@ -462,7 +434,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function addDefaultValueField() {
         var appendString;
-        appendString = "<div id='metaValueField" + uniqueId + "' class='form-group'><div class='col-xs-8 singleValueField valueField'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + uniqueId + "'></input></div><a class='btn' onclick='delMeta(" + uniqueId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
+        appendString = "<div id='metaValueField" + uniqueId + "' class='form-group singleValueField valueField'><div class='col-xs-8'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + uniqueId + "'></input></div><a class='btn' onclick='delMeta(" + uniqueId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
         $("#meta_value_div").append(appendString);
         ++uniqueId;
     }
@@ -490,33 +462,42 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
-
-
-
-    function passMultipleArgsForSelect(param) {
-        var obj = {elem: param, value: param.value};
-        return obj;
-    }
-
-
-
+/*<div class='btn-group'>
+				  <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>
+					Metafeld <span class='caret'></span>
+				  </button>
+				  <ul class='dropdown-menu' role='xmenu'>
+					<li><a onclick='addValueField('==');'>gleich</a></li>
+					<li><a onclick='addValueField('< ');'>kleiner</a></li>
+					<li><a onclick='addValueField('> ');'>größer</a></li>
+					<li><a onclick='addValueField('<=');'>kleiner gleich</a></li>
+					<li><a onclick='addValueField('>=');'>größer gleich</a></li>
+					<li><a onclick='addValueField('><');'>zwischen</a></li>
+				  </ul>
+				</div>*/
 
 
     function regenerateMetaSelect() {
-        var replace_string = "<select id='selectBox' class='dontbewhite' onchange='selectChanged(value);'><option></option>";
+		var replace_string = "<div id='selectBox' class='btn-group'>";
+		replace_string = replace_string.concat("<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
+		replace_string = replace_string.concat("Metafeld auswählen<span class='caret'></span></button>");
+		replace_string = replace_string.concat("<ul class='dropdown-menu' role='xmenu'>");
+
         var tmp_array = [];
-        var i;
         for (i = 0; i < messreihen_copy.length; i++) {
             var o;
             for (o = 1; o < messreihen_copy[i].length; o++) {
                 if ($.inArray(messreihen_copy[i][o]) < 0) {
                     tmp_array.push(messreihen_copy[i][o]);
-                    replace_string += "<option id='selectOption" + (uniquei++) + " class='dontbewhite' value='" + i + "" + o + "'>" + messreihen_copy[i][o]["name"] + "</option>";
+					replace_string = replace_string.concat("<li id='selectOption"+(uniquei++)+"' class='btn'>");
+					console.log(messreihen_copy[i][o]["name"]);
+					var tmp_str = ""+i;
+					tmp_str = tmp_str.concat(""+o);	
+					replace_string = replace_string.concat("<a onclick='selectChanged(\""+tmp_str+"\");'>"+ messreihen_copy[i][o]["name"]+"</a></li>");
                 }
             }
         }
-        replace_string += "</select>";
-
+        replace_string += "</ul></div>";
         $("#selectBox").replaceWith(replace_string);
     }
 
@@ -529,7 +510,7 @@ $jsonselectsensor = json_encode($selectsensor);
     function regenerateMessreihenList() {
         var replace_string = "<ul id='messreihenListe' class='list-group list-unstyled'>";
         for (i = 0; i < messreihen_copy.length; i++) {
-            replace_string += "<li><div class='row'><div class='col-sm-4 col-sm-offset-4'><a onclick='showSensorsOf(" + messreihen_copy[i][0] + ");'>" + messreihen_copy[i][0] + "</a class='btn'></div></div></li>";
+            replace_string += "<li><a onclick='showSensorsOf(" + messreihen_copy[i][0] + ");'>" + messreihen_copy[i][0] + "</a class='btn'></li>";
         }
         replace_string += "</ul>";
         $("#messreihenListe").replaceWith(replace_string);
@@ -561,7 +542,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     $(function () {
         regenerateDocument();
-        $('#meta_select_button').click(function() {
+        $('#meta_select_button').click(function () {
             addMeta();
             $(this).blur();
         });
