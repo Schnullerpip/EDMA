@@ -395,21 +395,36 @@ $jsonselectsensor = json_encode($selectsensor);
                 break;
 
             case 'numerisch':
-                appendString = "<div id='metaOperatorField" + uniqueId + "' class='col-xs-4'><select id='operatorSelect" + uniqueId + "' onchange='addValueField(passMultipleArgsForSelect(this));' class='meta-element-size'><option></option><option value='==' selected>gleich</option><option value='<'>kleiner</option><option value='>'>größer</option><option value='<='>kleiner gleich</option><option value='>='>größer gleich</option></select></div></div>";
-                /*<select id='operatorSelect"+selectedValue+"' onchange='operatorSelectChanged(value);' class='meta-element-size'>
-                 <option></option>
-                 <option value='=='>equals</option>
-                 <option value='<'>less than</option>
-                 <option value='>'>greater than</option>
-                 <option value='<='>less/equals</option>
-                 <option value='>='>greater/equals</option></select>*/
+                appendString = "<div id='metaOperatorField" + uniqueId + "' class='btn-group'>";
+				appendString = appendString.concat("<button id='operatorButton"+uniqueId+"' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
+				appendString = appendString.concat("Operator <span class='caret'></span></button>");
+				appendString = appendString.concat("<ul class='dropdown-menu' role='xmenu'>");
+				appendString = appendString.concat("<li><a onclick='addValueField("+uniqueId+", \"==\", \"gleich\");'>gleich</a></li>");
+				appendString = appendString.concat("<li><a onclick='addValueField("+uniqueId+", \"<\", \"kleiner\");'>kleiner</a></li>");
+				appendString = appendString.concat("<li><a onclick='addValueField("+uniqueId+", \">\", \"größer\");'>größer</a></li>");
+				appendString = appendString.concat("<li><a onclick='addValueField("+uniqueId+", \"<=\", \"kleiner gleich\");'>kleiner gleich</a></li>");
+				appendString = appendString.concat("<li><a onclick='addValueField("+uniqueId+", \">=\", \"größer gleich\");'>größer gleich</a></li>");
+				appendString = appendString.concat("<li><a onclick='addValueField("+uniqueId+", \"><\", \"zwischen\");'>zwischen</a></li></ul></div>");
+
+                /*<div class='btn-group'>
+				  <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>
+					Metafeld <span class='caret'></span>
+				  </button>
+				  <ul class='dropdown-menu' role='xmenu'>
+					<li><a onclick='addValueField('==');'>gleich</a></li>
+					<li><a onclick='addValueField('< ');'>kleiner</a></li>
+					<li><a onclick='addValueField('> ');'>größer</a></li>
+					<li><a onclick='addValueField('<=');'>kleiner gleich</a></li>
+					<li><a onclick='addValueField('>=');'>größer gleich</a></li>
+					<li><a onclick='addValueField('><');'>zwischen</a></li>
+				  </ul>
+				</div>*/
                 break;
 
             case 'datum':
                 //TODO #######Datum########
                 break;
         }
-        
         $("#meta_name_operator_div").append(append + appendString);
     }
 
@@ -420,35 +435,38 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
-    function addValueField(param) {
+    function addValueField(id, value, name) {	
         var appendString;
         var singleFieldOperators = ["==", "<", ">", "<=", ">="];
 
-        var argsId = $(param.elem).attr('id');
-        argsId = argsId.slice(-1);
-        var valueFieldExists = $(param.elem).parent().parent().next().children('#metaValueField' + argsId);
+        var argsId = id;
+        var valueFieldExists = $('#metaValueField' + argsId);
+		
+		//Den Beschriftung des OperatorenMenüs des Metafilters auf den ausgewählten Operator setzen
+		$("#operatorButton"+argsId).html(name + "<span class='caret'></span>");
 
         //Das gefundene bereits vorhandene ValueField muss nun mit der neuen Auswahlersetzt
         //werden, falls es sich die Anzahl der angeforderten Inputfelder unterscheiden
-        var isSingleValueFieldOperator = $.inArray(param.value, singleFieldOperators);
-        if ($(valueFieldExists).hasClass("singleValueFieldERRORDELETETHIS") && isSingleValueFieldOperator) {
-            //Feld muss nicht erneuert werden
-            console.log("valueField already exists (single)");
-            return;
-        } else if ($(valueFieldExists).hasClass("doubleValuefField") && !isSingleValueFieldOperator) {
-            //Feld muss nicht erneuert werden
-            console.log("valueField already exists (double)");
-            return;
-        }
-        //In deisem Fall muss das bestehende Feld gelöscht werden und mit einem neuen ersetzt werden!
-        var previousMetaValueFieldId = $(valueFieldExists).attr('id');
-        if ($.inArray(param.value, singleFieldOperators) > -1) {
-            appendString = "<div id='metaValueField" + previousMetaValueFieldId + "' class='form-group'><div class='col-xs-8 singleValueField valueField'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + previousMetaValueFieldId + "'></input></div><a onclick='delMeta(" + previousMetaValueFieldId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
-        }
-        //TODO #######Datum####### /*vielleicht kommt noch weiterer Bedarf für andere Felder wie between in welchem Fall dann zwei Textfelder geadded werden müssen */
-        console.log("valueFieldExists: ");
-        console.log(valueFieldExists);
-        $('metaValueField' + previousMetaValueFieldId).replaceWith(appendString);
+        var isSingleValueFieldOperator = $.inArray(value, singleFieldOperators);
+         
+        //Unterscheide ob es sich um einen ein-Feld-/oder mehr-feld-operator handelt
+        if ($.inArray(value, singleFieldOperators) > -1) {
+			if ($(valueFieldExists).hasClass("singleValueField") && isSingleValueFieldOperator) {
+		        //Feld muss nicht erneuert werden
+		        console.log("valueField already exists (single)");
+		        return;
+        	}
+            appendString = "<div id='metaValueField" + argsId + "' class='form-group singleValueField valueField'><div class='col-xs-8'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><a onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div></div>";
+        }else{
+			//kann momentan nur "between sein"
+			if ($(valueFieldExists).hasClass("doubleValueField") && !isSingleValueFieldOperator) {
+		        //Feld muss nicht erneuert werden
+		        console.log("valueField already exists (double)");
+            	return;
+        	}
+			appendString = "<div id='metaValueField" + argsId + "' class='form-group doubleValueField valueField'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input class='form-control' type='text' placeholder='bis' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><a onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div></div>";
+		}
+        $('#metaValueField'+argsId).replaceWith(appendString);
     }
 
 
@@ -462,7 +480,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function addDefaultValueField() {
         var appendString;
-        appendString = "<div id='metaValueField" + uniqueId + "' class='form-group'><div class='col-xs-8 singleValueField valueField'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + uniqueId + "'></input></div><a class='btn' onclick='delMeta(" + uniqueId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
+        appendString = "<div id='metaValueField" + uniqueId + "' class='form-group singleValueField valueField'><div class='col-xs-8'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + uniqueId + "'></input></div><a class='btn' onclick='delMeta(" + uniqueId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
         $("#meta_value_div").append(appendString);
         ++uniqueId;
     }
@@ -490,16 +508,19 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
-
-
-
-    function passMultipleArgsForSelect(param) {
-        var obj = {elem: param, value: param.value};
-        return obj;
-    }
-
-
-
+/*<div class='btn-group'>
+				  <button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>
+					Metafeld <span class='caret'></span>
+				  </button>
+				  <ul class='dropdown-menu' role='xmenu'>
+					<li><a onclick='addValueField('==');'>gleich</a></li>
+					<li><a onclick='addValueField('< ');'>kleiner</a></li>
+					<li><a onclick='addValueField('> ');'>größer</a></li>
+					<li><a onclick='addValueField('<=');'>kleiner gleich</a></li>
+					<li><a onclick='addValueField('>=');'>größer gleich</a></li>
+					<li><a onclick='addValueField('><');'>zwischen</a></li>
+				  </ul>
+				</div>*/
 
 
     function regenerateMetaSelect() {
@@ -529,7 +550,7 @@ $jsonselectsensor = json_encode($selectsensor);
     function regenerateMessreihenList() {
         var replace_string = "<ul id='messreihenListe' class='list-group list-unstyled'>";
         for (i = 0; i < messreihen_copy.length; i++) {
-            replace_string += "<li><div class='row'><div class='col-sm-4 col-sm-offset-4'><a onclick='showSensorsOf(" + messreihen_copy[i][0] + ");'>" + messreihen_copy[i][0] + "</a class='btn'></div></div></li>";
+            replace_string += "<li><a onclick='showSensorsOf(" + messreihen_copy[i][0] + ");'>" + messreihen_copy[i][0] + "</a class='btn'></li>";
         }
         replace_string += "</ul>";
         $("#messreihenListe").replaceWith(replace_string);
