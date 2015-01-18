@@ -409,7 +409,7 @@ $jsonselectsensor = json_encode($selectsensor);
 		        console.log("valueField already exists (single)");
 		        return;
         	}
-            appendString = "<div id='metaValueField"+argsId+"' class='form-group'><div class='col-xs-8'><input class='singleValueField form-control valueField' type='text' placeholder='insert Value' name='stringInput"+argsId+"'></input></div><a class='btn' onclick='delMeta("+argsId+");'><span class='glyphicon glyphicon-remove'></span></a></div>";
+            appendString = "<div id='metaValueField"+argsId+"' class='form-group'><div class='col-xs-8'><input id='metaValueInput"+argsId+"' class='singleValueField form-control valueField' type='text' placeholder='insert Value' name='stringInput"+argsId+"'></input></div><a class='btn' onclick='delMeta("+argsId+");'><span class='glyphicon glyphicon-remove'></span></a></div>";
         }else{
 			//kann momentan nur "between sein"
 			if ($(valueFieldExists).hasClass("doubleValueField") && !(isSingleValueFieldOperator)) {
@@ -417,7 +417,7 @@ $jsonselectsensor = json_encode($selectsensor);
 		        console.log("valueField already exists (double)");
             	return;
         	}
-			appendString = "<div id='metaValueField" + argsId + "' class='form-group'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input class='doubleValueField form-control valueField' type='text' placeholder='bis' name='stringInput"+argsId+"'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
+			appendString = "<div id='metaValueField" + argsId + "' class='form-group'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input id='metaValueInput"+argsId+"' class='doubleValueField form-control valueField' type='text' placeholder='bis' name='stringInput"+argsId+"'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
 		}
         $('#metaValueField'+argsId).replaceWith(appendString);
     }
@@ -433,7 +433,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function addDefaultValueField() {
         var appendString;
-        appendString = "<div id='metaValueField" + uniqueId + "' class='form-group singleValueField valueField'><div class='col-xs-8'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + uniqueId + "'></input></div><a class='btn' onclick='delMeta(" + uniqueId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
+        appendString = "<div id='metaValueField"+uniqueId+"' class='form-group'><div class='col-xs-8'><input id='metaValueInput"+uniqueId+"'class='singleValueField form-control valueField' type='text' placeholder='insert Value' name='stringInput"+uniqueId+"'></input></div><a class='btn' onclick='delMeta("+uniqueId+");'><span class='glyphicon glyphicon-remove'></span></a></div>";
         $("#meta_value_div").append(appendString);
         ++uniqueId;
     }
@@ -491,18 +491,20 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
-<<<<<<< HEAD
-	
-	
-	
+
+
+
+
 	function filterMessreihen(target, div_id){
 		var val2 = target.value;
-		if($("#"+div_id+"").contents().length > 2){
-			var val1 = $("#"+div_id+"").contents().0;
+		var val1 = $("#"+div_id).parent().prev().children().attr("value");
+		console.log($("#"+div_id).parent().prev().children());
+		if($("#"+div_id).parent().prev().contents().length > 2){
+			console.log("[filterMessreihen]");
+			var val1 = {};
+			val1 = $("#"+div_id+"").children();
+			console.log(val1);
 		}
-		
-		console.log("[filterMessreihen]");
-		console.log(val1);
 	}
 
 
@@ -514,32 +516,6 @@ $jsonselectsensor = json_encode($selectsensor);
 	function filterMessreihenOfDoubleValueField(target){
 		console.log("[filterDouble]:"+target);
 	}
-=======
-
-
-
-    function filterMessreihen(meta_value_div_id) {
-        alert("ha");
-        if ($("#metaValueField" + meta_value_div_id).hasClass("singleValueField")) {
-            filterMessreihenOfSingleValueField(meta_value_div_id);
-        } else {
-            filterMessreihenOfDoubleValueField(meta_value_div_id);
-        }
-    }
-
-
-
-    function filterMessreihenOfSingleValueField(div_id) {
-        var value = $("#metavalueField" + div_id).attr("value");
-        console.log(value);
-    }
-
-    function filterMessreihenOfDoubleValueField(div_id) {
-        var value = $("#metavalueField" + div_id).attr("value");
-        console.log(value);
-    }
->>>>>>> 79df692aea55177c46af243e73e43296fab3e1ba
-
 
 
 
@@ -590,6 +566,10 @@ $jsonselectsensor = json_encode($selectsensor);
         });
 
 		 $('#meta_value_div').on("blur", ".valueField", function (e) {
+			console.log("[eventHandler]#####");
+			console.log(e.target);
+			console.log($(this).attr("id"));
+			console.log("###################");
             filterMessreihen(e.target, $(this).attr("id"));
         });
         
