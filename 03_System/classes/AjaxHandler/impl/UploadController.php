@@ -132,15 +132,25 @@ class UploadController extends AjaxController {
                 // der Parser hält ein Array "errors" in dem Fehler gespeichert werden
                 if (count($parser->errors()) == 0) {
                     $this->_succeeded[] = array(
-                        'name' => $this->_files['file']['name'][0],
-                        'message' => 'Die Datei wurde erfolgreich importiert!'
+                        'Dateiname' => $this->_files['file']['name'][0],
+                        'Import beendet' => 'Die Datei wurde erfolgreich importiert!'
                     );
-                } else {
+                    if (count($parser->warnings()) != 0) {
+                        $this->_warned[] = array(
+                            'Warnung' => "Importieren der Datei wird möglicherweise abgebrochen."
+                        );
+                    }
+                }
+                else {
                     $this->_failed[] = array(
-                        'Name' => $this->_files['file']['name'][0],
-                        'Warnung' => "Importieren der Datei wird möglicherweise abgebrochen.",
+                        'Dateiname' => $this->_files['file']['name'][0],
                         'error' => $parser->errors()
                     );
+                    if (count($parser->warnings()) != 0) {
+                        $this->_warned[] = array(
+                            'Warnung' => "Importieren der Datei wird möglicherweise abgebrochen."
+                        );
+                    }
                 }
             } else {
                 $this->_failed[] = array(
