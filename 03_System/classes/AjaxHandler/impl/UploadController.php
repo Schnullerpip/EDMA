@@ -7,8 +7,7 @@
  */
 class UploadController extends AjaxController {
 
-    private $_allowed = ['.pdf', '.doc', '.csv'],
-            $_csv_mimetypes = array(
+    private $_csv_mimetypes = array(
                 'text/csv',
                 'text/plain',
                 'application/csv',
@@ -19,7 +18,13 @@ class UploadController extends AjaxController {
                 'text/anytext',
                 'application/octet-stream',
                 'application/txt',
-                    ),
+            ),
+            $_description_mimetypes = array (
+                'application/msword', // doc
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document', //docx
+                'application/vnd.oasis.opendocument.text', // openoffice
+                'application/pdf', // pdf
+            ),
             $_maxSize,
             $_files;
 
@@ -56,40 +61,72 @@ class UploadController extends AjaxController {
     }
 
     /**
-     * Verschiebt die hochgeladenen Dateien in das Projekt-Verzeichnis
+     * Speichert die Datei in der Datenbank
      */
-    public function moveFiles() {
-        // TODO: DB Insert
+    private function insertFile($name, $path, $size, $type) {
+        $db = DB::getInstance();
+        
+        
+        $fp = fopen($path, 'r');
+        $content = addslashes(fread($fp, filesize($path)));
+        fclose($fp);
+
+        if(!get_magic_quotes_gpc())
+        {
+            $name = addslashes($name);
+        }
+        
+        $fields = array(
+            'projekt_id' => Input::get('projektid'),
+            'dateiname' => $name,
+            'inhalt' => $content,
+            'groesse' => $size,
+            'dateityp' => $type
+        );
+        
+        return $db->insertOrUpdate("anhang", $fields);
     }
 
     protected function process($id = null) {
-        foreach ($this->_files['file']['name'] as $key => $filename) {
-            if ($this->_files['file']['error'][$key] === 0) {
+        foreach ($this->_files['file']['name'] as $key => $fileName) {
+            
+            $fileSize = $this->_files['file']['size'][$key];
+            $fileType = $this->_files['file']['type'][0];
+            $fileTemp = $this->_files['file']['tmp_name'][$key];
+            
+            if ($this->_files['file']['error'][$key] !== 0) {
+                $this->_failed[] = array(
+                    'Dateiname' => $fileName,
+                    'PHP Errorcode' => $this->_files['file']['error'][$key]
+                );
+                continue;
+            }
 
-                $temp = $this->_files['file']['tmp_name'][$key];
+            if (!in_array($fileType, $this->_description_mimetypes)) {
+                $this->_failed[] = array(
+                    'Dateiname' => $fileName,
+                    'Fehler' => "Datei ist in ungültigem Dateiformat",
+                    'Unterstütze Formate' => "doc, docx, pdf, odt",
+                );
+                continue;
+            }
 
-                // Validate Files
-                $fileName = $this->_files['file']['name'][$key];
-                $fileSize = $this->_files['file']['size'][$key];
-                if (!$this->validate($fileName, $fileSize)) {
-                    continue;
-                }
+            // Validate Files
+            if (!$this->validate($fileName, $fileSize)) {
+                continue;
+            }
 
-                if (move_uploaded_file($temp, "uploads/tmp/{$filename}") === true) {
-                    $this->_succeeded[] = array(
-                        'name' => $filename,
-                        'date' => date('d.m.Y')
-                    );
-                } else {
-                    $this->_failed[] = array(
-                        'name' => $filename,
-                        'error' => 'Die Datei konnte nicht hochgeladen werden!'
-                    );
-                }
+            //if (move_uploaded_file($temp, "uploads/tmp/{$filename}") === true) {
+            $id = $this->insertFile($fileName, $fileTemp, $fileSize, $fileType);
+            if ($id >= 0) {
+                $this->_succeeded[] = array(
+                    'name' => $fileName,
+                    'id' => $id,
+                );
             } else {
                 $this->_failed[] = array(
-                    'name' => $filename,
-                    'error' => $this->_files['file']['error'][$key]
+                    'Dateiname' => $fileName,
+                    'Achtung' => 'Die Datei konnte nicht hochgeladen werden!'
                 );
             }
         }
@@ -110,8 +147,8 @@ class UploadController extends AjaxController {
                     );
                 } else {
                     $this->_failed[] = array(
-                        'name' => $this->_files['file']['name'][0],
-                        'message' => 'Fehler beim Importieren der Datei!',
+                        'Name' => $this->_files['file']['name'][0],
+                        'Warnung' => "Importieren der Datei wird möglicherweise abgebrochen.",
                         'error' => $parser->errors()
                     );
                 }

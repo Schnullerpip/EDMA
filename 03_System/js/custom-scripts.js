@@ -36,7 +36,7 @@ var app = app || {};
     "use strict";
 
     // private methods
-    var ajax, getFormData, setProgress, convertArray;
+    var ajax, getFormData, setProgress;
 
     ajax = function (data) {
         var xmlhttp = new XMLHttpRequest(), uploaded;
@@ -57,12 +57,13 @@ var app = app || {};
                     
                     if (uploaded.failed.length != 0) {
                         if (typeof o.options.error === 'function') {
-                            o.options.error(convertArray(uploaded.failed), -1);
+                            o.options.error(uploaded.failed);
                         }
-                    } else {
+                    } 
+                    if (uploaded.succeeded.length != 0) {
                         if (typeof o.options.finished === 'function') {
                             
-                            o.options.finished(convertArray(uploaded.succeeded));
+                            o.options.finished(uploaded.succeeded);
                         }
                     }
                 } else {
@@ -108,24 +109,6 @@ var app = app || {};
     setProgress = function (percent) {
         o.options.progress.width(percent);
     };
-    
-    
-    convertArray = function (possibleArray, depth) {
-        var result = possibleArray;
-        if (Array.isArray(possibleArray) || typeof possibleArray === 'object') {
-            result = "";
-            for (var prop in possibleArray) {
-                if (possibleArray.hasOwnProperty(prop)) { 
-                    if (typeof possibleArray[prop] === 'object') {
-                        result += convertArray(possibleArray[prop]);
-                    } else {
-                        result += (prop + ": " + possibleArray[prop] + "<br>");
-                    }
-                }
-            }
-        }
-        return result;
-    }
 
     o.uploader = function (options) {
         o.options = options;
@@ -152,4 +135,21 @@ function checkMaxsize(size, files) {
         return 'Bitte eine Datei auswählen!';
     }
     return '';
+}
+
+function convertArray (possibleArray) {
+    var result = possibleArray;
+    if (Array.isArray(possibleArray) || typeof possibleArray === 'object') {
+        result = "";
+        for (var prop in possibleArray) {
+            if (possibleArray.hasOwnProperty(prop)) { 
+                if (typeof possibleArray[prop] === 'object') {
+                    result += convertArray(possibleArray[prop]);
+                } else {
+                    result += (prop + ": " + possibleArray[prop] + "<br>");
+                }
+            }
+        }
+    }
+    return result;
 }

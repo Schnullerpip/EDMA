@@ -24,6 +24,7 @@ class DeleteController extends AjaxController {
 
             case 'messreihe':
                 $this->deleteMessreihe();
+
                 break;
 
             default:
