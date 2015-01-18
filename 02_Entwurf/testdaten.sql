@@ -23,7 +23,7 @@ INSERT INTO `messreihe_metainfo` (messreihe_id, metainfo_id, metawert)
 VALUES ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Material'), 'PA6'),
        ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Trocknungstemp'), '80'),
        ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Taupunkt'), '-15'),
-       ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Masse'), 'kont. Förderung	kg');
+       ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Masse'), '100');
 
 INSERT INTO `sensor` (sensorname)
 VALUE ('Material Eintritt'), ('Trichter 1'), ('Trichter 2'),	('Trichter 3'),
@@ -46,6 +46,5 @@ VALUES ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FR
        ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.999486, '2014-10-14 12:30:01'),
        ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.998877, '2014-10-14 12:30:02'),
        ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.789654, '2014-10-14 12:30:03');
-
 
 

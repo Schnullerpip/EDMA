@@ -18,9 +18,17 @@
         
         <!-- Bootstrap Datepicker -->
         <script src="js/vendor/bootstrap-datepicker.min.js"></script>
+        <script src="js/vendor/locales/bootstrap-datepicker.de.js"></script>
         
         <!-- EDMA Custom-Scripts -->
         <script src="js/custom-scripts.js"></script>
+        
+        <?php 
+        if (isset($includes)) {
+            foreach ($includes as $include) {
+                echo "<script src='js/{$include}.js'></script>";
+            }
+        }
+        ?>
     </body>
 </html>
-
