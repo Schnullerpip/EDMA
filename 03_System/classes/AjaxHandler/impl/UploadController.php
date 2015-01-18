@@ -60,34 +60,12 @@ class UploadController extends AjaxController {
         return true;
     }
 
-    /**
-     * Speichert die Datei in der Datenbank
-     */
-    private function insertFile($name, $path, $size, $type) {
-        $db = DB::getInstance();
-        
-        
-        $fp = fopen($path, 'r');
-        $content = addslashes(fread($fp, filesize($path)));
-        fclose($fp);
-
-        if(!get_magic_quotes_gpc())
-        {
-            $name = addslashes($name);
+    protected function process($id = null) {
+        $uploadedFiles = array();
+        if (Session::exists(Config::get('session/upload_name'))) {
+            $uploadedFiles = Session::get(Config::get('session/upload_name'));
         }
         
-        $fields = array(
-            'projekt_id' => Input::get('projektid'),
-            'dateiname' => $name,
-            'inhalt' => $content,
-            'groesse' => $size,
-            'dateityp' => $type
-        );
-        
-        return $db->insertOrUpdate("anhang", $fields);
-    }
-
-    protected function process($id = null) {
         foreach ($this->_files['file']['name'] as $key => $fileName) {
             
             $fileSize = $this->_files['file']['size'][$key];
@@ -115,13 +93,21 @@ class UploadController extends AjaxController {
             if (!$this->validate($fileName, $fileSize)) {
                 continue;
             }
-
-            //if (move_uploaded_file($temp, "uploads/tmp/{$filename}") === true) {
-            $id = $this->insertFile($fileName, $fileTemp, $fileSize, $fileType);
-            if ($id >= 0) {
+            
+            if (!file_exists('uploads/tmp')) {
+               mkdir('uploads/tmp', 0775, true);
+            }
+            
+            $filePath = "uploads/tmp/" . basename($fileTemp);
+            if (move_uploaded_file($fileTemp, $filePath) === true) {
                 $this->_succeeded[] = array(
                     'name' => $fileName,
                     'id' => $id,
+                );
+                $uploadedFiles[$fileName] = array(
+                    'fileTemp' => $filePath,
+                    'fileSize' => $fileSize,
+                    'fileType' => $fileType,
                 );
             } else {
                 $this->_failed[] = array(
@@ -129,6 +115,10 @@ class UploadController extends AjaxController {
                     'Achtung' => 'Die Datei konnte nicht hochgeladen werden!'
                 );
             }
+        }
+        
+        if (count($uploadedFiles) >= 0) {
+            Session::put(Config::get('session/upload_name'), $uploadedFiles);
         }
     }
 

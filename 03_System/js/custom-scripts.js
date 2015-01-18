@@ -10,6 +10,25 @@ $(document).ready(function () {
     });
 });
 
+// Append Modal Methods
+function modalTextSuccess(msg) {
+    $('#infoModal').find('.modal-body .success').show().find('.content').html(msg);
+}
+function modalTextError(msg) {
+    $('#infoModal').find('.modal-body .error').show().find('.content').html(msg);
+}
+function modalTextWarning(msg) {
+    $('#infoModal').find('.modal-body .warning').show().find('.content').html(msg);
+}
+
+/*
+var _super = $.fn.modal;
+$.extend(_super.Constructor.prototype.info, function () {
+    console.log('test');
+});
+*/
+
+
 // Upload-Funktionalitaet
 var app = app || {};
 

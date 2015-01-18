@@ -75,6 +75,10 @@ h2 {
     margin-bottom: 5px;
 }
 
+.mb-15 {
+    margin-bottom: 15px;
+}
+
 .mb-30 {
     margin-bottom: 30px;
 }
@@ -425,6 +429,18 @@ table tr:hover .glyphicon {
 }
 
 
+/* Metadatenfilter */
+/* ------------------------------- */
+
+
+#addMetaDiv button.btn {
+    width: 100%;
+}
+#addMetaDiv button.btn .glyphicon {
+    margin-right: 5px;
+}
+
+
 /* Footer */
 /* ------------------------------- */
 
@@ -480,4 +496,29 @@ table tr:hover .glyphicon {
 .datepicker table tr td.active.active, .datepicker table tr td.active:hover.active {
     background-color: #224565;
     background-image: none;
+}
+
+
+/* Bootstrap Modalbox Fix */
+/* ------------------------------- */
+
+body.modal-open {
+    overflow-y: scroll;
+}
+
+.modal {
+    color: black;
+}
+
+.modal .modal-body .success {
+    display: none;
+}
+.modal .modal-body .warning{
+    display: none;
+}
+.modal .modal-body .error {
+    display: none;
+}
+.modal .modal-body {
+    padding-bottom: 0;
 }

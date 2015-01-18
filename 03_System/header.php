@@ -51,24 +51,24 @@ if (!$projekt->isLoggedIn() && curPageName() !== 'login.php') {
     </head>
 
     <body>
-        <?php
-        if (Session::exists('error')) {
-            ?>
+        <?php if (Session::exists('error')) : ?>
             <div class="alert alert-top alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Schließen</span></button>
                 <strong>Warnung!</strong> <?php echo Session::flash('error'); ?>
             </div>
-            <?php
-        }
-        if (Session::exists('message')) {
-            ?>
+        <?php endif; ?>
+        <?php if (Session::exists('warning')) : ?>
             <div class="alert alert-info alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Schließen</span></button>
-                <strong>Warnung!</strong> <?php echo Session::flash('message'); ?>
+                <strong>Warnung!</strong> <?php echo Session::flash('warning'); ?>
             </div>
-            <?php
-        }
-        ?>
+        <?php endif; ?>
+        <?php if (Session::exists('success')) : ?>
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Schließen</span></button>
+                <?php echo Session::flash('success'); ?>
+            </div>
+        <?php endif; ?>
         <!-- Fixierte Navbar -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation">
             <div class="container">

@@ -22,11 +22,10 @@ if (Input::exists()) {
             $salt = Hash::salt(32);
 
             $db = DB::getInstance();
-            
-            if (is_object($projekt->data()) and $projekt->data()->id > 0) {
-                try {                
-                // Projekt updaten
-            
+            $newProjekt = false;
+            try {
+                if (is_object($projekt->data()) and $projekt->data()->id > 0) {
+                    // Projekt updaten
                     if (Input::get('projektname') !== $projekt->data()->projektname) {
                         $projektData = array(
                             'projektname' => Input::get('projektname')
@@ -54,15 +53,9 @@ if (Input::exists()) {
                             throw new Exception("Passwort konnte nicht angelegt werden.");
                         }
                     }
-                } catch (Exception $ex) {
-                    Session::flash("error", $ex->getMessage());
-                    die($ex->getMessage());
-                }
-
-            } else {
-                // Neues Projekt
-                try {
-                    
+                } else {
+                    $newProjekt = true;
+                    // Neues Projekt
                     $projektData = array(
                         'projektname' => Input::get('projektname'),
                     );
@@ -87,13 +80,55 @@ if (Input::exists()) {
                         throw new Exception("Passwort konnte nicht angelegt werden.");
                     }
                     
-                    $projekt = $projekt_id;
-
-                    Session::flash('message', 'Projekt erfolgreich angelegt!');
-                     Redirect::to('index.php');
-                } catch (Exception $ex) {
-                    die($ex->getMessage());
+                    $projekt = new Projekt($projekt_id);
                 }
+                
+                // insert Projektbeschreibungen
+                if (Session::exists(Config::get('session/upload_name'))) {
+                    $uploadedFiles = Session::get(Config::get('session/upload_name'));
+                    $errors = array();
+                    foreach ($uploadedFiles as $fileName => $fileArray) {
+                        $filePath = $fileArray['fileTemp'];
+                        $fileType = $fileArray['fileType'];
+                        $fileSize = $fileArray['fileSize'];
+                        
+                        
+                        $fp = fopen($filePath, 'r');
+                        $fileContent = addslashes(fread($fp, filesize($filePath)));
+                        fclose($fp);
+
+                        if(!get_magic_quotes_gpc())
+                        {
+                            $fileName = addslashes($fileName);
+                        }
+        
+                        $fields = array(
+                            'projekt_id' => $projekt->data()->id,
+                            'dateiname' => $fileName,
+                            'inhalt' => $fileContent,
+                            'groesse' => $fileSize,
+                            'dateityp' => $fileType
+                        );
+        
+                        if ($db->insertOrUpdate("anhang", $fields) < 0) {
+                            $errors[] = "Fehler beim Upload von Datei " . $fileName;
+                        }
+                        
+                        unlink($filePath);
+                    }
+                    Session::delete(Config::get('session/upload_name'));
+                    if (count($errors) > 0) {
+                        throw new Exception(implode("\n", $errors));
+                    }
+                }
+            } catch (Exception $ex) {
+                Session::flash('error', $ex->getMessage());
+                Redirect::to('projekt.php');
+            }
+            
+            if ($newProjekt) {
+                Session::flash('success', 'Projekt erfolgreich angelegt!');
+                Redirect::to('index.php');
             }
         } else {
             $message = "";
@@ -183,7 +218,7 @@ if (Input::exists()) {
     <div class="form-group">
         <div class="col-sm-offset-4 col-sm-5">
             <button type="submit" class="btn btn-default">Speichern</button>
-            <a href="index.php" class="btn btn-link">Abbrechen</a>
+            <a href="reset.php" class="btn btn-link">Abbrechen</a>
         </div>
     </div>
 

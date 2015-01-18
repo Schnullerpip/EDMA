@@ -9,13 +9,22 @@ require_once 'core/init.php';
  */
 class DeleteController extends AjaxController {
 
-    public function __construct($element) {
-        $name = $element['name'];
-        $id = $element['id'];
+    private $_id; // ID der zu loeschenden Messreihe oder Projektbeschreibung
+    private $_db;
 
-        switch ($name) {
+    public function __construct($element, $id) {
+        $this->_id = $id;
+
+        $this->_db = DB::getInstance();
+
+        switch ($element) {
             case 'projektbeschreibung':
-                $this->process($id);
+                $this->process('anhang');
+                break;
+
+            case 'messreihe':
+                $this->deleteMessreihe();
+
                 break;
 
             default:
@@ -23,10 +32,23 @@ class DeleteController extends AjaxController {
         }
     }
 
-    public function process($id) {
-        // delete from anhang where id = $id
+    public function process() {
         $this->_succeeded[] = array(
-            'id' => 0
+            'id' => $this->_id
         );
     }
+
+    private function deleteMessreihe() {
+        $this->_db->get('messreihe', array('id', '=', $this->_id));
+        $messreihe = $this->_db->results();
+
+        $this->_db->delete('messreihe', array('id', '=', $this->_id));
+        if ($this->_db->error()) {
+            $this->_failed = array(
+                'name' => $messreihe->messreihenname,
+                'message' => 'Die Messreihe konnte nicht gelöscht werden!'
+            );
+        }
+    }
+
 }
