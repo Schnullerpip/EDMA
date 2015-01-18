@@ -407,22 +407,23 @@ $jsonselectsensor = json_encode($selectsensor);
 
         //Unterscheide ob es sich um einen ein-Feld-/oder mehr-feld-operator handelt
         if ($.inArray(value, singleFieldOperators) > -1) {
-            if ($(valueFieldExists).hasClass("singleValueField") && isSingleValueFieldOperator) {
-                //Feld muss nicht erneuert werden
-                console.log("valueField already exists (single)");
-                return;
-            }
-            appendString = "<div id='metaValueField" + argsId + "' class='form-group singleValueField valueField'><div class='col-xs-8'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + argsId + "'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
-        } else {
-            //kann momentan nur "between sein"
-            if ($(valueFieldExists).hasClass("doubleValueField") && !(isSingleValueFieldOperator)) {
-                //Feld muss nicht erneuert werden
-                console.log("valueField already exists (double)");
-                return;
-            }
-            appendString = "<div id='metaValueField" + argsId + "' class='form-group doubleValueField valueField'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input class='form-control' type='text' placeholder='bis' name='stringInput" + argsId + "'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
-        }
-        $('#metaValueField' + argsId).replaceWith(appendString);
+
+			if ($(valueFieldExists).hasClass("singleValueField") && isSingleValueFieldOperator) {
+		        //Feld muss nicht erneuert werden
+		        console.log("valueField already exists (single)");
+		        return;
+        	}
+            appendString = "<div id='metaValueField"+argsId+"' class='form-group'><div class='col-xs-8'><input class='singleValueField form-control valueField' type='text' placeholder='insert Value' name='stringInput"+argsId+"'></input></div><a class='btn' onclick='delMeta("+argsId+");'><span class='glyphicon glyphicon-remove'></span></a></div>";
+        }else{
+			//kann momentan nur "between sein"
+			if ($(valueFieldExists).hasClass("doubleValueField") && !(isSingleValueFieldOperator)) {
+		        //Feld muss nicht erneuert werden
+		        console.log("valueField already exists (double)");
+            	return;
+        	}
+			appendString = "<div id='metaValueField" + argsId + "' class='form-group'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input class='doubleValueField form-control valueField' type='text' placeholder='bis' name='stringInput"+argsId+"'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
+		}
+        $('#metaValueField'+argsId).replaceWith(appendString);
     }
 
 
@@ -490,6 +491,30 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
+<<<<<<< HEAD
+	
+	
+	
+	function filterMessreihen(target, div_id){
+		var val2 = target.value;
+		if($("#"+div_id+"").contents().length > 2){
+			var val1 = $("#"+div_id+"").contents().0;
+		}
+		
+		console.log("[filterMessreihen]");
+		console.log(val1);
+	}
+
+
+
+	function filterMessreihenOfSingleValueField(target){
+		console.log("[filterSingle]:"+target);
+	}
+
+	function filterMessreihenOfDoubleValueField(target){
+		console.log("[filterDouble]:"+target);
+	}
+=======
 
 
 
@@ -513,6 +538,7 @@ $jsonselectsensor = json_encode($selectsensor);
         var value = $("#metavalueField" + div_id).attr("value");
         console.log(value);
     }
+>>>>>>> 79df692aea55177c46af243e73e43296fab3e1ba
 
 
 
@@ -563,8 +589,8 @@ $jsonselectsensor = json_encode($selectsensor);
             $(this).blur();
         });
 
-        $('#meta_value_div').on("blur", ".valueField", function () {
-            console.log($(this).attr("id"));
+		 $('#meta_value_div').on("blur", ".valueField", function (e) {
+            filterMessreihen(e.target, $(this).attr("id"));
         });
         
         $('#messreihenDiv').on("click", ".btn", function (e) {
