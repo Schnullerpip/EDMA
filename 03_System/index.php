@@ -317,7 +317,9 @@ require_once 'header.php';
 						messreihen_copy = tmp_new_array;
 						//Nun das SelectFeld neu generieren
 						regenerateMetaSelect();
-						look_up_unique_id.push(to_delete);//Für delMeta(argid) Funktion
+						for(i = 0; i < to_delete.length; i++){
+							look_up_unique_id.push(to_delete[i]);//Für delMeta(argid) Funktion
+						}
 	}
 
 
@@ -429,10 +431,14 @@ require_once 'header.php';
 		console.log("##########");
 		element_to_delete.parentNode.removeChild(element_to_delete);
 
-		//TODO regenerate #selectBox da nun vorherig weggefallene messreihen wieder erlaubt sein können
+		//TODO regenerate #selectBox da nun vorherig weggefallene messreihen wieder erlaubt sein können	
+		var to_remove_from_look_up= [];
 		for(i = 0; i < look_up_unique_id; i++){
 			messreihen_copy.push(look_up_unique_id[i]);
+			to_remove_from_look_up.push(i);
 		}
+		//look_up_unique_id aufräumen
+		look_up_unique_id = [];		
 		regenerateMetaSelect();
 	}	
 
