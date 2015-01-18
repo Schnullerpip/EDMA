@@ -261,8 +261,12 @@ $jsonselectsensor = json_encode($selectsensor);
     <!-- Select element und Bestätigungsbutton -->
     <div class="form-group">
         <div class="col-sm-2 col-sm-offset-4">
-            <select id="selectBox" class="dontbewhite" onchange="selectChanged(value);">
-            </select>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    Metafeld auswählen<span class="caret"></span>
+                </button>
+                <ul  id="selectBox" class="dropdown-menu" role="xmenu"></ul>
+            </div>
         </div>
 
         <div class="col-sm-4">
@@ -278,7 +282,7 @@ $jsonselectsensor = json_encode($selectsensor);
 <h2>Messreihe wählen</h2>
 <div id="messreihenSensorenFilterDiv">
     <div id="messreihenDiv" class="col-xs-12 col-xs-6">
-        <div id='messreihenListe' class='btn-group-vertical' role='group'></div>
+        <div id="messreihenListe" class="btn-group-vertical" role="group"></div>
     </div>
     <div id="sensorenDiv" class="col-xs-12 col-xs-6">
         <div id="sensorenListe" class="btn-group-vertical" role="group"></div>
@@ -361,7 +365,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function addOperatorMenu(type, append) {
-        var appendString = "<div id='metaOperatorField" + uniqueId + "' class='col-sm-4 btn-group'>";
+        var appendString = "<div id='metaOperatorField" + uniqueId + "' class='col-sm-4'><div class='btn-group'>";
         if (type == 'string') {
             appendString = appendString.concat("<button id='operatorButton" + uniqueId + "' class='btn btn-default'>");
             appendString = appendString.concat("Ist</button></div>");
@@ -369,12 +373,12 @@ $jsonselectsensor = json_encode($selectsensor);
             appendString = appendString.concat("<button id='operatorButton" + uniqueId + "' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
             appendString = appendString.concat("Operator <span class='caret'></span></button>");
             appendString = appendString.concat("<ul class='dropdown-menu' role='xmenu'>");
-            appendString = appendString.concat("<li><a class='btn' onclick='addValueField(" + uniqueId + ", \"==\", \"gleich\");'>gleich</a></li>");
-            appendString = appendString.concat("<li><a class='btn' onclick='addValueField(" + uniqueId + ", \"<\", \"kleiner\");'>kleiner</a></li>");
-            appendString = appendString.concat("<li><a class='btn' onclick='addValueField(" + uniqueId + ", \">\", \"größer\");'>größer</a></li>");
-            appendString = appendString.concat("<li><a class='btn' onclick='addValueField(" + uniqueId + ", \"<=\", \"kleiner gleich\");'>kleiner gleich</a></li>");
-            appendString = appendString.concat("<li><a class='btn' onclick='addValueField(" + uniqueId + ", \">=\", \"größer gleich\");'>größer gleich</a></li>");
-            appendString = appendString.concat("<li><a class='btn' onclick='addValueField(" + uniqueId + ", \"><\", \"zwischen\");'>zwischen</a></li></ul></div>");
+            appendString = appendString.concat("<li><a onclick='addValueField(" + uniqueId + ", \"==\", \"gleich\");'>gleich</a></li>");
+            appendString = appendString.concat("<li><a onclick='addValueField(" + uniqueId + ", \"<\", \"kleiner\");'>kleiner</a></li>");
+            appendString = appendString.concat("<li><a onclick='addValueField(" + uniqueId + ", \">\", \"größer\");'>größer</a></li>");
+            appendString = appendString.concat("<li><a onclick='addValueField(" + uniqueId + ", \"<=\", \"kleiner gleich\");'>kleiner gleich</a></li>");
+            appendString = appendString.concat("<li><a onclick='addValueField(" + uniqueId + ", \">=\", \"größer gleich\");'>größer gleich</a></li>");
+            appendString = appendString.concat("<li><a onclick='addValueField(" + uniqueId + ", \"><\", \"zwischen\");'>zwischen</a></li></ul></div></div>");
 
         }
         $("#meta_name_operator_div").append(append + appendString);
@@ -467,10 +471,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function regenerateMetaSelect() {
-        var replace_string = "<div id='selectBox' class='btn-group'>";
-        replace_string = replace_string.concat("<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
-        replace_string = replace_string.concat("Metafeld auswählen<span class='caret'></span></button>");
-        replace_string = replace_string.concat("<ul class='dropdown-menu' role='xmenu'>");
+        var replace_string = "";
 
         var tmp_array = [];
         for (i = 0; i < messreihen_copy.length; i++) {
@@ -478,15 +479,14 @@ $jsonselectsensor = json_encode($selectsensor);
             for (o = 0; o < messreihen_copy[i].metafields.length; o++) {
                 if ($.inArray(messreihen_copy[i].metafields[o]) < 0) {
                     tmp_array.push(messreihen_copy[i].metafields[o], tmp_array);
-                    replace_string = replace_string.concat("<li id='selectOption" + (uniquei++) + "' class='btn'>");
+                    replace_string = replace_string.concat("<li id='selectOption" + (uniquei++) + "'>");
                     var tmp_str = "" + i;
                     tmp_str = tmp_str.concat("" + o);
                     replace_string = replace_string.concat("<a onclick='selectChanged(\"" + tmp_str + "\");'>" + messreihen_copy[i].metafields[o]["metaname"] + "</a></li>");
                 }
             }
         }
-        replace_string += "</ul></div>";
-        $("#selectBox").replaceWith(replace_string);
+        $("#selectBox").html(replace_string);
     }
 
 
