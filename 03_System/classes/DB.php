@@ -122,6 +122,12 @@ class DB {
         return $this->action('SELECT *', $table, $where);
     }
 
+    /**
+     * 
+     * @param type $table die Tabelle in der gelöscht werden soll
+     * @param type $where array mit (spaltenname, operator, wert) Paaren
+     * @return type boolean ob erfolgreich oder nicht
+     */
     public function delete($table, $where) {
         return $this->action('DELETE', $table, $where);
     }
@@ -187,7 +193,7 @@ class DB {
      * wobei KEY = Feldname und VALUE = Wert z.B. array['metaname'] = 'Datum'.
      */
     public function getIdBySelectOrInsert($table, $fields) {
-        $where = preareArray($fields, "and");
+        $where = $this->prepareArray($fields, "and");
         
         $sql = "SELECT id FROM {$table} WHERE {$where}";
         $this->query($sql, $fields);
