@@ -383,7 +383,7 @@ require_once 'header.php';
         //In deisem Fall muss das bestehende Feld gelöscht werden und mit einem neuen ersetzt werden!
         var previousMetaValueFieldId = $(valueFieldExists).attr('id');
 		if($.inArray(param.value, singleFieldOperators) > -1){
-				appendString = "<div id='metaValueField"+previousMetaValueFieldId+"' class='col-xs-12 singleValueField valueField'><input class='dontbewhite' type='text' placeholder='insert Value' name='stringInput"+previousMetaValueFieldId+"'></input> <a onclick='delMeta("+previousMetaValueFieldId+");'><span class='glyphicon glyphicon-remove-circle'></span></a></div>";
+				appendString = "<div id='metaValueField"+previousMetaValueFieldId+"' class='col-xs-12 singleValueField valueField'><input class='dontbewhite' type='text' placeholder='insert Value' name='stringInput"+previousMetaValueFieldId+"'></input> <a onclick='delMeta("+previousMetaValueFieldId+");'><span class='glyphicon glyphicon-remove'></span></a></div>";
         }
         //TODO #######Datum####### /*vielleicht kommt noch weiterer Bedarf für andere Felder wie between in welchem Fall dann zwei Textfelder geadded werden müssen */
 		console.log("valueFieldExists: ");
@@ -402,7 +402,7 @@ require_once 'header.php';
 
     function addDefaultValueField(){
 		var appendString;
-		appendString = "<div id='metaValueField"+uniqueId+"' class='col-xs-12 singleValueField valueField'><input class='dontbewhite' type='text' placeholder='insert Value' name='stringInput"+uniqueId+"'></input><a class='btn' onclick='delMeta("+uniqueId+");'><span class='glyphicon glyphicon-remove-circle'></span></a></div>";
+		appendString = "<div id='metaValueField"+uniqueId+"' class='col-xs-12 singleValueField valueField'><input class='dontbewhite' type='text' placeholder='insert Value' name='stringInput"+uniqueId+"'></input><a class='btn' onclick='delMeta("+uniqueId+");'><span class='glyphicon glyphicon-remove'></span></a></div>";
 		$("#meta_value_div").append(appendString);
         ++uniqueId;
     }
