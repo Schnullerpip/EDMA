@@ -188,7 +188,7 @@ class DB {
      * );
      * $id = $db->getIdBySelectOrInsert("messreihe", $messreihenFelder);
      * 
-     * @param type $table Name der Tabell in welcher der Datensatz liegt.
+     * @param type $table Name der Tabelle in welcher der Datensatz liegt.
      * @param type $fields Array mit Felder für WHERE oder INSERT,
      * wobei KEY = Feldname und VALUE = Wert z.B. array['metaname'] = 'Datum'.
      */
@@ -208,6 +208,15 @@ class DB {
         return false;
     }
     
+    /**
+     * Legt einen Datensatz an der updated ihn (falls schon vorhanden) mit den 
+     * Daten aus $fields.
+     * In $fields stehen dabei die Felder und dazugehoerigen Werte als array.
+     * @param type $table Name der Tabelle in welcher der Datensatz eigefuegt/geupdatet werden soll.
+     * @param type $fields Array mit Felder für INSERT oder UPDATE,
+     * wobei KEY = Feldname und VALUE = Wert z.B. array['metaname'] = 'Datum'.
+     * @return type Gibt die ID des Datenstatz zurueck oder -1 im Fehlerfall.
+     */
     public function insertOrUpdate($table, $fields) {
         $result = -1;
         
