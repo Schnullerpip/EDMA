@@ -188,7 +188,7 @@ if (Input::exists('post')) {
                     </div>
                 </div>
                 <?php
-                $db->query('SELECT sensor.sensorname, sensor.id, messreihe_sensor.anzeigename FROM messreihe_sensor INNER JOIN sensor on messreihe_sensor.sensor_id = sensor.id WHERE messreihe_sensor.messreihe_id = ?', array($projekt->data()->id));
+                $db->query('SELECT sensor.sensorname, sensor.id, messreihe_sensor.anzeigename FROM messreihe_sensor INNER JOIN sensor on messreihe_sensor.sensor_id = sensor.id WHERE messreihe_sensor.messreihe_id = ?', array($inp));
                 $sensoren = $db->results();
                 ?>
                 <?php foreach ($sensoren as $sensor) : ?>
