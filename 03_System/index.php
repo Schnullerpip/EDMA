@@ -361,10 +361,10 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function addOperatorMenu(type, append) {
-        var appendString = "<div id='metaOperatorField" + uniqueId + "' class='btn-group'>";
+        var appendString = "<div id='metaOperatorField" + uniqueId + "' class='col-sm-4 btn-group'>";
         if (type == 'string') {
-            appendString = appendString.concat("<label id='operatorButton" + uniqueId + "' class='btn btn-default'>");
-            appendString = appendString.concat("Ist</label></div>");
+            appendString = appendString.concat("<button id='operatorButton" + uniqueId + "' class='btn btn-default'>");
+            appendString = appendString.concat("Ist</button></div>");
         } else {
             appendString = appendString.concat("<button id='operatorButton" + uniqueId + "' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
             appendString = appendString.concat("Operator <span class='caret'></span></button>");
@@ -408,7 +408,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 console.log("valueField already exists (single)");
                 return;
             }
-            appendString = "<div id='metaValueField" + argsId + "' class='form-group singleValueField valueField'><div class='col-xs-8'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><a onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div></div>";
+            appendString = "<div id='metaValueField" + argsId + "' class='form-group singleValueField valueField'><div class='col-xs-8'><input class='form-control' type='text' placeholder='insert Value' name='stringInput" + argsId + "'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
         } else {
             //kann momentan nur "between sein"
             if ($(valueFieldExists).hasClass("doubleValueField") && !(isSingleValueFieldOperator)) {
@@ -416,7 +416,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 console.log("valueField already exists (double)");
                 return;
             }
-            appendString = "<div id='metaValueField" + argsId + "' class='form-group doubleValueField valueField'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input class='form-control' type='text' placeholder='bis' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><a onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div></div>";
+            appendString = "<div id='metaValueField" + argsId + "' class='form-group doubleValueField valueField'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input class='form-control' type='text' placeholder='bis' name='stringInput" + argsId + "'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
         }
         $('#metaValueField' + argsId).replaceWith(appendString);
     }
