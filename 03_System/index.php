@@ -497,25 +497,13 @@ $jsonselectsensor = json_encode($selectsensor);
 
 	function filterMessreihen(target, div_id){
 		var val2 = target.value;
-		var val1 = $("#"+div_id).parent().prev().children().attr("value");
-		console.log(val2);
+		var val1 = $("#"+div_id).parent().prev().children().val();
+		console.log(val2);	
 		if(val1 != undefined){
 			console.log(val1);
 		}
+		//TODO Messreihen anhand der values aus den input filtern!!!!
 	}
-
-
-
-	function filterMessreihenOfSingleValueField(target){
-		console.log("[filterSingle]:"+target);
-	}
-
-	function filterMessreihenOfDoubleValueField(target){
-		console.log("[filterDouble]:"+target);
-	}
-
-
-
 
 
 
