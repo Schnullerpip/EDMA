@@ -44,7 +44,7 @@ $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>">
+                                            <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe bearbeiten">
                                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                             </a>
                                         </li>
