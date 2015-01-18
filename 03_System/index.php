@@ -1,28 +1,39 @@
 <?php
 require_once 'header.php';
+$db = DB::getInstance();
 ?>
 
 <p>Projekt: <?php echo escape($projekt->data()->projektname); ?></p>
-<div class="row">
-    <div class="col-xs-12">
+
+<?php
+$db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
+?>
+
+<?php if ($db->error()) : ?>
+    <p>Fehler beim holen der Messreihen!</p>
+<?php else: ?>
+
+    <?php $messreihen = $db->results(); ?>
+
+    <?php if (!empty($messreihen)) : ?>
         <div class="panel-group accordeon" role="tablist">
             <div class="panel panel-default">
-                <a class="btn btn-block panel-heading text-center collapsed" role="tab" href="#collapseListengruppe1" data-toggle="collapse" aria-expanded="true" aria-controls="collapseListengruppe1" id="collapseListengruppeÜberschrift1">
+                <a class="btn btn-block panel-heading text-center collapsed" role="tab" href="#collapseMessreihen" data-toggle="collapse" aria-expanded="true" aria-controls="collapseMessreihen" id="collapseMessreihenLabel">
                     Letzte Messreihenimporte anzeigen<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
                 </a>
-                <div id="collapseListengruppe1" class="panel-collapse collapse out" role="tabpanel" aria-labelledby="collapseListengruppeÜberschrift1" aria-expanded="true">
+                <div id="collapseMessreihen" class="panel-collapse collapse out" role="tabpanel" aria-labelledby="collapseMessreihenLabel" aria-expanded="true">
                     <ul class="list-group list-unstyled">
+                        <?php foreach ($messreihen as $key => $messreihe) : ?>
                         <li>
                             <div class="row">
-                                <div class="col-sm-2">
+                                <div class="col-sm-8">
                                     <div class="list-content">
-                                        Messreihe 1
+                                        <?php echo escape($messreihe->messreihenname); ?>
                                     </div>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-2 text-right">
                                     <div class="list-content">
-                                        <!-- TODO: <data> -->
-                                        01.01.1970
+                                        <?php echo escape($messreihe->datum); ?>
                                     </div>
                                 </div>
                                 <div class="col-sm-2 pull-right controls">
@@ -33,7 +44,7 @@ require_once 'header.php';
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#">
+                                            <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe bearbeiten">
                                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                                             </a>
                                         </li>
@@ -41,77 +52,19 @@ require_once 'header.php';
                                 </div>
                             </div>
                         </li>
-                        <li>
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <div class="list-content">
-                                        Messreihe 1
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="list-content">
-                                        <!-- TODO: <data> -->
-                                        01.01.1970
-                                    </div>
-                                </div>
-                                <div class="col-sm-2 pull-right controls">
-                                    <ul class="list-unstyled list-inline pull-right">
-                                        <li>
-                                            <a href="#graph">
-                                                <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <div class="list-content">
-                                        Messreihe 1
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="list-content">
-                                        <!-- TODO: <data> -->
-                                        01.01.1970
-                                    </div>
-                                </div>
-                                <div class="col-sm-2 pull-right controls">
-                                    <ul class="list-unstyled list-inline pull-right">
-                                        <li>
-                                            <a href="#graph">
-                                                <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
+                        <?php endforeach ; ?>
                     </ul>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    <?php endif; ?>
+<?php endif; ?>
 
 
 
 <?php
 //Vorbereitung für die Filter		
 //datenbank instanz erstellen
-$db = DB::getInstance();
 $projektid = $projekt->data()->id;
 
 //Select für messreihenname, metadatenname, datentyp
@@ -277,7 +230,7 @@ $jsonselectsensor = json_encode($selectsensor);
 </script>				
 
 <h2>Metadaten filtern</h2>
-<div class="form-horizontal" id="addMetaDiv">
+<div class="form-horizontal mb-15" id="addMetaDiv">
     <!-- Anzeigefelder für die ausgewählten Metadatenfilter -->
     <div class="form-group">
         <div class="col-sm-6" id="meta_name_operator_div"></div>
@@ -582,7 +535,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     $(function () {
         regenerateDocument();
-        $('#meta_select_button').click(function() {
+        $('#meta_select_button').click(function () {
             addMeta();
             $(this).blur();
         });
