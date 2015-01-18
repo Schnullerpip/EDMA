@@ -55,10 +55,11 @@ var app = app || {};
                     try {
                         uploaded = JSON.parse(this.response);
                     } catch (error) {
-                        // wenn response kein JASON Objekt ist, ist ein unerwarterter Fehler passiert.
+                        // wenn response kein JSON Objekt ist, ist ein unerwarterter Fehler passiert.
                         // this. response ist plain html => convert to JSON
                         uploaded = {
                             succeeded: "",
+                            warned: "",
                             failed: this.response,
                         };
                     }
@@ -67,7 +68,12 @@ var app = app || {};
                         if (typeof o.options.error === 'function') {
                             o.options.error(uploaded.failed);
                         }
-                    } 
+                    }
+                    if (uploaded.warned.length != 0) {
+                        if (typeof o.options.warning === 'function') {
+                            o.options.warning(uploaded.warned);
+                        }
+                    }
                     if (uploaded.succeeded.length != 0) {
                         if (typeof o.options.finished === 'function') {
                             
