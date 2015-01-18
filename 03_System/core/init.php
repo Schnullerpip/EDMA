@@ -15,7 +15,8 @@ $GLOBALS['config'] = array(
     ),
     'session' => array(
         'session_name' => 'projekt',
-        'token_name' => 'token'
+        'token_name' => 'token',
+        'upload_name' => 'uploadedFiles'
     )
 );
 
