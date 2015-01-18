@@ -281,6 +281,7 @@ $jsonselectsensor = json_encode($selectsensor);
         selectedMetafeld = messreihen_copy[io[0]][io[1]];
         selectFlag = true;
         selectChangedCount++;
+		$("#meta_select_button").html("<span class='glyphicon glyphicon-plus'></span>"+messreihen_copy[io[0]][io[1]]["name"] +"filter hinzufügen");
     }
 
 
@@ -341,14 +342,14 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function addOperatorMenu(type, append) {
-        var appendString;
+        var appendString = "<div id='metaOperatorField" + uniqueId + "' class='btn-group'>";
         switch (type) {
             case 'string':
-                appendString = "<div id='metaOperatorField" + uniqueId + "' class='col-sm-4'> <label class='control-label'>ist</label></div></div>";
+				appendString = appendString.concat("<label id='operatorButton"+uniqueId+"' class='btn btn-default'>");
+				appendString = appendString.concat("Ist</label></div>");
                 break;
 
             case 'numerisch':
-                appendString = "<div id='metaOperatorField" + uniqueId + "' class='btn-group'>";
 				appendString = appendString.concat("<button id='operatorButton"+uniqueId+"' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
 				appendString = appendString.concat("Operator <span class='caret'></span></button>");
 				appendString = appendString.concat("<ul class='dropdown-menu' role='xmenu'>");
@@ -477,20 +478,26 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function regenerateMetaSelect() {
-        var replace_string = "<select id='selectBox' class='dontbewhite' onchange='selectChanged(value);'><option></option>";
+		var replace_string = "<div id='selectBox' class='btn-group'>";
+		replace_string = replace_string.concat("<button type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
+		replace_string = replace_string.concat("Metafeld auswählen<span class='caret'></span></button>");
+		replace_string = replace_string.concat("<ul class='dropdown-menu' role='xmenu'>");
+
         var tmp_array = [];
-        var i;
         for (i = 0; i < messreihen_copy.length; i++) {
             var o;
             for (o = 1; o < messreihen_copy[i].length; o++) {
                 if ($.inArray(messreihen_copy[i][o]) < 0) {
                     tmp_array.push(messreihen_copy[i][o]);
-                    replace_string += "<option id='selectOption" + (uniquei++) + " class='dontbewhite' value='" + i + "" + o + "'>" + messreihen_copy[i][o]["name"] + "</option>";
+					replace_string = replace_string.concat("<li id='selectOption"+(uniquei++)+"' class='btn'>");
+					console.log(messreihen_copy[i][o]["name"]);
+					var tmp_str = ""+i;
+					tmp_str = tmp_str.concat(""+o);	
+					replace_string = replace_string.concat("<a onclick='selectChanged(\""+tmp_str+"\");'>"+ messreihen_copy[i][o]["name"]+"</a></li>");
                 }
             }
         }
-        replace_string += "</select>";
-
+        replace_string += "</ul></div>";
         $("#selectBox").replaceWith(replace_string);
     }
 
