@@ -254,7 +254,7 @@ require_once 'header.php';
 					</div>
 
 					<div class="col-sm-4">
-						<button id="meta_select_button" class="dontbewhite" onClick="addMeta();">new Metafilter</button>
+						<button id="meta_select_button" class="btn btn-default" onClick="addMeta();">new Metafilter</button>
 					</div>
 				</div>
 			</div>
@@ -369,7 +369,7 @@ require_once 'header.php';
         //Das gefundene bereits vorhandene ValueField muss nun mit der neuen Auswahlersetzt
         //werden, falls es sich die Anzahl der angeforderten Inputfelder unterscheiden
         var isSingleValueFieldOperator = $.inArray(param.value, singleFieldOperators);
-        if($(valueFieldExists).hasClass("singleValueFieldH") && isSingleValueFieldOperator){
+        if($(valueFieldExists).hasClass("singleValueFieldERRORDELETETHIS") && isSingleValueFieldOperator){
             //Feld muss nicht erneuert werden
 			console.log("valueField already exists (single)");
             return;
@@ -381,10 +381,12 @@ require_once 'header.php';
         //In deisem Fall muss das bestehende Feld gelöscht werden und mit einem neuen ersetzt werden!
         var previousMetaValueFieldId = $(valueFieldExists).attr('id');
 		if($.inArray(param.value, singleFieldOperators) > -1){
-				appendString = "<div id='metaValueField"+previousMetaValueFieldId+"' class='col-xs-12 singleValueField valueField'><input class='dontbewhite' type='text' placeholder='insert Value' name='stringInput"+previousMetaValueFieldId+"'></input> <a type='btn' onclick='delMeta("+previousMetaValueFieldId+");'>X</a></div>";
+				appendString = "<div id='metaValueField"+previousMetaValueFieldId+"' class='col-xs-12 singleValueField valueField'><input class='dontbewhite' type='text' placeholder='insert Value' name='stringInput"+previousMetaValueFieldId+"'></input> <a onclick='delMeta("+previousMetaValueFieldId+");'><span class='glyphicon glyphicon-remove-circle'></span></a></div>";
         }
         //TODO #######Datum####### /*vielleicht kommt noch weiterer Bedarf für andere Felder wie between in welchem Fall dann zwei Textfelder geadded werden müssen */
-		$(valueFieldExists).replaceWith(appendString);
+		console.log("valueFieldExists: ");
+		console.log(valueFieldExists);
+		$('metaValueField'+previousMetaValueFieldId).replaceWith(appendString);
 	}
 
 
@@ -398,7 +400,7 @@ require_once 'header.php';
 
     function addDefaultValueField(){
 		var appendString;
-		appendString = "<div id='metaValueField"+uniqueId+"' class='col-xs-12 singleValueField valueField'><input class='dontbewhite' type='text' placeholder='insert Value' name='stringInput"+uniqueId+"'></input><a class='btn' onclick='delMeta("+uniqueId+");'>X</a></div>";
+		appendString = "<div id='metaValueField"+uniqueId+"' class='col-xs-12 singleValueField valueField'><input class='dontbewhite' type='text' placeholder='insert Value' name='stringInput"+uniqueId+"'></input><a class='btn' onclick='delMeta("+uniqueId+");'><span class='glyphicon glyphicon-remove-circle'></span></a></div>";
 		$("#meta_value_div").append(appendString);
         ++uniqueId;
     }
