@@ -122,6 +122,12 @@ class DB {
         return $this->action('SELECT *', $table, $where);
     }
 
+    /**
+     * 
+     * @param type $table die Tabelle in der gelöscht werden soll
+     * @param type $where array mit (spaltenname, operator, wert) Paaren
+     * @return type boolean ob erfolgreich oder nicht
+     */
     public function delete($table, $where) {
         return $this->action('DELETE', $table, $where);
     }

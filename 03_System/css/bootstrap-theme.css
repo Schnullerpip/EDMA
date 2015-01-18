@@ -481,3 +481,28 @@ table tr:hover .glyphicon {
     background-color: #224565;
     background-image: none;
 }
+
+
+/* Bootstrap Modalbox Fix */
+/* ------------------------------- */
+
+body.modal-open {
+    overflow-y: scroll;
+}
+
+.modal {
+    color: black;
+}
+
+.modal .modal-body .success {
+    display: none;
+}
+.modal .modal-body .warning{
+    display: none;
+}
+.modal .modal-body .error {
+    display: none;
+}
+.modal .modal-body {
+    padding-bottom: 0;
+}
