@@ -20,6 +20,7 @@ class Parser {
     private $_projektID;
     private $_messreiheID;
     private $_error = array();
+    private $_warning = array();
     private $_zeilennummerMessdaten;
     
     public function __construct($file, $projekt_id) {
@@ -42,7 +43,7 @@ class Parser {
         $stringFile = explode("###", $stringFile);
         if (count($stringFile) == 1) {
             $this->_error = array(
-                'Error' => "Trennzeichen'###' nicht vorhanden!",
+                'Fehler' => "Trennzeichen'###' nicht vorhanden!",
                 'Abbruch' => "Import abgebrochen!"
             );
             return;
@@ -61,7 +62,7 @@ class Parser {
             $this->_error = array_merge($this->_error, $exceptionArray);
             $this->_error = array_merge($this->_error, $e->getMessages());
             $abbruch = array(
-                'Abbruch' => "Import abgebrochen!"
+                'ABBRUCH' => "Import abgebrochen!"
             );
             $this->_error = array_merge($this->_error, $abbruch);
             $this->_db->rollback();
@@ -97,8 +98,7 @@ class Parser {
         $lines = count($metalines);
         $this->_zeilennummerMessdaten = $lines + 3; // Metazeilen + Trennzeichenzeile + Sensornamenzeile + Indexbeginn
         if ($count != $lines) {
-            $warningArray = $this->metalinesToIgnore($matches[0], $metalines);
-            $this->_error = array_merge($this->_error, $warningArray);
+            $this->_warning = $this->metalinesToIgnore($matches[0], $metalines);
         }
 
         $messreihenname = array_search("Name", $matches[1]);
@@ -124,7 +124,7 @@ class Parser {
         );
         $messreihe_id = $this->_db->getIdBySelectOrInsert('messreihe', $messreihe);
         if ($this->_db->error()) {
-            $this->throwMetaException("beim Aufruf von '\$this->_db->getIdBySelectOrInsert('messreihe', \$messreihe)'");
+            $this->throwMetaException("Fehler beim INSERT von 'messreihe'");
         }
         $this->_messreiheID = $messreihe_id;
         
@@ -142,27 +142,27 @@ class Parser {
         );
         $datentyp_id_s = $this->_db->getIdBySelectOrInsert('datentyp', $datentyp_s);
         if ($this->_db->error()) {
-            $this->throwMetaException("beim Aufruf von '\$this->_db->getIdBySelectOrInsert('datentyp', \$datentyp_s)'");
+            $this->throwMetaException("Fehler beim INSERT von 'datentyp'");
         }
         $datentyp_d = array(
             "typ" => "datum",
         );
         $datentyp_id_d = $this->_db->getIdBySelectOrInsert('datentyp', $datentyp_d);
         if ($this->_db->error()) {
-            $this->throwMetaException("beim Aufruf von '\$this->_db->getIdBySelectOrInsert('datentyp', \$datentyp_d)'");
+            $this->throwMetaException("Fehler beim INSERT von 'datentyp'");
         }
         $datentyp_n = array(
             "typ" => "numerisch",
         );
         $datentyp_id_n = $this->_db->getIdBySelectOrInsert('datentyp', $datentyp_n);
         if ($this->_db->error()) {
-            $this->throwMetaException("beim Aufruf von '\$this->_db->getIdBySelectOrInsert('datentyp', \$datentyp_n)'");
+            $this->throwMetaException("Fehler beim INSERT von 'datentyp'");
         }
 
         // insert metainfo und messreihe_metainfo
         $preparedInsert = $this->_db->createStatement("INSERT INTO messreihe_metainfo (messreihe_id, metainfo_id, metawert) VALUES (?, ?, ?)");
         if ($preparedInsert === FALSE) {
-            $this->throwMetaException("beim Aufruf von '\$this->_db->createStatement('INSERT INTO messreihe_metainfo (messreihe_id, metainfo_id, metawert) VALUES (?, ?, ?)')'");
+            $this->throwMetaException("Fehler beim Erstellen des prepared statements von 'messreihe_metainfo'");
         }
         foreach ($meta_indizes as $index) {
             if ($matches[4][$index] != null) {
@@ -186,7 +186,7 @@ class Parser {
             }
             $metainfo_id = $this->_db->getIdBySelectOrInsert('metainfo', $metainfo);
             if ($this->_db->error()) {
-                $this->throwMetaException("beim Aufruf von '\$this->_db->getIdBySelectOrInsert('metainfo', \$metainfo)'");
+                $this->throwMetaException("Fehler beim INSERT von 'metainfo'");
             }
             
             $messreihe_metainfo = array(
@@ -197,7 +197,7 @@ class Parser {
             
             $this->_db->executeStatement($preparedInsert, $messreihe_metainfo);
             if ($this->_db->error()) {
-                $this->throwMetaException("beim Aufruf von '\$this->_db->executeStatement(\$preparedInsert, \$messreihe_metainfo)' (ID: " . $metainfo_id . ")");
+                $this->throwMetaException("Fehler beim INSERT von 'messreihe_metainfo'");
             }
         }
     }
@@ -215,7 +215,7 @@ class Parser {
         $sensor_id_array = array();
         $statement_messreihe_sensor = $this->_db->createStatement("INSERT INTO messreihe_sensor (messreihe_id, sensor_id, anzeigename) VALUES (?, ?, ?)");
         if ($statement_messreihe_sensor === FALSE) {
-            $this->throwMessException("beim Aufruf von '\$this->_db->createStatement('INSERT INTO messreihe_sensor (messreihe_id, sensor_id, anzeigename) VALUES (?, ?, ?)')'");
+            $this->throwMessException("Fehler beim Erstellen des prepared statements von 'messreihe_sensor'");
         }
         // ab Spalte 2, ohne Datum und Uhrzeit
         for ($i = 2; $i < $spaltenanzahl; $i++) {
@@ -224,6 +224,9 @@ class Parser {
                 "sensorname" => $sensorname,
             );
             $sensor_id = $this->_db->getIdBySelectOrInsert('sensor', $sensor);
+            if ($this->_db->error()) {
+                $this->throwMessException("Fehler beim INSERT von 'sensor'");
+            }
             array_push($sensor_id_array, $sensor_id);
 
             $messreihe_sensor = array(
@@ -233,7 +236,7 @@ class Parser {
             );
             $this->_db->executeStatement($statement_messreihe_sensor, $messreihe_sensor);
             if ($this->_db->error()) {
-                $this->throwMessException("beim Aufruf von '\$this->_db->executeStatement(\$statement_messreihe_sensor, \$messreihe_sensor)'");
+                $this->throwMessException("Fehler beim INSERT von 'messreihe_sensor'");
             }
         }
         $messdaten = array_slice($messdaten, 1);	// löschen des Elements mit Sensornamen, da nicht mehr benötigt
@@ -249,7 +252,7 @@ class Parser {
         
         $statement_messung = $this->_db->createStatement($sql);
         if ($statement_messreihe_sensor === FALSE) {
-            $this->throwMessException("beim Aufruf von '\$this->_db->createStatement(\$sql)'");
+            $this->throwMessException("Fehler beim Erstellen des prepared statements von 'messung'");
         }
         
         // Iteration ueber alle Zeilen
@@ -262,9 +265,11 @@ class Parser {
                 if ($j === count($messdaten) - 1 and count($messungsSpalte) === 1) {
                     continue;
                 } else {
-                    $executeError = "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
-                        . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")";
-                $this->throwMessException($executeError);
+                    $executeError = array(
+                        'Error' => "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
+                        . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")"
+                    );
+                    throw new ParserException("Fehler in Funktion parseMetaDaten()", 0, null, $executeError);
                 }
             }
             $datum = $messungsSpalte[0];
@@ -289,7 +294,7 @@ class Parser {
             
             $this->_db->executeStatement($statement_messung, $values);
             if ($this->_db->error()) {
-                $this->throwMessException("beim Aufruf von '\$this->_db->executeStatement(\$statement_messung, \$values)'");
+                $this->throwMessException("Fehler beim INSERT von 'messung'");
             }
         }
         ini_set('max_execution_time', $saveExTime);
@@ -322,5 +327,9 @@ class Parser {
 
     public function errors() {
         return $this->_error;
+    }
+    
+    public function warnings() {
+        return $this->_warning;
     }
 }

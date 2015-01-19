@@ -101,15 +101,15 @@ if (Input::exists('post')) {
                     processor: 'ajaxHandler.php',
                     projektID: projektID,
                     finished: function (data) {
-+                        var succMsg = convertArray(data);
-+                        progressBar.width(0);
-+                        modalTextSuccess(succMsg);
-+                        $('#infoModal').modal();
+                        var succMsg = convertArray(data);
+                        progressBar.width(0);
+                        modalTextSuccess(succMsg);
+                        $('#infoModal').modal();
                     },
                     error: function (data) {
-+                        var errorMsg = convertArray(data);
-+                        modalTextError(errorMsg);
-+                        $('#infoModal').modal();
+                        var errorMsg = convertArray(data);
+                        modalTextError(errorMsg);
+                        $('#infoModal').modal();
                     }
                 });
             });
