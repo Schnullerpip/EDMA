@@ -29,11 +29,7 @@ if (!$projekt->isLoggedIn() && curPageName() !== 'login.php') {
         <!-- EDMA CSS -->
         <link href="css/bootstrap-theme.css" rel="stylesheet">
 
-        <!-- TODO bessere Lösung finden Julistuff -->
-        <link href="css/julicss.css" rel="stylesheet">
-
         <!-- Vendor-JavaScript -->
-        
         <!-- Bootstrap Datepicker -->
         <script src="js/vendor/jquery.min.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
