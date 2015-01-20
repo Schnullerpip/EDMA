@@ -63,6 +63,13 @@ $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
 
 
 <?php
+// TODO:
+// 
+// Name einer Messreihe als Filter?
+
+
+
+
 //Vorbereitung für die Filter		
 //datenbank instanz erstellen
 $projektid = $projekt->data()->id;

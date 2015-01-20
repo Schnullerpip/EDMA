@@ -9,9 +9,11 @@ $includes = array('messreihen');
 if (Input::exists('post')) {
     if (Token::check(Input::get('token'))) {
         // Name geändert
+        // TODO: For-Schleife bauen?
         if ($name = Input::get('name')) {
             if (!$db->update('messreihe', Input::get('messreihenid'), array('messreihenname' => $name))) {
                 // Error
+                // TODO: Was wenn Name schon vorhanden?
             }
         }
         // Datum geändert
