@@ -101,7 +101,7 @@ $jsonselectsensor = json_encode($selectsensor);
     //
     //-----------------------Variablen zur Auswahl aus dem Select----
     var select = <?php echo $jsonselectmeta; ?>;    //enthält den select
-    var selectedMetafeld;
+    var selectedMetafield;
     var select_copy = [];
 
     //filter alle Metas heraus, die es doppelt gibt -----------------------------------
@@ -145,7 +145,7 @@ $jsonselectsensor = json_encode($selectsensor);
         }
     }
 
-    //redundantes Datum zu messreihen metafields hinzufügen damit datum wie metafield gehandelt werden kann
+    //redundantes Datum zu messreihen metafields hinzufügen damit datum wie metafield behandelt werden kann
     for (i = 0; i < messreihen.length; i++) {
         var o;
         var tmp_array = [];
@@ -185,7 +185,7 @@ $jsonselectsensor = json_encode($selectsensor);
         for (o = 0; o < sensors.length; o++) {
             var already_exists = false;
             if ((select_sensor[i].anzeigename == sensors[o].anzeigename)) {
-                //metafield already exists!!!
+                //sensor already exists!!!
                 already_exists = true;
                 break;
             }
@@ -232,7 +232,7 @@ $jsonselectsensor = json_encode($selectsensor);
     var uniqueId = 0; //Diese Variable sollte nach erstellen eines neuen Metafilters inkrementiert werden	
     var look_up_unique_id = []; //Mit dieser Array kann die delMeta Funktion anhand der uniqueId zurückverfolgen
     //welches Metafeld in die Arbeitskopie messreihen_copy zurückgeführt werden muss
-    var uniquei = 0; //für die <option> tagsim metafilterselect "#selectBox"
+    var uniquei = 0; //für die <option> tags im metafilterselect "#selectBox"
     //----------------------------------------------------------------------------------------------------------------------------------------------------------
     //
     //
@@ -244,7 +244,7 @@ $jsonselectsensor = json_encode($selectsensor);
     //
     //
     //------------------------------------Die Strings, aus denen zuletzt der Select gebildet wird-------------
-    var QUERY_SELECT = " SELECT";
+    var QUERY_SELECT = "SELECT";
     var QUERY_FROM = " FROM";
     var QUERY_WHERE = " WHERE";
     //--------------------------------------------------------------------------------------------------------
@@ -305,13 +305,22 @@ $jsonselectsensor = json_encode($selectsensor);
     <div class="col-sm-12 col-md-6 col-lg-4"></div>
 </div>
 
+
+
+
+
+
+
+
+
+
 <script>
     function selectChanged(val) {
         var io = val.split("");
-        selectedMetafeld = messreihen_copy[io[0]].metafields[io[1]];
+        selectedMetafield = messreihen_copy[io[0]].metafields[io[1]];
         selectFlag = true;
         selectChangedCount++;
-        $("#meta_select_button").html("<span class='glyphicon glyphicon-plus'></span>" + selectedMetafeld["metaname"] + "filter hinzufügen");
+        $("#meta_select_button").html("<span class='glyphicon glyphicon-plus'></span>" + selectedMetafield["metaname"] + "filter hinzufügen");
     }
 
 
@@ -323,24 +332,25 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function addMeta() {
-        if ((selectFlag == false && old_value != selectedMetafeld) || (selectChangedCount == 0)) {
-            old_value = selectedMetafeld;
+        if ((selectFlag == false && old_value != selectedMetafield) || (selectChangedCount == 0)) {
+            old_value = selectedMetafield;
             return;
         }
+        old_value = selectedMetafield;
 
-        var tmp_str = "<div id='' class='form-group'><label id='metaNameField" + uniqueId + "' class='control-label col-sm-8 text-right'>" + selectedMetafeld["metaname"] + "</label>";
+        var tmp_str = "<div id='' class='form-group'><label id='metaNameField" + uniqueId + "' class='control-label col-sm-8 text-right'>" + selectedMetafield["metaname"] + "</label>";
 
-        addOperatorMenu(selectedMetafeld.typ, tmp_str);
+        addOperatorMenu(selectedMetafield.typ, tmp_str);
         addDefaultValueField();
         selectFlag = false;
-        old_value = selectedMetafeld;
 
-        //Falls eine andere Messreihe das gewählte Metafeld nicht hat sollte diese (ihre eigenen, die wiederum kein anderer hat)aus der auswahl entfernt werden
+
+        //Falls eine andere Messreihe das gewählte Metafeld nicht hat sollte diese aus der auswahl entfernt werden
         var to_delete = [];
         for (i = 0; i < messreihen_copy.length; i++) {
             var exists_in_messreihe = false;
             for (o = 0; o < messreihen_copy[i].metafields.length; o++) {
-                if (messreihen_copy[i].metafields[o]["metaname"] == selectedMetafeld["metaname"]) {
+                if (messreihen_copy[i].metafields[o]["metaname"] == selectedMetafield["metaname"]) {
                     exists_in_messreihe = true;
                 }
             }
@@ -356,9 +366,12 @@ $jsonselectsensor = json_encode($selectsensor);
                 tmp_new_array.push(messreihen_copy[i]);
             }
         }
-        messreihen_copy = tmp_new_array;
+        messreihen_copy = $.extend(true, [], tmp_new_array);
+
+
         for (i = 0; i < to_delete.length; i++) {
-            look_up_unique_id.push(to_delete[i]);//Für delMeta(argid) Funktion, so kann rückverfolgt werden was wieso gelöscht wurde
+            look_up_unique_id.push({id: uniqueId-1, messreihe: to_delete[i]});//Für delMeta(argid) Funktion, so kann rückverfolgt werden was wieso gelöscht wurde
+                /*da die unique id in addDefaultValueField schon inkrementiert wird müssen wir hier mit der vorherigen rechnen*/
         }
 
         //Nun das SelectFeld neu generieren
@@ -372,10 +385,11 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function addOperatorMenu(type, append) {
-        var appendString = "<div id='metaOperatorField" + uniqueId + "' class='col-sm-4'><div class='btn-group'>";
-        if (type == 'string') {
+        var datatype = type;
+        var appendString = "<div id='metaOperatorField" + uniqueId + "' class='col-sm-4 datatype_"+type+"'><div class='btn-group'>";
+        if (datatype == 'string') {
             appendString = appendString.concat("<button id='operatorButton" + uniqueId + "' class='btn btn-default'>");
-            appendString = appendString.concat("Ist</button></div>");
+            appendString = appendString.concat("ist </button></div>");
         } else {
             appendString = appendString.concat("<button id='operatorButton" + uniqueId + "' type='button' class='btn btn-default dropdown-toggle' data-toggle='dropdown' aria-expanded='false'>");
             appendString = appendString.concat("Operator <span class='caret'></span></button>");
@@ -454,19 +468,21 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
-
+    //löscht einen bestehenden metadatenfilter und macht die vorfilterung der meetaliste rückgängig
     function delMeta(argid) {
         $("#metaNameField" + argid).parent().remove();
         $("#metaValueField" + argid).remove();
 
         //TODO regenerate #selectBox da nun vorherig weggefallene messreihen wieder erlaubt sein können	
-        var to_remove_from_look_up = [];
-        for (i = 0; i < look_up_unique_id; i++) {
-            messreihen_copy.push(look_up_unique_id[i]);
-            to_remove_from_look_up.push(i);
+
+        //füge der arbeitsopie wieder jene elemente hinzu welche durch das gelöschte metafeld beseitigt wurden (und NUR diese!)
+        for (i = 0; i < look_up_unique_id.length; i++) {
+            /*falls wegen des nun gelöschten metaelements anderere messreihen von der auswahl ausgeshlossen wurden, müssen diese nun wieder der auswahl hinzugefüht werden da die ursache nun beseitigt ist*/
+            if(look_up_unique_id[i].id == argid){
+                messreihen_copy.push(look_up_unique_id[i].messreihe);
+                look_up_unique_id.splice(i, 1);  //entsprechendes element aus dem lookup löschen
+            }
         }
-        //look_up_unique_id aufräumen
-        look_up_unique_id = [];
         regenerateDocument();
     }
 
@@ -503,20 +519,188 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 	function filterMessreihen(target, div_id){
-		var val2 = target.value;
-		var val1 = $("#"+div_id).parent().prev().children().val();
-		console.log(val2);	
-		if(val1 != undefined){
-			console.log(val1);
-		}
-		//TODO Messreihen anhand der values aus den input filtern!!!!
+        //diese variablen dienen der ermittlung der relevanten faktoren zum filtern wie operator und datentyp
+        var target_id = div_id.match(/[0-9]+/);
+        var data_type;
+        var operator;
+        var metaname;
+
+        //diese beiden input felder enthalten die entsprechenden inputs anhand denen gefiltert werden kann
+        var target1 = target;
+        var target2 = $("#"+div_id).parent().prev().children();
+
+        //einfangen der möglicherweise zwei input felder - anhand dieser werte wird gefiltert
+		var filterstring = target1.value;
+		var untergrenze = target2.val();
+
+        //welches metafeld? (name... zb. Material, Druck etc. ..)
+        metaname = $("#metaNameField"+target_id).html();
+
+        //welcher datentyp?
+        operator = $("#metaOperatorField"+target_id);
+        if(operator.hasClass('datatype_numerisch')){
+            data_type = 'numerisch';
+        }else if(operator.hasClass('datatype_datum')){
+            data_type = 'datum';
+        }else if(operator.hasClass('datatype_string')){
+            data_type = 'string';
+        }
+
+
+        //welcher operator?
+        operator = operator.children().children().html();  
+        var cutoff_index = operator.search('<');
+        operator = operator.slice(0, cutoff_index);
+
+
+        //WICHTIG zunächst wird noch geprüft ob durch den selben metadatenfilter bereits etwas weggefiltert wurde, denn wenn nun der filter überschrieben wird müssen die weggefilterten ergebnisse nun wieder in Betracht gezogen werden
+        for(i = 0; i < look_up_unique_id.length; i++){
+            if(look_up_unique_id[i].id[0] == target_id){
+                messreihen_copy.push(look_up_unique_id[i].messreihe);
+                look_up_unique_id.splice(i, 1);
+                break;
+            }
+        }
+       
+		if((untergrenze != undefined) && (operator == "zwischen")){ // in diesem fall muss speziell behandelt werden, da es sich hier um zwei filterwerte handelt
+            filterWith(metaname, data_type, "größer gleich", untergrenze, target_id);
+            filterWith(metaname, data_type, "kleiner gleich",filterstring, target_id);
+        }else{
+            filterWith(metaname, data_type, operator, filterstring, target_id);
+        }
 	}
 
 
 
-//----------------------------------Funktionen zum Bearbeiten der "Messreihen/Sensoren-Filtern" Felder ------------------------------
-    /*<div class="btn-group-vertical" role="group" aria-label="...">*/
 
+
+    function filterWith(metaname, datatype, operator, value, target_id){
+        //zunächst sollte der input bereinigt werden, zb falls der datatype numerisch ist sollte der input kein A-Z usw enthalten...
+        /*if(!checkInput(datatype, value))
+            return;*/
+
+
+        /*jetzt sollte durch alle messreihen durchiteriert werden und geguckt werden ob wegen der eingegebenen werte eventuell
+            *manche messreihen nicht mehr in die auswahl passen*/
+        var tmp_array = [];//speichert die entstehend liste und wird am ende die arbeitskopie von messreihen übernommen
+        var to_delete = [];
+        for(i = 0; i < messreihen_copy.length; i++){
+            var messreihe_fits = false;
+            for(o = 0; o < messreihen_copy[i].metafields.length; o++){
+                if(messreihen_copy[i].metafields[o].metaname == metaname){//match gefunden nun werte vergleichen
+                   if(elementFitsTheFilter(datatype, operator, value, messreihen_copy[i].metafields[o].wert)){
+                       messreihe_fits = true;
+                   }
+                   break;
+                }
+            }
+            if(!messreihe_fits){
+                to_delete.push(messreihen_copy[i]);
+            }else{
+                tmp_array.push(messreihen_copy[i]);
+            }
+        }
+        messreihen_copy = $.extend(true, [], tmp_array);
+
+        for(i=0; i<messreihen_copy.length;i++){
+        }
+
+        for(i = 0; i < to_delete.length; i++){
+            look_up_unique_id.push({id: target_id, messreihe: to_delete[i]});
+        }
+
+        regenerateDocument();
+    }
+
+
+
+
+    
+
+
+    function checkInput(datatype, value){
+        if((datatype == "numerisch") && (isNaN(parseInt(value)))){
+            alert("Ein numerischer input sollte eine Zahl sein! 120k geht zum Beispiel auch, jedoch wird dann eben das k ignoriert.");
+            return false;
+        }else if((datatype == "datum") && !(/[0-9]{4}-[0-9]{2}-[0-9]{2}$/).test(value)){
+            alert("Ein Datum muss von der Form yyy-mm-dd sein!");
+            return false;
+        }
+        return true;
+    }
+
+
+
+    function elementFitsTheFilter(datatype, operand, value, fit){
+        if(datatype == "string"){
+             if(value == fit){
+                return true;
+             }
+             return false;
+        }
+
+        else if(datatype == "numerisch"){
+            var val_numeric = parseInt(value);
+            var fit_numeric = parseInt(fit);
+            switch(operand){
+                case "kleiner gleich":
+                    if(fit_numeric <= val_numeric){
+                        return true;
+                    }
+                    return false;
+                case "größer gleich":
+                    if(fit_numeric >= val_numeric){
+                        return true;
+                    }
+                    return false;
+                case "gleich":
+                    if(val_numeric == fit_numeric){
+                        return true;
+                    }
+                    return false;
+                case "kleiner":
+                    if(fit_numeric < val_numeric){
+                        return true;
+                    }
+                    return false;
+                case "größer":
+                    if(fit_numeric > val_numeric){
+                        return true;
+                    }
+                    return false;
+            }
+        }
+        else if(datatype == "datum"){
+            var date_value = new Date(value);
+            var date_fit = new Date(fit);
+            date_value = date_value.getTime();
+            date_fit = date_fit.getTime();
+
+            switch(operand){
+                case "kleiner gleich":
+                    if(date_fit <= date_value)
+                        return true;
+                    return false;
+                case "größer gleich":
+                    if(date_fit >= date_value)
+                        return true;
+                    return false;
+                case "gleich":
+                    if(date_value == date_fit)
+                        return true;
+                    return false;
+                case "kleiner":
+                    if(date_fit < date_value)
+                        return true;
+                    return false;
+                case "größer":
+                    if(date_fit > date_value)
+                        return true;
+                    return false;
+           }
+        }
+    }
+//----------------------------------Funktionen zum Bearbeiten der "Messreihen/Sensoren-Filtern" Felder ------------------------------
     function regenerateMessreihenList() {
         var replace_string = "<div id='messreihenListe'>";
         for (i = 0; i < messreihen_copy.length; i++) {
@@ -527,9 +711,7 @@ $jsonselectsensor = json_encode($selectsensor);
     }
 
 
-
     function showSensorsOf(arg) {
-        console.log(arg);
         var replace_string = "<div id='sensorListe'>";
         for (i = 0; i < sensors.length; i++) {
             if (arg == sensors[i]["messreihenname"]) {
@@ -558,14 +740,11 @@ $jsonselectsensor = json_encode($selectsensor);
         });
 
 		 $('#meta_value_div').on("blur", ".valueField", function (e) {
-			console.log("[eventHandler]#####");
-			console.log(e.target);
-			console.log($(this).attr("id"));
-			console.log("###################");
             filterMessreihen(e.target, $(this).attr("id"));
         });
         
         $('#messreihenDiv').on("click", ".btn", function (e) {
+            console.log(e.target);
             showSensorsOf($(e.target).data('messreihe'));
         });
     });
