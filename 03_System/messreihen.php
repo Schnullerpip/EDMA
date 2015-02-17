@@ -108,6 +108,11 @@ if (Input::exists('post')) {
                         modalTextSuccess(succMsg);
                         $('#infoModal').modal();
                     },
+                    warning: function (data) {
+                        var warnMsg = convertArray(data);
+                        modalTextWarning(warnMsg);
+                        $('#infoModal').modal();
+                    },
                     error: function (data) {
                         var errorMsg = convertArray(data);
                         modalTextError(errorMsg);

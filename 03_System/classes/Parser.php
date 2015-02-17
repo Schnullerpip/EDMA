@@ -2,9 +2,9 @@
 /**
  * Description of Parser
  *
- * Parsed die Datei mit RegularExpression.
- * Ergebniss ist ein Array mit Groesse 7:
- * [0]: Array mit alle gefundenen Zeilen (komplett)
+ * Parset die Datei mit RegularExpression.
+ * Ergebnis ist ein Array mit Groesse 7:
+ * [0]: Array mit allen gefundenen Zeilen (komplett)
  * [1]: Array mit allen Metanamen (ohne _TYP)
  * [2]: Array mit dem Typ (n, s oder d)
  * [3]: Array mit allen Metawerten (gemischt)
@@ -44,7 +44,7 @@ class Parser {
         if (count($stringFile) == 1) {
             $this->_error = array(
                 'Fehler' => "Trennzeichen'###' nicht vorhanden!",
-                'Abbruch' => "Import abgebrochen!"
+                'ABBRUCH' => "Import abgebrochen!"
             );
             return;
         }
@@ -117,15 +117,18 @@ class Parser {
         $datum_mysql = Utils::convertDate($datum_german);
 
         // insert messreihe
+        $messreihen_name = $matches[3][$messreihenname];
         $messreihe = array (
-            "messreihenname" => $matches[3][$messreihenname],
+            "messreihenname" => $messreihen_name,
             "datum" => $datum_mysql,
             "projekt_id" => $this->_projektID,
         );
-        $messreihe_id = $this->_db->getIdBySelectOrInsert('messreihe', $messreihe);
+        $this->_db->insert('messreihe', $messreihe);
         if ($this->_db->error()) {
-            $this->throwMetaException("Fehler beim INSERT von 'messreihe'");
+            $this->throwMetaException("Fehler beim INSERT von 'messreihe' ("
+                    . $messreihen_name . "), wahrscheinlich ist der Messreihenname bereits vorhanden");
         }
+        $messreihe_id = $this->_db->getIdBySelectOrInsert('messreihe', $messreihe);
         $this->_messreiheID = $messreihe_id;
         
         // alle Indizes außer Indizes von "Name" und "Datum"
@@ -184,9 +187,11 @@ class Parser {
                 );
                 $metawert = $matches[6][$index];
             }
+            // TODO: was, wenn metainfo eines anderen Projekts gleichen Namen, aber anderen Datentyp hat?
             $metainfo_id = $this->_db->getIdBySelectOrInsert('metainfo', $metainfo);
             if ($this->_db->error()) {
-                $this->throwMetaException("Fehler beim INSERT von 'metainfo'");
+                $metainfo_name = $metainfo["metaname"];
+                $this->throwMetaException("Fehler beim INSERT von 'metainfo' (" . $metainfo_name . ")");
             }
             
             $messreihe_metainfo = array(
@@ -197,7 +202,10 @@ class Parser {
             
             $this->_db->executeStatement($preparedInsert, $messreihe_metainfo);
             if ($this->_db->error()) {
-                $this->throwMetaException("Fehler beim INSERT von 'messreihe_metainfo'");
+                $this->throwMetaException("Fehler beim INSERT von 'messreihe_metainfo' ("
+                        . "messreihe_id: " . $messreihe_id
+                        . ", metainfo_id: " . $metainfo_id
+                        . ", metawert: " . $metawert . ")");
             }
         }
     }
@@ -225,7 +233,7 @@ class Parser {
             );
             $sensor_id = $this->_db->getIdBySelectOrInsert('sensor', $sensor);
             if ($this->_db->error()) {
-                $this->throwMessException("Fehler beim INSERT von 'sensor'");
+                $this->throwMessException("Fehler beim INSERT von 'sensor' (" . $sensorname . ")");
             }
             array_push($sensor_id_array, $sensor_id);
 
@@ -236,7 +244,10 @@ class Parser {
             );
             $this->_db->executeStatement($statement_messreihe_sensor, $messreihe_sensor);
             if ($this->_db->error()) {
-                $this->throwMessException("Fehler beim INSERT von 'messreihe_sensor'");
+                $this->throwMessException("Fehler beim INSERT von 'messreihe_sensor' ("
+                        . "messreihe_id: " . $this->_messreiheID
+                        . ", sensor_id: " . $sensor_id
+                        . ", sensorname: " . $sensorname . ")");
             }
         }
         $messdaten = array_slice($messdaten, 1);	// löschen des Elements mit Sensornamen, da nicht mehr benötigt
