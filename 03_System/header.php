@@ -49,12 +49,15 @@ if (Input::itemExists('projekt_cancel')) {
         <!-- EDMA CSS -->
         <link href="css/bootstrap-theme.css" rel="stylesheet">
 
-        <!-- TODO bessere Lösung finden Julistuff -->
-        <link href="css/julicss.css" rel="stylesheet">
-
-        <!-- Bootstrap-JavaScript -->
-        <script src="js/jquery.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
+        <!-- Vendor-JavaScript -->
+        <!-- Bootstrap Datepicker -->
+        <script src="js/vendor/jquery.min.js"></script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/vendor/bootstrap-datepicker.min.js"></script>
+        <script src="js/vendor/locales/bootstrap-datepicker.de.js"></script>
+        <script src="js/vendor/string_score.min.js"></script>
+        <!-- Dynatable für Suche/Filter bei Tabellen-->
+        <script src="js/vendor/dynatable.min.js"></script>
 
 
         <!-- Unterstützung für Media Queries und HTML5-Elemente in IE8 über HTML5 shim und Respond.js -->
@@ -66,8 +69,6 @@ if (Input::itemExists('projekt_cancel')) {
         <!-- IE10-Anzeigefenster-Hack für Fehler auf Surface und Desktop-Windows-8 -->
         <script src="js/ie10-viewport-bug-workaround.js"></script>
         
-        <!-- Dynatable für Suche/Filter bei Tabellen-->
-        <script src="js/dynatable.min.js"></script>
     </head>
 
     <body>

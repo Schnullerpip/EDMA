@@ -2,9 +2,9 @@
 /**
  * Description of Parser
  *
- * Parsed die Datei mit RegularExpression.
- * Ergebniss ist ein Array mit Groesse 7:
- * [0]: Array mit alle gefundenen Zeilen (komplett)
+ * Parset die Datei mit RegularExpression.
+ * Ergebnis ist ein Array mit Groesse 7:
+ * [0]: Array mit allen gefundenen Zeilen (komplett)
  * [1]: Array mit allen Metanamen (ohne _TYP)
  * [2]: Array mit dem Typ (n, s oder d)
  * [3]: Array mit allen Metawerten (gemischt)
@@ -20,6 +20,7 @@ class Parser {
     private $_projektID;
     private $_messreiheID;
     private $_error = array();
+    private $_warning = array();
     private $_zeilennummerMessdaten;
     
     public function __construct($file, $projekt_id) {
@@ -42,8 +43,8 @@ class Parser {
         $stringFile = explode("###", $stringFile);
         if (count($stringFile) == 1) {
             $this->_error = array(
-                'Error' => "Trennzeichen'###' nicht vorhanden!",
-                'Abbruch' => "Import abgebrochen!"
+                'Fehler' => "Trennzeichen'###' nicht vorhanden!",
+                'ABBRUCH' => "Import abgebrochen!"
             );
             return;
         }
@@ -61,7 +62,7 @@ class Parser {
             $this->_error = array_merge($this->_error, $exceptionArray);
             $this->_error = array_merge($this->_error, $e->getMessages());
             $abbruch = array(
-                'Abbruch' => "Import abgebrochen!"
+                'ABBRUCH' => "Import abgebrochen!"
             );
             $this->_error = array_merge($this->_error, $abbruch);
             $this->_db->rollback();
@@ -97,35 +98,36 @@ class Parser {
         $lines = count($metalines);
         $this->_zeilennummerMessdaten = $lines + 3; // Metazeilen + Trennzeichenzeile + Sensornamenzeile + Indexbeginn
         if ($count != $lines) {
-            $warningArray = $this->metalinesToIgnore($matches[0], $metalines);
-            $this->_error = array_merge($this->_error, $warningArray);
+            $this->_warning = $this->metalinesToIgnore($matches[0], $metalines);
         }
 
         $messreihenname = array_search("Name", $matches[1]);
         if ($messreihenname === FALSE) {
-            $nameError = array(
-                'Error' => "Metainfo 'Name' nicht gefunden oder Wert ungültig!"
-            );
-            throw new ParserException("Fehler in Funktion parseMetaDaten()", 0, null, $nameError);
+            $nameError = "Metainfo 'Name' nicht gefunden oder Wert ungültig!";
+            $this->throwMetaException($nameError);
         }
         
         $datum_index = array_search("Datum", $matches[1]);
         if ($datum_index === FALSE) {
-            $datumError = array(
-                'Error' => "Metainfo 'Datum' nicht gefunden oder Wert ungültig!"
-            );
-            throw new ParserException("Fehler in Funktion parseMetaDaten()", 0, null, $datumError);
+            $datumError = "Metainfo 'Datum' nicht gefunden oder Wert ungültig!";
+            $this->throwMetaException($datumError);
         }        
 
         $datum_german = $matches[3][$datum_index];
         $datum_mysql = Utils::convertDate($datum_german);
 
         // insert messreihe
+        $messreihen_name = $matches[3][$messreihenname];
         $messreihe = array (
-            "messreihenname" => $matches[3][$messreihenname],
+            "messreihenname" => $messreihen_name,
             "datum" => $datum_mysql,
             "projekt_id" => $this->_projektID,
         );
+        $this->_db->insert('messreihe', $messreihe);
+        if ($this->_db->error()) {
+            $this->throwMetaException("Fehler beim INSERT von 'messreihe' ("
+                    . $messreihen_name . "), wahrscheinlich ist der Messreihenname bereits vorhanden");
+        }
         $messreihe_id = $this->_db->getIdBySelectOrInsert('messreihe', $messreihe);
         $this->_messreiheID = $messreihe_id;
         
@@ -142,17 +144,29 @@ class Parser {
             "typ" => "string",
         );
         $datentyp_id_s = $this->_db->getIdBySelectOrInsert('datentyp', $datentyp_s);
+        if ($this->_db->error()) {
+            $this->throwMetaException("Fehler beim INSERT von 'datentyp'");
+        }
         $datentyp_d = array(
             "typ" => "datum",
         );
         $datentyp_id_d = $this->_db->getIdBySelectOrInsert('datentyp', $datentyp_d);
+        if ($this->_db->error()) {
+            $this->throwMetaException("Fehler beim INSERT von 'datentyp'");
+        }
         $datentyp_n = array(
             "typ" => "numerisch",
         );
         $datentyp_id_n = $this->_db->getIdBySelectOrInsert('datentyp', $datentyp_n);
+        if ($this->_db->error()) {
+            $this->throwMetaException("Fehler beim INSERT von 'datentyp'");
+        }
 
         // insert metainfo und messreihe_metainfo
         $preparedInsert = $this->_db->createStatement("INSERT INTO messreihe_metainfo (messreihe_id, metainfo_id, metawert) VALUES (?, ?, ?)");
+        if ($preparedInsert === FALSE) {
+            $this->throwMetaException("Fehler beim Erstellen des prepared statements von 'messreihe_metainfo'");
+        }
         foreach ($meta_indizes as $index) {
             if ($matches[4][$index] != null) {
                 $metainfo = array(
@@ -173,7 +187,12 @@ class Parser {
                 );
                 $metawert = $matches[6][$index];
             }
+            // TODO: was, wenn metainfo eines anderen Projekts gleichen Namen, aber anderen Datentyp hat?
             $metainfo_id = $this->_db->getIdBySelectOrInsert('metainfo', $metainfo);
+            if ($this->_db->error()) {
+                $metainfo_name = $metainfo["metaname"];
+                $this->throwMetaException("Fehler beim INSERT von 'metainfo' (" . $metainfo_name . ")");
+            }
             
             $messreihe_metainfo = array(
                 $messreihe_id,
@@ -183,10 +202,10 @@ class Parser {
             
             $this->_db->executeStatement($preparedInsert, $messreihe_metainfo);
             if ($this->_db->error()) {
-                $executeError = array(
-                    'Error' => "Fehler beim INSERT von Metainfo (ID: " . $metainfo_id . ")"
-                );
-                throw new ParserException("Fehler in Funktion parseMetaDaten()", 0, null, $executeError);
+                $this->throwMetaException("Fehler beim INSERT von 'messreihe_metainfo' ("
+                        . "messreihe_id: " . $messreihe_id
+                        . ", metainfo_id: " . $metainfo_id
+                        . ", metawert: " . $metawert . ")");
             }
         }
     }
@@ -203,6 +222,9 @@ class Parser {
         // insert sensor und messreihe_sensor
         $sensor_id_array = array();
         $statement_messreihe_sensor = $this->_db->createStatement("INSERT INTO messreihe_sensor (messreihe_id, sensor_id, anzeigename) VALUES (?, ?, ?)");
+        if ($statement_messreihe_sensor === FALSE) {
+            $this->throwMessException("Fehler beim Erstellen des prepared statements von 'messreihe_sensor'");
+        }
         // ab Spalte 2, ohne Datum und Uhrzeit
         for ($i = 2; $i < $spaltenanzahl; $i++) {
             $sensorname = $spaltennamen[$i];
@@ -210,6 +232,9 @@ class Parser {
                 "sensorname" => $sensorname,
             );
             $sensor_id = $this->_db->getIdBySelectOrInsert('sensor', $sensor);
+            if ($this->_db->error()) {
+                $this->throwMessException("Fehler beim INSERT von 'sensor' (" . $sensorname . ")");
+            }
             array_push($sensor_id_array, $sensor_id);
 
             $messreihe_sensor = array(
@@ -218,6 +243,12 @@ class Parser {
                 $sensorname,
             );
             $this->_db->executeStatement($statement_messreihe_sensor, $messreihe_sensor);
+            if ($this->_db->error()) {
+                $this->throwMessException("Fehler beim INSERT von 'messreihe_sensor' ("
+                        . "messreihe_id: " . $this->_messreiheID
+                        . ", sensor_id: " . $sensor_id
+                        . ", sensorname: " . $sensorname . ")");
+            }
         }
         $messdaten = array_slice($messdaten, 1);	// löschen des Elements mit Sensornamen, da nicht mehr benötigt
         
@@ -231,22 +262,25 @@ class Parser {
         }
         
         $statement_messung = $this->_db->createStatement($sql);
+        if ($statement_messreihe_sensor === FALSE) {
+            $this->throwMessException("Fehler beim Erstellen des prepared statements von 'messung'");
+        }
         
         // Iteration ueber alle Zeilen
         for ($j = 0; $j < count($messdaten); ++$j) {
             $messungsSpalte = preg_split("/\t/", $messdaten[$j]);
             
-            // Pruefung auf zu wenig Zeilen
+            // Pruefung auf zu wenig Spalten
             if (count($messungsSpalte) !== $spaltenanzahl) {
                 // Pruefung auf Leerzeile in letzter Zeile
-                if ($j === count($messdaten) - 1 and count($messungsSpalte) === 0) {
+                if ($j === count($messdaten) - 1 and count($messungsSpalte) === 1) {
                     continue;
                 } else {
                     $executeError = array(
                         'Error' => "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
                         . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")"
                     );
-                    throw new ParserException("Fehler in Funktion parseMessDaten()", 0, null, $executeError);
+                    throw new ParserException("Fehler in Funktion parseMetaDaten()", 0, null, $executeError);
                 }
             }
             $datum = $messungsSpalte[0];
@@ -271,10 +305,7 @@ class Parser {
             
             $this->_db->executeStatement($statement_messung, $values);
             if ($this->_db->error()) {
-                $dbError = array(
-                    '' => "Fehler beim INSERT von messung",
-                );
-                throw new ParserException("Fehler in Funktion parseMessDaten()", 0, null, $dbError);
+                $this->throwMessException("Fehler beim INSERT von 'messung'");
             }
         }
         ini_set('max_execution_time', $saveExTime);
@@ -290,8 +321,26 @@ class Parser {
         }
         return $retArray;
     }
+    
+    private function throwMetaException($msg) {
+        $dbErrorMsg = array(
+            'DB Error' => $msg
+        );
+        throw new ParserException("Fehler in Funktion parseMetaDaten()", 0, null, $dbErrorMsg);
+    }
+    
+    private function throwMessException($msg) {
+        $dbErrorMsg = array(
+            'DB Error' => $msg
+        );
+        throw new ParserException("Fehler in Funktion parseMessDaten()", 0, null, $dbErrorMsg);
+    }
 
     public function errors() {
         return $this->_error;
+    }
+    
+    public function warnings() {
+        return $this->_warning;
     }
 }
