@@ -98,6 +98,7 @@ var app = app || {};
         data.append('element', o.options.element.name);
         data.append('ajax', true);
         data.append('maxsize', o.options.maxsize);
+        data.append('projektID', o.options.projektID);
         
         if (o.options.projektID !== 'undefined') {
             data.append('projektid', o.options.projektID);

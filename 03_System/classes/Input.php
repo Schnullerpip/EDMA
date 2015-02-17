@@ -42,5 +42,22 @@ class Input {
         }
         return '';
     }
+    
+    /**
+     * Prüft ob ein Input-Feld mit dem Namen $item übermittelt wurde.
+     * Nützlich um die existens von Feldern zu prüfen, die keinen Inhalt haben.
+     * Zum Beispiel kann {@link get()} bei Buttons vom Typ submit
+     * nicht verwendet werden, da sie einen leeren Wert haben.
+     * @param type $item Name des Input-Feldes
+     * @return boolean true wenn existiert ansonsten false
+     */
+    public static function itemExists($item) {
+        if (isset($_POST[$item])) {
+            return true;
+        } else if (isset($_GET[$item])) {
+            return true;
+        }
+        return false;
+    }
 
 }

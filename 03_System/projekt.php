@@ -94,13 +94,8 @@ if (Input::exists()) {
                         
                         
                         $fp = fopen($filePath, 'r');
-                        $fileContent = addslashes(fread($fp, filesize($filePath)));
+                        $fileContent = fread($fp, filesize($filePath));
                         fclose($fp);
-
-                        if(!get_magic_quotes_gpc())
-                        {
-                            $fileName = addslashes($fileName);
-                        }
         
                         $fields = array(
                             'projekt_id' => $projekt->data()->id,
@@ -109,14 +104,40 @@ if (Input::exists()) {
                             'groesse' => $fileSize,
                             'dateityp' => $fileType
                         );
+                        
+                        $serachFileds = array(
+                            'projekt_id' => $projekt->data()->id,
+                            'dateiname' => $fileName
+                        );
         
-                        if ($db->insertOrUpdate("anhang", $fields) < 0) {
-                            $errors[] = "Fehler beim Upload von Datei " . $fileName;
+                        if ($db->insertOrUpdate("anhang", $fields, $serachFileds) < 0) {
+                            $errors[] = "Fehler beim Upload von Datei " . $fileName . 
+                                    "\n" . 'projekt_id ' . $projekt->data()->id . "\n" .
+                            'dateiname ' . $fileName . "\n" .
+                            'groesse ' . $fileSize . "\n" .
+                            'dateityp ' . $fileType . "\n" .
+                            'content_groesse' . strlen($fileContent);
                         }
                         
                         unlink($filePath);
                     }
                     Session::delete(Config::get('session/upload_name'));
+                    if (count($errors) > 0) {
+                        throw new Exception(implode("\n", $errors));
+                    }
+                }
+                
+                // markierte Projektbeschreibungen loeschen
+                if (Session::exists(Config::get('session/removed_name'))) {
+                    $filesToDelete = Session::get(Config::get('session/removed_name'));
+                    $errors = array();
+                    foreach ($filesToDelete as $fileName => $anhangid) {
+                        $deleteWhere = array("id", "=", $anhangid);
+                        if (!$db->delete("anhang", $deleteWhere)) {
+                            $errors[] = "Fehler beim Löschen von Datei " . $fileName;
+                        }
+                    }
+                    Session::delete(Config::get('session/removed_name'));
                     if (count($errors) > 0) {
                         throw new Exception(implode("\n", $errors));
                     }
@@ -169,7 +190,16 @@ if (Input::exists()) {
                 <div class="panel-heading">Vorhandene Projektbeschreibungen</div>
 
                 <!-- Tabelle -->
-                <table class="table" id="projektbeschreibungen" data-count="3">
+                <?php
+                $db = DB::getInstance(); 
+                if (is_object($projekt->data())) {
+                    $db->query('SELECT dateiname, id FROM anhang WHERE projekt_id = ' . $projekt->data()->id);
+                    $projektbeschreibungen = $db->results();
+                } else {
+                    $projektbeschreibungen = array();
+                }
+                ?>
+                <table class="table" id="projektbeschreibungen" data-count="<?php echo $db->count(); ?>">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -180,16 +210,13 @@ if (Input::exists()) {
                     <tbody id="projektbeschreibungen_body">
                         
                         <?php
-                        $db = DB::getInstance();
-
-                        $db->query('SELECT dateiname, id FROM anhang WHERE projekt_id = ' . $projekt->data()->id);
-                        foreach ($db->results() as $index => $anhang) {
+                        foreach ($projektbeschreibungen as $index => $anhang) {
                             printf(
                             '<tr>
                                 <td>%d</td>
-                                <td>%s</td>
-                                <td class="hidden-close"><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="%d"></span></td>
-                            </tr>', $index+1, strlen($anhang->dateiname) > 49 ? substr($anhang->dateiname, 0, 49) . "..." : $anhang->dateiname, $anhang->id);                            
+                                <td><a href="download.php?id=%d">%s</a></td>
+                                <td class="hidden-close"><span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="%d" data-filename="%s"></span></td>
+                            </tr>', $index+1, $anhang->id, strlen($anhang->dateiname) > 49 ? substr($anhang->dateiname, 0, 49) . "..." : $anhang->dateiname, $anhang->id, $anhang->dateiname);                            
                         }
                         ?>
                     </tbody>
@@ -217,8 +244,8 @@ if (Input::exists()) {
     <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
     <div class="form-group">
         <div class="col-sm-offset-4 col-sm-5">
-            <button type="submit" class="btn btn-default">Speichern</button>
-            <a href="reset.php" class="btn btn-link">Abbrechen</a>
+            <button name="projekt_save" type="submit" class="btn btn-default">Speichern</button>
+            <button name="projekt_cancel" type="submit" class="btn btn-default">Abbrechen</button>
         </div>
     </div>
 
@@ -257,24 +284,35 @@ if (Input::exists()) {
                 finished: function (data) {
                     progressBar.width(0);
                     // Fuege Element in Tabelle ein
-                    var count = $('#projektbeschreibungen_body tr').length;
-                            parseInt($('#projektbeschreibungen').data('count'));
+                    var count = parseInt($('#projektbeschreibungen').data('count'));
                     $.each(data, function (i) {
                         var name = data[i].name;
-                        if (name.length > 49) {
-                            name = name.substr(0,49) + "..."; 
+                        if (name) {
+                            if (name.length > 49) {
+                                name = name.substr(0,49) + "..."; 
+                            }
+                            if (data[i].id == 'refreshed') {
+                                // TODO makiere aktualisierte Listenitems
+                                var tr = $("span[data-filename='" + name + "'").closest('tr');
+                                var a = tr.find('a');
+                                tr.find('td').wrapInner("<strong></strong>");
+                                a.attr("href","#");
+                            } else {
+
+                                $('#projektbeschreibungen').append(
+                                        '<tr><td><strong>' + 
+                                        (++count) + 
+                                        '</strong></td><td><strong>'
+                                        + name + 
+                                        '</strong></td><td><strong>' +
+                                        '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="' + data[i].id + '" data-filename="' + 
+                                        data[i].name + '"></span>' +
+                                        '</strong></td></tr>'
+                                        );
+                            }
                         }
-                        
-                        $('#projektbeschreibungen').append(
-                                '<tr><td>' + 
-                                (count + (i + 1)) + 
-                                '</td><td>' 
-                                + name + 
-                                '</td><td>' +
-                                '<span class="glyphicon glyphicon-remove" aria-hidden="true" data-id="' + data[i].id + '"></span>' +
-                                '</td></tr>'
-                                );
                     });
+                    $('#projektbeschreibungen').data('count', count);
                     reset($('#files'));
                 },
                 error: function (data) {
@@ -287,24 +325,26 @@ if (Input::exists()) {
             });
         });
         
-        $('.glyphicon-remove').on('click', function() {
+        
+        $("#projektbeschreibungen").on("click",".glyphicon-remove",function(e) {
             $.ajax({
                 type: 'post',
                 url: 'ajaxHandler.php',
                 data: {
                     function: "delete",
-                    element: {
-                        name: "projektbeschreibung",
-                        id: $(this).data('id')
-                    }
+                    element: "projektbeschreibung",
+                    id: $(this).data('id'),
+                    filename: $(this).data('filename'),
+                    ajax: true
                 }
             })
-            .done(function() {
-              console.log("success");
-              // TODO: Tabelleneintrag löschen
+            .done(function(ee) {
+                console.log(ee);
+                console.log("success");
+                $(e.target).closest('tr').fadeOut("slow");
             })
             .fail(function() {
-              // TODO: Fehler in $('#upload-errors') anzeigen
+                // TODO: Fehler in $('#upload-errors') anzeigen
             });
         });
         

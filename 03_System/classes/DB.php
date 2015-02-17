@@ -209,21 +209,28 @@ class DB {
     }
     
     /**
-     * Legt einen Datensatz an der updated ihn (falls schon vorhanden) mit den 
+     * Legt einen Datensatz an oder updated ihn (falls schon vorhanden) mit den 
      * Daten aus $fields.
      * In $fields stehen dabei die Felder und dazugehoerigen Werte als array.
+     * Per $serachFields kann die Existens des Datenstatzes mit andern Feldern
+     * geprueft werden. Angelegt wird aber weiterhin mit $fields.
      * @param type $table Name der Tabelle in welcher der Datensatz eigefuegt/geupdatet werden soll.
      * @param type $fields Array mit Felder für INSERT oder UPDATE,
      * wobei KEY = Feldname und VALUE = Wert z.B. array['metaname'] = 'Datum'.
+     * @param type $searchFields Aehnlich wie $fields nur das mit diesen Feldern
+     * beim SELECT geprueft wird, ob der Datensatz bereits existiert.
      * @return type Gibt die ID des Datenstatz zurueck oder -1 im Fehlerfall.
      */
-    public function insertOrUpdate($table, $fields) {
+    public function insertOrUpdate($table, $fields, $searchFields = null) {
         $result = -1;
+        if (is_null($searchFields)) {
+            $searchFields = $fields;
+        }
         
-        $where = $this->prepareArray($fields, "and");
+        $where = $this->prepareArray($searchFields, "and");
         $sql = "SELECT id FROM {$table} WHERE {$where}";
        
-        $this->query($sql, $fields);
+        $this->query($sql, $searchFields);
         if(!$this->error() and $this->count()) {
             $id = $this->first()->id;
             if ($this->update($table, $id, $fields)) {

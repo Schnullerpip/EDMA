@@ -26,15 +26,17 @@ class UploadController extends AjaxController {
                 'application/pdf', // pdf
             ),
             $_maxSize,
-            $_files;
+            $_files,
+            $_db;
 
     public function __construct($element, $files) {
         $this->_files = $files;
         $this->_maxSize = Input::get('maxsize');
+        $this->_db = DB::getInstance();
 
         switch ($element) {
             case 'projektbeschreibung':
-                $this->process();
+                $this->process(Input::get('projektID'));
                 break;
             case 'messreihe':
                 $this->import();
@@ -45,7 +47,7 @@ class UploadController extends AjaxController {
         }
     }
 
-    private function validate($fileName, $fileSize) {
+    private function validate($fileName, $fileSize, $fileType) {
         if ($fileSize > $this->_maxSize) {
             $this->_failed[] = array(
                 'file' => $fileName,
@@ -55,7 +57,15 @@ class UploadController extends AjaxController {
             return false;
         }
 
-        // Other Stuff
+        if (!in_array($fileType, $this->_description_mimetypes)) {
+            $this->_failed[] = array(
+                'Dateiname' => $fileName,
+                'Fehler' => "Datei ist in ungültigem Dateiformat",
+                'Unterstütze Formate' => "doc, docx, pdf, odt",
+            );
+            
+            return false;
+        }
 
         return true;
     }
@@ -66,10 +76,15 @@ class UploadController extends AjaxController {
             $uploadedFiles = Session::get(Config::get('session/upload_name'));
         }
         
+        $filesToDelete = array();
+        if (Session::exists(Config::get('session/removed_name'))) {
+            $filesToDelete = Session::get(Config::get('session/removed_name'));
+        }
+        
         foreach ($this->_files['file']['name'] as $key => $fileName) {
-            
+ 
             $fileSize = $this->_files['file']['size'][$key];
-            $fileType = $this->_files['file']['type'][0];
+            $fileType = $this->_files['file']['type'][$key];
             $fileTemp = $this->_files['file']['tmp_name'][$key];
             
             if ($this->_files['file']['error'][$key] !== 0) {
@@ -80,39 +95,63 @@ class UploadController extends AjaxController {
                 continue;
             }
 
-            if (!in_array($fileType, $this->_description_mimetypes)) {
-                $this->_failed[] = array(
-                    'Dateiname' => $fileName,
-                    'Fehler' => "Datei ist in ungültigem Dateiformat",
-                    'Unterstütze Formate' => "doc, docx, pdf, odt",
-                );
-                continue;
-            }
-
             // Validate Files
-            if (!$this->validate($fileName, $fileSize)) {
+            if (!$this->validate($fileName, $fileSize, $fileType)) {
                 continue;
             }
             
+            if (array_key_exists($fileName, $uploadedFiles)) {
+                // Datei wurde gerade hochgeladen
+                $this->_succeeded[] = ["skipped"];
+                continue;
+            }
+            
+            $anhangId = -1;
+            $refreshList = false;
+            if (array_key_exists($fileName, $filesToDelete)) {
+                // Datei wurde vorhin geloescht, wieder herstellen
+                $anhangId =  $filesToDelete[$fileName];
+                unset($filesToDelete[$fileName]);
+                
+                $refreshList = true;
+            } else {
+                // Pruefen ob Datei schon in der DB und damit schon in der Liste ist
+                $sql = 'SELECT id FROM anhang WHERE projekt_id = ? and dateiname = ?';
+                
+                if ($this->_db->query($sql, [$id, $fileName])->count() === 0) {
+                    // Noch nicht in der Liste
+                    $refreshList = true;
+                }
+            }
+                        
             if (!file_exists('uploads/tmp')) {
                mkdir('uploads/tmp', 0775, true);
             }
             
             $filePath = "uploads/tmp/" . basename($fileTemp);
-            if (move_uploaded_file($fileTemp, $filePath) === true) {
-                $this->_succeeded[] = array(
-                    'name' => $fileName,
-                    'id' => $id,
-                );
+            if (move_uploaded_file($fileTemp, $filePath) === true) {  
                 $uploadedFiles[$fileName] = array(
                     'fileTemp' => $filePath,
                     'fileSize' => $fileSize,
                     'fileType' => $fileType,
                 );
+                
+                if ($refreshList) {
+                    // Anhang neu oder wiederhergestellt, Eintrag in Frontend
+                    $this->_succeeded[] = array(
+                        'name' => $fileName,
+                        'id' => $anhangId,
+                    ); 
+                } else {
+                    $this->_succeeded[] = array(
+                        'name' => $fileName,
+                        'id' => 'refreshed'
+                    );
+                }
             } else {
                 $this->_failed[] = array(
                     'Dateiname' => $fileName,
-                    'Achtung' => 'Die Datei konnte nicht hochgeladen werden!'
+                    'Achtung' => 'Die Datei konnte nicht kopiert werden!'
                 );
             }
         }
@@ -120,6 +159,8 @@ class UploadController extends AjaxController {
         if (count($uploadedFiles) >= 0) {
             Session::put(Config::get('session/upload_name'), $uploadedFiles);
         }
+        Session::put(Config::get('session/removed_name'), $filesToDelete);
+        
     }
 
     protected function import() {

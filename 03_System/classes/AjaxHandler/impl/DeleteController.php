@@ -11,15 +11,15 @@ class DeleteController extends AjaxController {
 
     private $_id; // ID der zu loeschenden Messreihe oder Projektbeschreibung
     private $_db;
+    private $_filenName; // Dateiname der Projektbeschreibung
 
-    public function __construct($element, $id) {
+    public function __construct($element, $id, $filename) {
         $this->_id = $id;
-
+        $this->_filenName = $filename;
         $this->_db = DB::getInstance();
-
         switch ($element) {
             case 'projektbeschreibung':
-                $this->process('anhang');
+                $this->process();
                 break;
 
             case 'messreihe':
@@ -33,8 +33,26 @@ class DeleteController extends AjaxController {
     }
 
     public function process() {
+        if ($this->_id == -1) {
+            // Neue Beschreibung, noch nicht in der DB aber in der Session
+            $uploadedFiles = Session::get(Config::get('session/upload_name'));
+            // Aus Sesstion entfernen damit die Datei nicht hochgeladen wird.
+            unset($uploadedFiles[$this->_filenName]);
+            Session::put(Config::get('session/upload_name'), $uploadedFiles);
+        } else {
+            // Beschreibung wurde bereits importiert, zum Loeschen vormerken
+            if (Session::exists(Config::get('session/removed_name'))) {
+                $fielsToDelete = Session::get(Config::get('session/removed_name'));
+            } else {
+                $fielsToDelete = array();
+            }
+            $fielsToDelete[$this->_filenName] = $this->_id;
+            Session::put(Config::get('session/removed_name'), $fielsToDelete);
+        }
+        
         $this->_succeeded[] = array(
-            'id' => $this->_id
+            'id' => $this->_id,
+            'filename' => $this->_filenName
         );
     }
 
