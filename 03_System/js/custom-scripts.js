@@ -16,6 +16,16 @@ $(document).ready(function () {
         autoclose: true,
         clearBtn: true
     });
+    
+    // Resette Modal Texte nach ausblenden
+    $('#infoModal').on('hidden.bs.modal', function (e) {
+        $('#infoModal').find('.modal-body .success .content').empty();
+        $('#infoModal').find('.modal-body .success').hide();
+        $('#infoModal').find('.modal-body .error .content').empty();
+        $('#infoModal').find('.modal-body .error').hide();
+        $('#infoModal').find('.modal-body .warning .content').empty();
+        $('#infoModal').find('.modal-body .warning').hide();
+    });
 });
 
 // Append Modal Methods
@@ -28,13 +38,6 @@ function modalTextError(msg) {
 function modalTextWarning(msg) {
     $('#infoModal').find('.modal-body .warning').show().find('.content').html(msg);
 }
-
-/*
-var _super = $.fn.modal;
-$.extend(_super.Constructor.prototype.info, function () {
-    console.log('test');
-});
-*/
 
 
 // Upload-Funktionalitaet
