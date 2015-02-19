@@ -105,9 +105,9 @@ if (Input::itemExists('projekt_cancel')) {
                 <div id="navbar" class="navbar-collapse collapse">
                     <?php if ($projekt->isLoggedIn()) : ?>
                         <ul class="nav navbar-nav">
+                            <li><a href="index.php">Startseite</a></li>
+                            <li><a href="projekt.php">Projektverwaltung</a></li>
                             <?php if ($projekt->isMaster()) : ?>
-                                <li><a href="index.php">Startseite</a></li>
-                                <li><a href="projekt.php">Projektverwaltung</a></li>
                                 <li><a href="messreihen.php">Messreihenverwaltung</a></li>
                             <?php endif; ?>
                         </ul>

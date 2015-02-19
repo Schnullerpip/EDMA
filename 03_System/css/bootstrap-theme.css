@@ -327,8 +327,12 @@ table tr:hover .glyphicon {
     width: 100px;
 }
 
-.table#projektbeschreibungen {
+form .table#projektbeschreibungen {
     border-bottom: 2px solid white;
+}
+
+.table#projektbeschreibungen {
+    border-bottom: none;
 }
 
 .panel .upload-progress {
