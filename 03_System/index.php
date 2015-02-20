@@ -76,10 +76,11 @@ $projektid = $projekt->data()->id;
 
 //Select für messreihenname, metadatenname, datentyp
 $db->query("SELECT messreihe.messreihenname, messreihe.datum, metainfo.metaname, messreihe_metainfo.metawert, datentyp.typ
-					FROM messreihe INNER JOIN projekt ON messreihe.projekt_id = projekt.id = $projektid
+					FROM messreihe INNER JOIN projekt ON messreihe.projekt_id = projekt.id
 					INNER JOIN messreihe_metainfo ON messreihe.id = messreihe_metainfo.messreihe_id
 					INNER JOIN metainfo ON metainfo.id = messreihe_metainfo.metainfo_id
-					INNER JOIN datentyp ON metainfo.datentyp_id = datentyp.id");
+                    INNER JOIN datentyp ON metainfo.datentyp_id = datentyp.id
+                    WHERE projekt.id = $projektid");
 
 //speichere den Select mit den Metafeldern in einer Variable
 $select = $db->results();
@@ -87,9 +88,10 @@ $jsonselectmeta = json_encode($select);
 
 //select für sensoren
 $db->query("SELECT messreihe.messreihenname, messreihe.id, messreihe_sensor.anzeigename, sensor.id
-					FROM messreihe INNER JOIN projekt ON messreihe.projekt_id = projekt.id = $projektid
+					FROM messreihe INNER JOIN projekt ON messreihe.projekt_id = projekt.id
 					INNER JOIN messreihe_sensor ON messreihe.id = messreihe_sensor.messreihe_id
-					INNER JOIN sensor ON messreihe_sensor.sensor_id = sensor.id");
+					INNER JOIN sensor ON messreihe_sensor.sensor_id = sensor.id
+                    WHERE projekt.id = $projektid");
 
 $selectsensor = $db->results();
 $jsonselectsensor = json_encode($selectsensor);
@@ -102,46 +104,27 @@ $jsonselectsensor = json_encode($selectsensor);
     //-----------------------Variablen zur Auswahl aus dem Select----
     var select = <?php echo $jsonselectmeta; ?>;    //enthält den select
     var selectedMetafield;
-    var select_copy = [];
-
-    //filter alle Metas heraus, die es doppelt gibt -----------------------------------
-    var i;
-    for (i = 0; i < select.length; i++) {
-        var o;
-        for (o = 0; o < select_copy.length; o++) {
-            var already_exists = false;
-            if ((select[i].metaname == select_copy[o].metaname)) {
-                //metafield already exists!!!
-                already_exists = true;
-                break;
-            }
-        }
-        if (!already_exists) {
-            console.log("adding new meta to select meta: " + select[i].metaname);
-            select_copy.push(select[i]);
-        }
-    }
-    select = select_copy;
-    //jetzt befinden sich in select alle messreihen so oft, wie sie metafelder haben
 
     //Durch den folgenden Code ist nun eine array verfügbar, welche ausschließlich die verschiedenen Messreihen (jede genau ein mal) mit allen metafeldern aufzeigt
     var messreihen = [];
     var messreihennamen = [];
-    for (i = 0; i < select_copy.length; i++) {
-        if ($.inArray(select_copy[i].messreihenname, messreihennamen) < 0) {
-            messreihennamen.push(select_copy[i].messreihenname);
-            var tmp_messreihe = {messreihenname: select_copy[i].messreihenname};
-            tmp_messreihe.datum = select_copy[i].datum;
+    for (i = 0; i < select.length; i++) {
+        if ($.inArray(select[i].messreihenname, messreihennamen) < 0) {
+            var metanamen = [];
+            messreihennamen.push(select[i].messreihenname);
+            var tmp_messreihe = {messreihenname: select[i].messreihenname};
+            tmp_messreihe.datum = select[i].datum;
             tmp_messreihe.metafields = [];
             messreihen.push(tmp_messreihe);
             var o;
-            for (o = i; o < select_copy.length; o++) {
-                var mname = select_copy[o].metaname;
-                if ((select_copy[o].messreihenname == select_copy[i].messreihenname) && ($.inArray(mname, messreihen[messreihen.length - 1]) < 0)) {
+            for (o = i; o < select.length; o++) {
+                var mname = select[o].metaname;
+                if ((select[o].messreihenname == select[i].messreihenname) && ($.inArray(mname, metanamen) < 0)) {
+                    metanamen.push(mname);
+                    messreihen[messreihen.length - 1].metafields.push({metaname: select[o].metaname, typ: select[o].typ, wert: select[o].metawert});
                 }
-                messreihen[messreihen.length - 1].metafields.push({metaname: select_copy[o].metaname, typ: select_copy[o].typ, wert: select_copy[o].metawert});
             }
-            console.log("adding new 'messreihe' -->" + select_copy[i].messreihenname + "<-- to array 'messreihen'");
+            console.log("adding new 'messreihe' -->" + select[i].messreihenname + "<-- to array 'messreihen'");
         }
     }
 
@@ -149,16 +132,16 @@ $jsonselectsensor = json_encode($selectsensor);
     for (i = 0; i < messreihen.length; i++) {
         var o;
         var tmp_array = [];
-        for (o = 0; o < select_copy.length; o++) {
-            if ((messreihen[i]["messreihenname"] == select_copy[o]["messreihenname"]) && ($.inArray(messreihen[i], tmp_array) < 0)) {
+        for (o = 0; o < select.length; o++) {
+            if ((messreihen[i]["messreihenname"] == select[o]["messreihenname"]) && ($.inArray(messreihen[i], tmp_array) < 0)) {
                 tmp_array.push(messreihen[i]);
-                messreihen[i].metafields.push({metaname: "datum", typ: "datum", wert: select_copy[o]["datum"]});
+                messreihen[i].metafields.push({metaname: "datum", typ: "datum", wert: select[o]["datum"]});
             }
         }
     }
 
     //Arbeitskopie von messreihen erstellen
-    var messreihen_copy = $.extend(true, [], messreihen);
+    var messreihen_copy = $.extend(true, [], messreihen); //Tiefe Kopie
 
     //only for debug
     /*for(i = 0; i < messreihen.length; i++){
@@ -320,7 +303,7 @@ $jsonselectsensor = json_encode($selectsensor);
         selectedMetafield = messreihen_copy[io[0]].metafields[io[1]];
         selectFlag = true;
         selectChangedCount++;
-        $("#meta_select_button").html("<span class='glyphicon glyphicon-plus'></span>" + selectedMetafield["metaname"] + "filter hinzufügen");
+        $("#meta_select_button").html("<span class='glyphicon glyphicon-plus'></span>" + selectedMetafield["metaname"] + " filter hinzufügen");
     }
 
 
@@ -474,13 +457,23 @@ $jsonselectsensor = json_encode($selectsensor);
         $("#metaValueField" + argid).remove();
 
         //TODO regenerate #selectBox da nun vorherig weggefallene messreihen wieder erlaubt sein können	
-
         //füge der arbeitsopie wieder jene elemente hinzu welche durch das gelöschte metafeld beseitigt wurden (und NUR diese!)
         for (i = 0; i < look_up_unique_id.length; i++) {
             /*falls wegen des nun gelöschten metaelements anderere messreihen von der auswahl ausgeshlossen wurden, müssen diese nun wieder der auswahl hinzugefüht werden da die ursache nun beseitigt ist*/
             if(look_up_unique_id[i].id == argid){
                 messreihen_copy.push(look_up_unique_id[i].messreihe);
-                look_up_unique_id.splice(i, 1);  //entsprechendes element aus dem lookup löschen
+            }
+        }
+        //remove every entry in the look up array that holds the id = argid
+        var argid_is_in_lookup = true;
+        while(argid_is_in_lookup){
+            argid_is_in_lookup = false;
+            for(i = 0; i < look_up_unique_id.length; i++){
+                if(look_up_unique_id[i].id == argid){
+                    look_up_unique_id.splice(i, 1);
+                    argid_is_in_lokup = true;
+                    break;
+                }
             }
         }
         regenerateDocument();
@@ -495,13 +488,13 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function regenerateMetaSelect() {
         var replace_string = "";
-
+        var tmp_metanamen = [];
         var tmp_array = [];
         for (i = 0; i < messreihen_copy.length; i++) {
             var o;
             for (o = 0; o < messreihen_copy[i].metafields.length; o++) {
-                if ($.inArray(messreihen_copy[i].metafields[o]) < 0) {
-                    tmp_array.push(messreihen_copy[i].metafields[o], tmp_array);
+                if ($.inArray(messreihen_copy[i].metafields[o].metaname, tmp_metanamen) < 0) {
+                    tmp_metanamen.push(messreihen_copy[i].metafields[o].metaname);
                     replace_string = replace_string.concat("<li id='selectOption" + (uniquei++) + "'>");
                     var tmp_str = "" + i;
                     tmp_str = tmp_str.concat("" + o);
@@ -701,25 +694,26 @@ $jsonselectsensor = json_encode($selectsensor);
         }
     }
 //----------------------------------Funktionen zum Bearbeiten der "Messreihen/Sensoren-Filtern" Felder ------------------------------
+
+
+    //Liste der angezeigten Messreihen regenerieren 
     function regenerateMessreihenList() {
-        var replace_string = "<div id='messreihenListe'>";
+        var replace_string = "";
         for (i = 0; i < messreihen_copy.length; i++) {
             replace_string += "<button class='btn btn-default' data-messreihe='"+messreihen_copy[i]["messreihenname"]+"'>" + messreihen_copy[i]["messreihenname"] + "</button>";
         }
-        replace_string += "</div>";
-        $("#messreihenListe").replaceWith(replace_string);
+        $("#messreihenListe").html(replace_string);
     }
 
 
     function showSensorsOf(arg) {
-        var replace_string = "<div id='sensorListe'>";
+        replace_string = "";
         for (i = 0; i < sensors.length; i++) {
             if (arg == sensors[i]["messreihenname"]) {
-                replace_string += "<button>" + sensors[i]["anzeigename"] + "</button>";
+                replace_string += "<button class='btn btn-default'>" + sensors[i]["anzeigename"] + "</button>";
             }
-            replace_string += "</div>";
-            $("#sensorListe").replaceWith(replace_string);
         }
+        $("#sensorenListe").html(replace_string);
     }
 //-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -739,12 +733,13 @@ $jsonselectsensor = json_encode($selectsensor);
             $(this).blur();
         });
 
-		 $('#meta_value_div').on("blur", ".valueField", function (e) {
+		$('#meta_value_div').on("blur", ".valueField", function (e) {
             filterMessreihen(e.target, $(this).attr("id"));
         });
         
-        $('#messreihenDiv').on("click", ".btn", function (e) {
-            console.log(e.target);
+        $('#messreihenListe').on("click", ".btn", function (e) {
+            console.log("check");
+            console.log($(e.target).data('messreihe'));
             showSensorsOf($(e.target).data('messreihe'));
         });
     });
