@@ -124,7 +124,7 @@ $jsonselectsensor = json_encode($selectsensor);
                     messreihen[messreihen.length - 1].metafields.push({metaname: select[o].metaname, typ: select[o].typ, wert: select[o].metawert});
                 }
             }
-            console.log("adding new 'messreihe' -->" + select[i].messreihenname + "<-- to array 'messreihen'");
+            /*ONLY FOR DEBUGGING -> console.log("adding new 'messreihe' -->" + select[i].messreihenname + "<-- to array 'messreihen'");*/
         }
     }
 
@@ -167,10 +167,11 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
-
     //keine doppelten sensoren zulassen-------------------------------
     for (i = 0; i < select_sensor.length; i++) {
+        //zunächst werden noch die elemente selected und scala beigefügt -> selected sagt aus ob der sensor gewählt wurde, scala auf welcher y-achse er dann angezeugt werden soll
         select_sensor[i].selected = false;
+        select_sensor[i].scala = null;
         var o;
         for (o = 0; o < sensors.length; o++) {
             var already_exists = false;
@@ -181,7 +182,7 @@ $jsonselectsensor = json_encode($selectsensor);
             }
         }
         if (!already_exists) {
-            console.log("adding new sensor to sensors[]: " + select_sensor[i].anzeigename);
+            /*ONLY FOR DEBUG -> console.log("adding new sensor to sensors[]: " + select_sensor[i].anzeigename);*/
             sensors.push(select_sensor[i]);
         }
     }
@@ -234,7 +235,7 @@ $jsonselectsensor = json_encode($selectsensor);
     //
     //
     //------------------------------------Die Strings, aus denen zuletzt der Select gebildet wird-------------
-    var QUERY_SELECT = "SELECT";
+    var QUERY_SELECT = "SELECT ";
     var QUERY_FROM = " FROM";
     var QUERY_WHERE = " WHERE";
     //--------------------------------------------------------------------------------------------------------
@@ -279,9 +280,12 @@ $jsonselectsensor = json_encode($selectsensor);
 <h2 id="h2MessreihenWählen">Messreihen/Sensoren wählen</h2>
 <div id="messreihenSensorenFilterDiv" class="row">
     <div id="messreihenDiv" class="col-xs-12 col-xs-6">
+        <small>Messreihen</small>
         <div id="messreihenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
     </div>
+
     <div id="sensorenDiv" class="col-xs-12 col-xs-6">
+        <small>Sensoren</small>
         <div id="sensorenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
     </div>
 </div>
@@ -735,11 +739,16 @@ $jsonselectsensor = json_encode($selectsensor);
         replace_string = [];
         for (i = 0; i < sensors.length; i++) {
             if (arg == sensors[i]["messreihenname"]) {
+                replace_string.push("<div class='row'><div class='col-xs-10'>");
+                replace_string.push("<button class='btn btn-default sensor-btn' style='width:100%' data-sensorID='"+sensors[i]["id"]+"'>");
+                replace_string.push(sensors[i]["anzeigename"]);
                 if(sensors[i].selected == true){
-                    replace_string.push("<button class='btn btn-default' data-sensorID='"+sensors[i]["id"]+"'>" + sensors[i]["anzeigename"] + " <span class='glyphicon glyphicon-ok'></span></button>");
-                }else{
-                    replace_string.push("<button class='btn btn-default' data-sensorID='"+sensors[i]["id"]+"'>" + sensors[i]["anzeigename"] + "</button>");
+                    replace_string.push("<span class='glyphicon glyphicon-ok'></span>");
                 }
+                replace_string.push("</button></div>");
+                replace_string.push("<div class='col-xs-2'><button class='btn btn-default scala-btn' data-sensorID='"+sensors[i]["id"]+"'>");
+                replace_string.push("<span class='glyphicon glyphicon-stats'></span>  "+sensors[i]["scala"]);
+                replace_string.push("</button></div></div>");
             }
         }
         $("#sensorenListe").html(replace_string.join(""));
@@ -748,6 +757,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function selectSensor(target){
+        console.log($(target).parent().parent());
         var selected_id = target.getAttribute("data-sensorID");
         for(i = 0; i < sensors.length; i++){
             if(sensors[i].id == selected_id){
@@ -777,6 +787,11 @@ $jsonselectsensor = json_encode($selectsensor);
         $("#h2MessreihenWählen").html("Messreihen/Sensoren wählen <small>"+number_sensors+"</small>");
         regenerateMessreihenList();
     }
+
+    function selectScala(target){
+        console.log(target);
+
+    }
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -805,8 +820,13 @@ $jsonselectsensor = json_encode($selectsensor);
         });
 
         //CLICK ON SENSOR
-        $('#sensorenListe').on("click", ".btn", function (e) {
+        $('#sensorenListe').on("click", ".sensor-btn", function (e) {
            selectSensor(e.target); 
+        });
+
+        //CLICK ON SCALA
+        $('#sensorenListe').on("click", ".scala-btn", function (e) {
+           selectScala(e.target); 
         });
     });
 
