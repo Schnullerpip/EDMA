@@ -784,13 +784,12 @@ $jsonselectsensor = json_encode($selectsensor);
                 }
             }
         }
-        $("#h2MessreihenWählen").html("Messreihen/Sensoren wählen <small>"+number_sensors+"</small>");
+        $("#h2MessreihenWählen").html("Messreihen/Sensoren wählen <span class='badge'>"+number_sensors+"</span>");
         regenerateMessreihenList();
     }
 
     function selectScala(target){
         console.log(target);
-
     }
 //-----------------------------------------------------------------------------------------------------------------------------------
 
