@@ -176,22 +176,18 @@ class UploadController extends AjaxController {
                         'Dateiname' => $this->_files['file']['name'][0],
                         'Import beendet' => 'Die Datei wurde erfolgreich importiert!'
                     );
-                    if (count($parser->warnings()) != 0) {
-                        $this->_warned[] = array(
-                            'Warnung' => "Importieren der Datei wird möglicherweise abgebrochen."
-                        );
-                    }
                 }
                 else {
                     $this->_failed[] = array(
                         'Dateiname' => $this->_files['file']['name'][0],
                         'error' => $parser->errors()
                     );
-                    if (count($parser->warnings()) != 0) {
-                        $this->_warned[] = array(
-                            'Warnung' => "Importieren der Datei wird möglicherweise abgebrochen."
-                        );
-                    }
+                }
+                
+                if (count($parser->warnings()) != 0) {
+                    $this->_warned[] = array_merge($parser->warnings(), array(
+                        'Warnung' => "Import wird bei ignoriertem Pflichtfeld abgebrochen."
+                    ));
                 }
             } else {
                 $this->_failed[] = array(

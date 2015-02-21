@@ -19,12 +19,10 @@ $(document).ready(function () {
     
     // Resette Modal Texte nach ausblenden
     $('#infoModal').on('hidden.bs.modal', function (e) {
-        $('#infoModal').find('.modal-body .success .content').empty();
-        $('#infoModal').find('.modal-body .success').hide();
-        $('#infoModal').find('.modal-body .error .content').empty();
-        $('#infoModal').find('.modal-body .error').hide();
-        $('#infoModal').find('.modal-body .warning .content').empty();
-        $('#infoModal').find('.modal-body .warning').hide();
+        $('#infoModal section').each(function () {
+            $(this).find('content').empty();
+            $(this).hide();
+        });
     });
 });
 
