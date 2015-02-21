@@ -256,7 +256,6 @@ if (is_object($projekt->data())) {
                                 </div>
                             </div>
                         </div>
-                        <div id="upload-errors" style="display: none;" class="alert alert-danger"></div>
                         <p><strong>Achtung:</strong> Wenn der Name der Datei schon vorhanden ist, wird die existierende Datei überschrieben.</p>
 
                     </div>
@@ -274,7 +273,6 @@ if (is_object($projekt->data())) {
         <script>
             $('#upload').click(function (event) {
                 var f = $('#files')[0];
-                var errorBox = $('#upload-errors');
                 var button = $('#upload');
                 var maxSize = $('#files').data('maxsize');
                 var progressBar = $('.upload-progress');
@@ -282,13 +280,11 @@ if (is_object($projekt->data())) {
 
                 event.preventDefault();
                 button.blur();
-                errorBox.empty();
-                errorBox.hide();
 
                 var msg = checkMaxsize(maxSize, f);
                 if (msg !== '') {
-                    errorBox.show();
-                    errorBox.append(msg);
+                    modalTextError(msg);
+                    $('#infoModal').modal();
                     reset($('#files'));
                     return false;
                 }
@@ -340,8 +336,8 @@ if (is_object($projekt->data())) {
                     error: function (data) {
                         var errorMsg = convertArray(data);
                         progressBar.width(0);
-                        errorBox.show();
-                        errorBox.append(errorMsg);
+                        modalTextError(errorMsg);
+                        $('#infoModal').modal();
                         reset($('#files'));
                     }
                 });
