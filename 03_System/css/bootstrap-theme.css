@@ -483,6 +483,20 @@ form .table#projektbeschreibungen {
 }
 
 
+
+/* Messreihen/Sensoren auswählen */
+/* ------------------------------- */
+#messreihenListe div.btn-group-verrtical{
+    width:80%;
+}
+
+#sensorenListe div.btn-group-verrtical{
+    width:80%;
+}
+
+
+
+
 /* Footer */
 /* ------------------------------- */
 

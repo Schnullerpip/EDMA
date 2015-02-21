@@ -161,9 +161,16 @@ $jsonselectsensor = json_encode($selectsensor);
     //Variablen für den Sensorzugriff
     var select_sensor = <?php echo $jsonselectsensor; ?>;
     var sensors = [];
+    var number_sensors = 0;
+    const max_number_sensors = 6; //Es sollen höchstens 6 Sensoren ausgewählt werden dürfen, dies ist die Vergleichskonstante
+    var selected_sensors = []; //speichert die bereits ausgewählten Sensoren
+
+
+
 
     //keine doppelten sensoren zulassen-------------------------------
     for (i = 0; i < select_sensor.length; i++) {
+        select_sensor[i].selected = false;
         var o;
         for (o = 0; o < sensors.length; o++) {
             var already_exists = false;
@@ -269,13 +276,13 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 <!-- Filterung der Messreihen/Sensoren -->
-<h2>Messreihe wählen</h2>
-<div id="messreihenSensorenFilterDiv">
+<h2 id="h2MessreihenWählen">Messreihen/Sensoren wählen</h2>
+<div id="messreihenSensorenFilterDiv" class="row">
     <div id="messreihenDiv" class="col-xs-12 col-xs-6">
-        <div id="messreihenListe" class="btn-group-vertical" role="group"></div>
+        <div id="messreihenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
     </div>
     <div id="sensorenDiv" class="col-xs-12 col-xs-6">
-        <div id="sensorenListe" class="btn-group-vertical" role="group"></div>
+        <div id="sensorenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
     </div>
 </div>
 
@@ -298,7 +305,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 <script>
-    function selectChanged(val) {
+    function selectChanged(val) { //val ist von der Form val[i, o] über i wird die MEssreihe erfasst und über o das Metafeld
         var io = val.split("");
         selectedMetafield = messreihen_copy[io[0]].metafields[io[1]];
         selectFlag = true;
@@ -487,7 +494,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function regenerateMetaSelect() {
-        var replace_string = "";
+        var replace_string = [];
         var tmp_metanamen = [];
         var tmp_array = [];
         for (i = 0; i < messreihen_copy.length; i++) {
@@ -495,14 +502,14 @@ $jsonselectsensor = json_encode($selectsensor);
             for (o = 0; o < messreihen_copy[i].metafields.length; o++) {
                 if ($.inArray(messreihen_copy[i].metafields[o].metaname, tmp_metanamen) < 0) {
                     tmp_metanamen.push(messreihen_copy[i].metafields[o].metaname);
-                    replace_string = replace_string.concat("<li id='selectOption" + (uniquei++) + "'>");
+                    replace_string.push("<li id='selectOption" + (uniquei++) + "'>");
                     var tmp_str = "" + i;
                     tmp_str = tmp_str.concat("" + o);
-                    replace_string = replace_string.concat("<a onclick='selectChanged(\"" + tmp_str + "\");'>" + messreihen_copy[i].metafields[o]["metaname"] + "</a></li>");
+                    replace_string.push("<a onclick='selectChanged(\"" + tmp_str + "\");'>" + messreihen_copy[i].metafields[o]["metaname"] + "</a></li>");
                 }
             }
         }
-        $("#selectBox").html(replace_string);
+        $("#selectBox").html(replace_string.join(""));
     }
 
 
@@ -698,22 +705,77 @@ $jsonselectsensor = json_encode($selectsensor);
 
     //Liste der angezeigten Messreihen regenerieren 
     function regenerateMessreihenList() {
-        var replace_string = "";
+        var replace_string = [];
         for (i = 0; i < messreihen_copy.length; i++) {
-            replace_string += "<button class='btn btn-default' data-messreihe='"+messreihen_copy[i]["messreihenname"]+"'>" + messreihen_copy[i]["messreihenname"] + "</button>";
+            var hms = anySensorsSelectedFrom(messreihen_copy[i]["messreihenname"]); 
+            if(hms > 0){
+                replace_string.push("<button class='btn btn-default' data-messreihe='"+messreihen_copy[i]["messreihenname"]+"'>");
+                replace_string.push(messreihen_copy[i]["messreihenname"] + " " +messreihen_copy[i].datum);
+                replace_string.push(" <span class='glyphicon glyphicon-ok'></span>  <small>"+hms+"</small></button>");
+            }else{
+               replace_string.push("<button class='btn btn-default' data-messreihe='"+messreihen_copy[i]["messreihenname"]+"'>");
+               replace_string.push(messreihen_copy[i]["messreihenname"] + " " +messreihen_copy[i].datum + "</button>");
+            }
         }
-        $("#messreihenListe").html(replace_string);
+        $("#messreihenListe").html(replace_string.join(""));
+    }
+
+    function anySensorsSelectedFrom(messreihe){
+        var how_much_sensors = 0;
+        for(o=0; o<selected_sensors.length; o++){
+            if((selected_sensors[o]["messreihenname"] == messreihe) && (selected_sensors[o]["selected"])){
+                ++how_much_sensors;
+            }
+        }
+        return how_much_sensors;
     }
 
 
     function showSensorsOf(arg) {
-        replace_string = "";
+        replace_string = [];
         for (i = 0; i < sensors.length; i++) {
             if (arg == sensors[i]["messreihenname"]) {
-                replace_string += "<button class='btn btn-default'>" + sensors[i]["anzeigename"] + "</button>";
+                if(sensors[i].selected == true){
+                    replace_string.push("<button class='btn btn-default' data-sensorID='"+sensors[i]["id"]+"'>" + sensors[i]["anzeigename"] + " <span class='glyphicon glyphicon-ok'></span></button>");
+                }else{
+                    replace_string.push("<button class='btn btn-default' data-sensorID='"+sensors[i]["id"]+"'>" + sensors[i]["anzeigename"] + "</button>");
+                }
             }
         }
-        $("#sensorenListe").html(replace_string);
+        $("#sensorenListe").html(replace_string.join(""));
+    }
+
+
+
+    function selectSensor(target){
+        var selected_id = target.getAttribute("data-sensorID");
+        for(i = 0; i < sensors.length; i++){
+            if(sensors[i].id == selected_id){
+                if(sensors[i].selected == false){
+                    $(target).append(" <span class='glyphicon glyphicon-ok'></span>");
+                    sensors[i].selected = true;
+                    selected_sensors.push(sensors[i]);
+                    if(++number_sensors == max_number_sensors+1){
+                        alert("Attention! Good Performance is only guaranteed when 6 or less sensors are selected...");
+                    }
+                    break;
+                }else{
+                    sensors[i].selected = false;
+                    for(o=0;o<selected_sensors.length;o++){
+                        if(selected_sensors[o]["id"] == selected_id){
+                            $(target).html(sensors[i]["anzeigename"]);
+                            selected_sensors.splice(o, 1);
+                            if(--number_sensors < 0){
+                                alert("number_sensors is negative... this is strange... thanks obama");
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        $("#h2MessreihenWählen").html("Messreihen/Sensoren wählen <small>"+number_sensors+"</small>");
+        regenerateMessreihenList();
     }
 //-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -736,11 +798,15 @@ $jsonselectsensor = json_encode($selectsensor);
 		$('#meta_value_div').on("blur", ".valueField", function (e) {
             filterMessreihen(e.target, $(this).attr("id"));
         });
-        
+
+        //CLICK ON MESSREIHE
         $('#messreihenListe').on("click", ".btn", function (e) {
-            console.log("check");
-            console.log($(e.target).data('messreihe'));
             showSensorsOf($(e.target).data('messreihe'));
+        });
+
+        //CLICK ON SENSOR
+        $('#sensorenListe').on("click", ".btn", function (e) {
+           selectSensor(e.target); 
         });
     });
 
