@@ -483,16 +483,35 @@ form .table#projektbeschreibungen {
 }
 
 
-
-/* Messreihen/Sensoren auswählen */
-/* ------------------------------- */
-#messreihenListe div.btn-group-verrtical{
-    width:80%;
+/*--------------------------------------------------kleiner Julian-----*/
+/*für index.php damit die anzeige der sensoren und die der skalen schön aussehen*/
+#scalaDiv {
+    padding-left:0px;
+}
+#sensorenDiv {
+    padding-right:0px;
+}
+#scalaDiv div.btn-group-vertical{
+    border-left:0px;
+}
+.sensor-btn {
+    border-right:0px;
+    border-top-right-radius:0px;
+    border-bottom-right-radius:0px;
+}
+.scala-btn {
+    border-top-left-radius:0px;
+    border-bottom-left-radius:0px;
 }
 
-#sensorenListe div.btn-group-verrtical{
-    width:80%;
+/*für das skalen-modal*/
+.modal-content .btn{
+    background-color: blue;
+    border-color: black;
+    color: black;
 }
+/*---------------------------------------------------------------------*/
+
 
 
 

@@ -165,6 +165,9 @@ $jsonselectsensor = json_encode($selectsensor);
     const max_number_sensors = 6; //Es sollen höchstens 6 Sensoren ausgewählt werden dürfen, dies ist die Vergleichskonstante
     var selected_sensors = []; //speichert die bereits ausgewählten Sensoren
 
+    //Sensnoren müssen einer Skala zugeordnet werden, entsprechende ZUweisung wurd in folgender Datenstruktur gespeichert
+    var scalas = [];
+
 
 
     //keine doppelten sensoren zulassen-------------------------------
@@ -279,14 +282,18 @@ $jsonselectsensor = json_encode($selectsensor);
 <!-- Filterung der Messreihen/Sensoren -->
 <h2 id="h2MessreihenWählen">Messreihen/Sensoren wählen</h2>
 <div id="messreihenSensorenFilterDiv" class="row">
+
     <div id="messreihenDiv" class="col-xs-12 col-xs-6">
         <small>Messreihen</small>
         <div id="messreihenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
     </div>
-
-    <div id="sensorenDiv" class="col-xs-12 col-xs-6">
+    <div id="sensorenDiv" class="col-xs-12 col-xs-5">
         <small>Sensoren</small>
         <div id="sensorenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
+    </div>
+    <div id="scalaDiv" class="col-xs-12 col-xs-1">
+        <small>Scala</small>
+        <div id="skalenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
     </div>
 </div>
 
@@ -300,7 +307,20 @@ $jsonselectsensor = json_encode($selectsensor);
 </div>
 
 
+<!-- Small modal -->
+<div id="scalaModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Skalen</h4>
+            <button id="modalContentMenuButtonNewScala" class="btn">Neue Skala</button>
+        </div>
 
+        blablablablablablabla
+    </div>
+  </div>
+</div>
 
 
 
@@ -316,10 +336,6 @@ $jsonselectsensor = json_encode($selectsensor);
         selectChangedCount++;
         $("#meta_select_button").html("<span class='glyphicon glyphicon-plus'></span>" + selectedMetafield["metaname"] + " filter hinzufügen");
     }
-
-
-
-
 
 
 
@@ -736,28 +752,33 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function showSensorsOf(arg) {
-        replace_string = [];
+        sensors_string = [];
+        scalas_string = [];
+
         for (i = 0; i < sensors.length; i++) {
             if (arg == sensors[i]["messreihenname"]) {
-                replace_string.push("<div class='row'><div class='col-xs-10'>");
-                replace_string.push("<button class='btn btn-default sensor-btn' style='width:100%' data-sensorID='"+sensors[i]["id"]+"'>");
-                replace_string.push(sensors[i]["anzeigename"]);
+                sensors_string.push("<button class='btn btn-default sensor-btn' style='width:100%' data-sensorID='"+sensors[i]["id"]+"'>");
+                sensors_string.push(sensors[i]["anzeigename"]);
                 if(sensors[i].selected == true){
-                    replace_string.push("<span class='glyphicon glyphicon-ok'></span>");
+                    sensors_string.push("<span class='glyphicon glyphicon-ok'></span>");
                 }
-                replace_string.push("</button></div>");
-                replace_string.push("<div class='col-xs-2'><button class='btn btn-default scala-btn' data-sensorID='"+sensors[i]["id"]+"'>");
-                replace_string.push("<span class='glyphicon glyphicon-stats'></span>  "+sensors[i]["scala"]);
-                replace_string.push("</button></div></div>");
+                sensors_string.push("</button>");
+                
+                scalas_string.push("<button class='btn btn-default scala-btn' style='width:100%' data-sensorID='"+sensors[i]["id"]+"'>");
+                scalas_string.push("<span class='glyphicon glyphicon-stats'></span>  ");
+                if(sensors[i]["scala"] != null){
+                    scalas_string.push(sensors[i]["scala"]);
+                }
+                scalas_string.push("</button>");
             }
         }
-        $("#sensorenListe").html(replace_string.join(""));
+        $("#sensorenListe").html(sensors_string.join(""));
+        $("#skalenListe").html(scalas_string.join(""));
     }
 
 
 
     function selectSensor(target){
-        console.log($(target).parent().parent());
         var selected_id = target.getAttribute("data-sensorID");
         for(i = 0; i < sensors.length; i++){
             if(sensors[i].id == selected_id){
@@ -824,8 +845,15 @@ $jsonselectsensor = json_encode($selectsensor);
         });
 
         //CLICK ON SCALA
-        $('#sensorenListe').on("click", ".scala-btn", function (e) {
-           selectScala(e.target); 
+        $('#skalenListe').on("click", ".scala-btn", function (e) {
+            selectScala(e.target);
+            $("#scalaModal").modal('show');
+        });
+
+        //in Modal click on "neue skala"
+        $('#modalContentMenuButtonNewScala').click(function(){
+            var new_scala; //TODO ich weiß noch nicht wirklich wie eine skala aussieht dafür brauch ich erst highcharts-erfahrung ist also eher n stub
+            scalas.push(new_scala);
         });
     });
 
