@@ -496,7 +496,13 @@ form .table#projektbeschreibungen {
 }
 .sensor-btn {
     border-right:0px;
+}
+
+.btn-group-vertical > .btn:first-child:not(:last-child) .sensor-btn {
     border-top-right-radius:0px;
+}
+
+.btn-group-vertical .btn:last-child:not(:first-child) -sensor-btn {
     border-bottom-right-radius:0px;
 }
 .scala-btn {
