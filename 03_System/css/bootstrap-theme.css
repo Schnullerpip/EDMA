@@ -494,14 +494,18 @@ form .table#projektbeschreibungen {
 #scalaDiv div.btn-group-vertical{
     border-left:0px;
 }
-.sensor-btn {
-    border-right:0px;
+.btn-group-vertical>.btn:first-child:not(:last-child).sensor-btn {
     border-top-right-radius:0px;
-    border-bottom-right-radius:0px;
+}
+.sensor-btn {
+    border-right: none;
+    border-bottom-right-radius: 0px;
+}
+.btn-group-vertical>.btn:last-child:not(:first-child).scala-btn {
+    border-bottom-left-radius:0px;
 }
 .scala-btn {
     border-top-left-radius:0px;
-    border-bottom-left-radius:0px;
 }
 
 /*für das skalen-modal*/
