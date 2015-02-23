@@ -510,6 +510,7 @@ form .table#projektbeschreibungen {
 }
 .scala-btn {
     border-top-left-radius:0px;
+    background-color:#224565;
 }
 
 /*für das skalen-modal*/
