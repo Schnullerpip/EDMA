@@ -285,17 +285,18 @@ $jsonselectsensor = json_encode($selectsensor);
 <h2 id="h2MessreihenWählen">Messreihen/Sensoren wählen</h2>
 <div id="messreihenSensorenFilterDiv" class="row">
 
+    <div class="col-sm-6"> <small>Messreihen</small></div>
+    <div class="col-sm-5"><small>Sensoren</small></div>
+    <div class="col-sm-1"><small>Scala</small></div>
+
     <div id="messreihenDiv" class="col-xs-12 col-xs-6">
-        <small>Messreihen</small>
         <div id="messreihenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
     </div>
     <div id="sensorenDiv" class="col-xs-12 col-xs-5">
-        <small>Sensoren</small>
         <div id="sensorenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
     </div>
     <div id="scalaDiv" class="col-xs-12 col-xs-1">
-        <small>Scala</small>
-        <div id="skalenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
+        <div id="skalenListe" class="btn-group-vertical" role="group"></div>
     </div>
 </div>
 
@@ -938,7 +939,6 @@ $jsonselectsensor = json_encode($selectsensor);
         $('#skalenListe').on("click", ".scala-btn", function (e) {
             selectScala(e.target);
             /*generiere den Modal inhalt für die skalenanzeige*/
-           
         });
 
         $(".choose-scala-btn").click(function(e){
