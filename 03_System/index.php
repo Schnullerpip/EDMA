@@ -286,8 +286,8 @@ $jsonselectsensor = json_encode($selectsensor);
 <div id="messreihenSensorenFilterDiv" class="row">
 
     <div class="col-sm-6"> <small>Messreihen</small></div>
-    <div class="col-sm-5"><small>Sensoren</small></div>
-    <div class="col-sm-1"><small>Scala</small></div>
+    <div id="smallSensoren" class="col-sm-5"><small>Sensoren</small></div>
+    <div id="smallSkala" class="col-sm-1" style="padding-left:0px"><small>Skala</small></div>
 
     <div id="messreihenDiv" class="col-xs-12 col-xs-6">
         <div id="messreihenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
@@ -915,6 +915,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     $(function () {
+
         regenerateDocument();
         $('#meta_select_button').click(function () {
             addMeta();
