@@ -276,11 +276,9 @@ class Parser {
                 if ($j === count($messdaten) - 1 and count($messungsSpalte) === 1) {
                     continue;
                 } else {
-                    $executeError = array(
-                        'Error' => "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
-                        . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")"
-                    );
-                    throw new ParserException("Fehler in Funktion parseMetaDaten()", 0, null, $executeError);
+                    $executeError = "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
+                            . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")";
+                    $this->throwMessException($executeError);
                 }
             }
             $datum = $messungsSpalte[0];
@@ -324,14 +322,14 @@ class Parser {
     
     private function throwMetaException($msg) {
         $dbErrorMsg = array(
-            'DB Error' => $msg
+            'Fehler' => $msg
         );
         throw new ParserException("Fehler in Funktion parseMetaDaten()", 0, null, $dbErrorMsg);
     }
     
     private function throwMessException($msg) {
         $dbErrorMsg = array(
-            'DB Error' => $msg
+            'Fehler' => $msg
         );
         throw new ParserException("Fehler in Funktion parseMessDaten()", 0, null, $dbErrorMsg);
     }
