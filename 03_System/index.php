@@ -167,6 +167,8 @@ $jsonselectsensor = json_encode($selectsensor);
 
     //Sensnoren müssen einer Skala zugeordnet werden, entsprechende ZUweisung wurd in folgender Datenstruktur gespeichert
     var scalas = [];
+    var scala_unique_id; //gibt jeder Skala eine eigene id - sollte nach erstellung einer skala inkrementiert werden -> anhand dieser ID werden auch variable Faktoren wie Graphen bzw y-Achsen Farbe und Erscheinungsbild bestimmt sodass einzelne Graphen voneinander unterschieden werden können und einer y-Achse zugewiesen werden können
+    var patient_sensor = null; //diese referenz wird den sensor speichern, dem über das auswahlmodal eine skala zugewiesen werden soll
 
 
 
@@ -307,17 +309,34 @@ $jsonselectsensor = json_encode($selectsensor);
 </div>
 
 
-<!-- Small modal -->
-<div id="scalaModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
+<!--Modal -->
+<div id="scalaModal" class="modal fade" aria-hidden="true">
+  <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Skalen</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Skalen Menü</h4> <div calss="form-group"> <br>
+                <div class="col-sm-6">
+                    <label class="control-label">Titel</label>
+                </div>
+                <div class="col-sm-6">
+                    <input id="scalaTitelInput" class="form-control" type="text" name="scalaTitleInput" placeholder="z.B. Temperatur"></input>
+                </div>
+
+                <div class="col-sm-6">
+                    <label class="control-label">Einheit</label>
+                </div>
+                <div class="col-sm-6">
+                    <input id="scalaEinheitInput" class="form-control" type="text" name="scalaEinheitInput" placeholder="z.B. in °C"></input>
+                </div>
+                
+            </div>
             <button id="modalContentMenuButtonNewScala" class="btn">Neue Skala</button>
         </div>
-
-        blablablablablablabla
+       <br>
+       <h4>Skalen auswählen</h4>
+       <div id="scalaModalContent" class="btn-group-vertical" role="group"></div>
     </div>
   </div>
 </div>
@@ -810,7 +829,78 @@ $jsonselectsensor = json_encode($selectsensor);
     }
 
     function selectScala(target){
+        var target_sensor_id = target.getAttribute("data-sensorid");
+        for(i=0;i<sensors.length;i++){
+            if(sensors[i].id == target_sensor_id){
+                patient_sensor = sensors[i]; //wenn anschließend eine skala aus se modal gewählt wurde wird sie dem sensor zugewiesen auf den patient_sensor zeigt
+                break;
+            }
+        }
+        if(patient_sensor == null){
+            alert("patient_sensor ist 'null' da kann was nicht stimmen - function selsectScala.... thanks obama");
+        }
+        regenerateScalaModal();
+        $("#scalaModal").modal('show');
+    }
+
+
+
+
+
+    function regenerateScalaModal(){
+        var replace_string = [];
+        for(i=0;i<scalas.length;i++){
+            replace_string.push("<button class='btn choose-scala-btn' data-scalaID='"+scalas[i].id+"'>"+scalas[i].title.text);
+            replace_string.push("  " + scalas[i].labels.format+"</button>");
+        }
+        $("#scalaModalContent").html(replace_string.join(""));
+    }
+
+
+
+
+
+    function chooseScala(target){
         console.log(target);
+        var chosen_scala;
+        for(i=0;i<scalas.length;i++){
+            if(scalas[i].id == target){
+                patient_sensor.scala = scalas[i];
+                break;
+            }
+        }
+        patient_scala = null; //Referenz löschen
+    }
+
+
+
+
+    function createNewScala(){
+        var val1 = $("#scalaTitelInput").val();
+        var val2 = $("#scalaEinheitInput").val();
+        
+        if((val1 != "") && (titleDoesntExists(val1))){
+            var new_scala = {title: {
+                                text: val1
+                                },
+                             labels:{
+                                format: val2
+                                }
+                            };
+
+
+            scalas.push(new_scala);
+            regenerateScalaModal();
+        }
+    }
+
+    function titleDoesntExists(titl){
+        for(i=0;i<scalas.length;i++){
+            if(scalas[i].title.text == titl){
+                return false;
+            }
+        }
+        return true;
     }
 //-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -847,13 +937,17 @@ $jsonselectsensor = json_encode($selectsensor);
         //CLICK ON SCALA
         $('#skalenListe').on("click", ".scala-btn", function (e) {
             selectScala(e.target);
-            $("#scalaModal").modal('show');
+            /*generiere den Modal inhalt für die skalenanzeige*/
+           
+        });
+
+        $(".choose-scala-btn").click(function(e){
+            chooseScala(e.target.getAttribute("data-scalaID")); //wird der funktion eine scala id geben
         });
 
         //in Modal click on "neue skala"
         $('#modalContentMenuButtonNewScala').click(function(){
-            var new_scala; //TODO ich weiß noch nicht wirklich wie eine skala aussieht dafür brauch ich erst highcharts-erfahrung ist also eher n stub
-            scalas.push(new_scala);
+            createNewScala();
         });
     });
 

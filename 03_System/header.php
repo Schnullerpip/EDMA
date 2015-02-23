@@ -68,7 +68,10 @@ if (Input::itemExists('projekt_cancel')) {
 
         <!-- IE10-Anzeigefenster-Hack für Fehler auf Surface und Desktop-Windows-8 -->
         <script src="js/ie10-viewport-bug-workaround.js"></script>
-        
+
+        <!-- HIGHCHARTS -->
+        <script src="http://code.highcharts.com/highcharts.js"></script>
+        <script src="http://code.highcharts.com/modules/exporting.js"></script> 
     </head>
 
     <body>
