@@ -640,6 +640,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 selected_sensors = $.extend(true, [], tmp_selSen); //Tiefe Kopie
                 number_sensors = selected_sensors.length;
                 $("#sensorenListe").html("");
+                $("#skalenListe").html("");
                 $("#h2MessreihenWählen").html("Messreihen/Sensoren wählen <span class='badge'>"+number_sensors+"</span>");
             }
         }
