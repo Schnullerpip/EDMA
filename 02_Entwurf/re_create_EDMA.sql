@@ -112,7 +112,7 @@ CREATE TABLE `messung` (
   `sensor_id` smallint(5) unsigned NOT NULL,
   `zeitpunkt` mediumint(8) unsigned NOT NULL,
   `messwert` double NOT NULL,
-  `datum_uhrzeit` datetime NOT NULL
+  `datum_uhrzeit` datetime(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `messung`
