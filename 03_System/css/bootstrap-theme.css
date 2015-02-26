@@ -495,7 +495,16 @@ form .table#projektbeschreibungen {
     border-left:0px;
 }
 
+h2 small{
+    color:white;
+}
 
+.scrollableAb200 {
+    overflow-x:hide;
+    overflow-y:auto;
+    height:200px;
+
+}
 
 
 .btn-group-vertical>.btn:first-child:not(:last-child).sensor-btn {
@@ -510,6 +519,7 @@ form .table#projektbeschreibungen {
 }
 .scala-btn {
     border-top-left-radius:0px;
+    background-color:#224565;
 }
 
 /*für das skalen-modal*/
