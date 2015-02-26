@@ -637,10 +637,14 @@ $jsonselectsensor = json_encode($selectsensor);
                 var selSenLen = selected_sensors.length;
                 var tmp_selSen = [];
                 for(iterate_s = 0; iterate_s<selSenLen;iterate_s++){
-                    if(!(selected_sensors[iterate_s].messreihenname == messreihen_copy[iterate_i].messreihenname)){
+                    var bed1, bed2;
+                    bed1 = selected_sensors[iterate_s].messreihenname;
+                    bed2 = messreihen_copy[iterate_i].messreihenname;
+                    if(!(bed1 == bed2)){
                         tmp_selSen.push(selected_sensors[iterate_s]);
+                    }else{
+                        selected_sensors[iterate_s].selected = false;
                     }
-                    selected_sensors[iterate_s].selected = false;
                 }
                 selected_sensors = $.extend(true, [], tmp_selSen); //Tiefe Kopie
                 number_sensors = selected_sensors.length;
