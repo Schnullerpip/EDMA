@@ -535,6 +535,11 @@ h2 small{
 .modal-header>input:first-of-type {
     border-bottom: none;
 }
+
+.modal-content select{
+    border-color: black;
+    width:50px;
+}
 /*---------------------------------------------------------------------*/
 
 
