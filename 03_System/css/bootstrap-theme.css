@@ -496,6 +496,12 @@ form .table#projektbeschreibungen {
 }
 
 
+.scrollableAb200 {
+    overflow-x:hide;
+    overflow-y:auto;
+    height:200px;
+
+}
 
 
 .btn-group-vertical>.btn:first-child:not(:last-child).sensor-btn {
