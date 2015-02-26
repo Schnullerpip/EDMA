@@ -392,6 +392,7 @@ $jsonselectsensor = json_encode($selectsensor);
             }
             if (!exists_in_messreihe) {
                 to_delete.push(messreihen_copy[i]);
+                excludeIrrelevantSensors(messreihen_copy[i]);
             }
         }
         //Jetzt wissen wir (in to_delete) welche messreihen von messreihen_copy (der Arbeitskopie)
@@ -633,30 +634,39 @@ $jsonselectsensor = json_encode($selectsensor);
                 tmp_array.push(messreihen_copy[iterate_i]);
             }else{
                 //evtl wurden bereits sensoren von einer nun zu entfernenden Messreihe ausgewählt, diese müssen nun natürlich abgewählt werden
-                var iterate_s;
-                var selSenLen = selected_sensors.length;
-                var tmp_selSen = [];
-                for(iterate_s = 0; iterate_s<selSenLen;iterate_s++){
-                    var bed1, bed2;
-                    bed1 = selected_sensors[iterate_s].messreihenname;
-                    bed2 = messreihen_copy[iterate_i].messreihenname;
-                    if(!(bed1 == bed2)){
-                        tmp_selSen.push(selected_sensors[iterate_s]);
-                    }else{
-                        selected_sensors[iterate_s].selected = false;
-                    }
-                }
-                selected_sensors = $.extend(true, [], tmp_selSen); //Tiefe Kopie
-                number_sensors = selected_sensors.length;
-                $("#sensorenListe").html("");
-                $("#skalenListe").html("");
-                $("#h2MessreihenWählen").html("Messreihen/Sensoren wählen <span class='badge'>"+number_sensors+"</span>");
+                excludeIrrelevantSensors(messreihen_copy[iterate_i]);
             }
         }
         messreihen_copy = $.extend(true, [], tmp_array);
     }
 
 
+    function excludeIrrelevantSensors(messreihe){
+        var iterate_s;
+        var selSenLen = selected_sensors.length;
+        var to_delete = [];
+        for(iterate_s = 0; iterate_s<selSenLen;iterate_s++){ //ermittle alle Sensoren, welche zur ausgeschlossnen Messreihe gehören und merke sie dir in to_delete
+            var cond1, cond2;
+            cond1 = selected_sensors[iterate_s].messreihenname;
+            cond2 = messreihe.messreihenname;
+            if(cond1 == cond2){
+                to_delete.push(selected_sensors[iterate_s]);
+            }
+        }
+
+        for(iterate_s=0;iterate_s<to_delete.length;iterate_s++){
+            if(to_delete[iterate_s].selected){
+                to_delete[iterate_s].selected = false;
+                selected_sensors.splice($.inArray(to_delete[iterate_s], selected_sensors), 1);
+            }
+        }
+
+
+        number_sensors = selected_sensors.length;
+        $("#sensorenListe").html("");
+        $("#skalenListe").html("");
+        $("#h2MessreihenWählen").html("Messreihen/Sensoren <small>("+number_sensors+")</small> wählen");
+    }
 
 
     
@@ -764,6 +774,10 @@ $jsonselectsensor = json_encode($selectsensor);
             }
         }
         $("#messreihenListe").html(replace_string.join(""));
+
+        if(selected_sensors.length > 0){
+            showSensorsOf(selected_sensors[selected_sensors.length-1].messreihenname);
+        }
     }
 
 
@@ -836,7 +850,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 }
             }
         }
-        $("#h2MessreihenWählen").html("Messreihen/Sensoren wählen <span class='badge'>"+number_sensors+"</span>");
+        $("#h2MessreihenWählen").html("Messreihen/Sensoren <small>("+number_sensors+")</small> wählen");
         regenerateMessreihenList();
     }
 
@@ -973,8 +987,7 @@ $jsonselectsensor = json_encode($selectsensor);
         });
 
         //in Modal on change in modals inputs 
-        $('.scalaModalInput').change(function(){
-            console.log("blaaaa");
+        $('#scalaEinheitInput').change(function(){
             createNewScala();
         });
     });

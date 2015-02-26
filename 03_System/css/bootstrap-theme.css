@@ -495,6 +495,9 @@ form .table#projektbeschreibungen {
     border-left:0px;
 }
 
+h2 small{
+    color:white;
+}
 
 .scrollableAb200 {
     overflow-x:hide;
