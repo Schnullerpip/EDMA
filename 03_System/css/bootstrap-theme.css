@@ -540,6 +540,19 @@ h2 small{
     border-color: black;
     width:50px;
 }
+
+
+/*Anzeige der "Einstellungen"*/
+.einstellungenInputDiv {
+    padding-right:0px;
+}
+.anzeigeButtonDiv {
+    padding-top:10px;
+}
+
+.anzeigeButton {
+    width:50%;
+}
 /*---------------------------------------------------------------------*/
 
 

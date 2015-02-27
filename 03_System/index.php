@@ -299,24 +299,43 @@ $jsonselectsensor = json_encode($selectsensor);
 <br>
 
 <!-- Weitere Einstellungen -->
+<script>
+    var step = 1;
+    var intervall1 = 0;
+    var intervall2 = 0;
+</script>
+
 <h2>Einstellungen</h2>
 <div class="form-group">
-    <div class="col-sm-12 col-md-6 col-lg-4">
-        <label class="control-label">Schrittweite</label>
-        <label class="control-label">Intrevall</label>
+    <div class="col-sm-1 col-sm-offset-3">
+       <div><label class="control-label">Schrittweite</label></div>
+        <br>
+       <div><label class="control-label">Intrevall</label></div>
     </div>
 
-    <div class="col-sm-12 col-md-6 col-lg-4">
-        <input class="col-sm-6 form-control" type="text" name="INtervallInput" placeholder="z.B. 100"></input>
-        <div class="row">
-            <input class="col-sm-6 form-control" type="text" name="INtervallInput" placeholder="z.B. 100"></input>
-            <input class="col-sm-6 form-control" type="text" name="INtervallInput" placeholder="z.B. 100"></input>
+    <div class="col-sm-3 einstellungenInputDiv">
+        <div>
+            <input id="stepInput" class="col-sm-6 form-control" type="text" name="IntervallInput" placeholder="z.B. 100 (er Schritte)"></input>
         </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-sm-6">
+                <input id="intervallInput1" class="form-control" type="text" name="IntervallInput" placeholder="Von"></input>
+            </div>
+            <div class="col-sm-6">
+                <input id="intervallInput2" class="form-control" type="text" name="IntervallInput" placeholder="Bis"></input>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-sm-offset-4 anzeigeButtonDiv">
+        <a class="btn btn-default anzeigeButton" href="">Anzeigen!</a>
     </div>
 </div>
 
 
-<!--Modal -->
+<!--Skala Modal -->
 <div id="scalaModal" class="modal fade" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -999,7 +1018,6 @@ $jsonselectsensor = json_encode($selectsensor);
     }
 
 
-
     $(function () {
 
         regenerateDocument();
@@ -1046,7 +1064,6 @@ $jsonselectsensor = json_encode($selectsensor);
             }else{
                 $("#radioFloatSpan").html("<label for='radioFLOAT'> Float</label>");
             }
-            });
         });
 
        //in Modal on click in modal inputs -> checkbox rightSideScala
@@ -1054,6 +1071,36 @@ $jsonselectsensor = json_encode($selectsensor);
             rightSideSCala = !rightSideScala;
         });
 
+
+        //stepInput on change
+        $("#stepInput").change(function(e){
+            step = parseInt($(e.target).val());
+        });
+
+        //intervallInput1 on change
+        $("#intervallInput1").change(function(e){
+            intervall1 = parseInt($(e.target).val());
+        });
+
+        //intervallInput2 on change
+        $("#intervallInput2").change(function(e){
+            intervall2 = parseInt($(e.target).val());
+            if(intervall2 < step){
+                intervall2 = intervall1+step;
+                $(e.target).val(intervall1+step);
+                modalTextWarning("Vorsicht! -> die Schrittweite ist höher als der Intervall!? Der Intervall wurde automatisch auf den kleinstmöglichen Wert gesetzt");
+                $('#infoModal').modal();
+            }else if(intervall2 < intervall1){
+                intervall2 = intervall1+step;
+                $(e.target).val(intervall1+step);
+                modalTextWarning("Vorsicht! -> 'Bis' ist kleiner als 'Von' -> Werte wurden automatisch logisch neu verteilt");
+                $('#infoModal').modal();
+            }
+        });
+
+        //Anzeigen! button on click
+        //TODO ich weiß ja noch nicht wirklich wie ich die parameter an den Großen Juliangeben muss...
+    });
 </script>
 
 <?php
