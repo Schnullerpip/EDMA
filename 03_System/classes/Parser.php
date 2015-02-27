@@ -72,22 +72,23 @@ class Parser {
     }
     
     private function parseMetaDaten($metadaten) {        
-        // Metanamen besteht aus beliebiger Anzahl von 
-        // Buchstaben, Zahlen, Leerzeichen, Prozentzeichen, 
-        // Gradzeichen, Slash / und Unterstrich _
+        // Metanamen besteht aus beliebiger Anzahl von Buchstaben, Ziffern, 
+        // Leerzeichen, Prozentzeichen, Gradzeichen, Slash, Minuszeichen und am
+        // Ende Unterstrich mit Datentyp (_d, _n oder _s)
         $metaNamePattern = "([\p{L}\p{N} \x{00B0}\x{0025}/\-]+)_([dns])";
         
-        // String Pattern nach s:\t beliebige Anzahl von
-        // Buchstaben /p{L}, Zahlen /p{N}, Punkt, Leerzeichen, Komma, Slash / 
-        // und Unterstrich _
+        // String Pattern 
+        // nach s:\t beliebige Anzahl von Buchstaben \p{L}, Ziffern \p{N}, Punkt,
+        // Leerzeichen, Komma, Unterstrich, Slash, Minuszeichen
         $stringPattern = "((?<=s:\t)[\p{L}\p{N}\. ,_/\-]+)";
         
-        // Datum Pattern nach d:\t DD.MM.YYYY
+        // Datum Pattern
+        // nach d:\t DD.MM.YYYY
         $datePattern = "((?<=d:\t)\p{N}{2}\.\p{N}{2}\.\p{N}{4})";
         
-        // Nummer Pattern nach n:\t 
-        // Optional -, beliebig viele Zahlen \p{N}, Optional Punkt oder Komma
-        // Danach Optional beliebig viele Zahlen
+        // Nummer Pattern 
+        // nach n:\t optionales Minuszeichen gefolgt von beliebig vielen Ziffern 
+        // \p{N}, zwischen den Ziffern optional Punkt oder Komma
         $numberPattern = "((?<=n:\t)-?\p{N}+[\.,]?\p{N}*)";
         
         $pattern = "#^" . $metaNamePattern . ":\t(" . $stringPattern . "|" . $datePattern . "|" . $numberPattern . ")\t*$#mu";
@@ -96,7 +97,7 @@ class Parser {
         $metalines = explode("\n", $metadaten);
         array_pop($metalines);  // letztes Element löschen, da leer
         $lines = count($metalines);
-        $this->_zeilennummerMessdaten = $lines + 3; // Metazeilen + Trennzeichenzeile + Sensornamenzeile + Indexbeginn
+        $this->_zeilennummerMessdaten = $lines + 3; // Metazeilen + (Trennzeichenzeile + Sensornamenzeile + Indexbeginn = 3)
         if ($count != $lines) {
             $this->_warning = $this->metalinesToIgnore($matches[0], $metalines);
         }
@@ -214,7 +215,7 @@ class Parser {
         $saveExTime = ini_get('max_execution_time');
         ini_set('max_execution_time', 1000);
         $messdaten = preg_split("/\n/", $messdaten);
-        $messdaten = array_slice($messdaten, 1);    // array_slice() löscht erstes Element, da leer
+        $messdaten = array_slice($messdaten, 1);    // array_slice() löscht erstes Element, da leer aufgrund von explode(###)
 
         $spaltennamen = preg_split("/:[\t]?/", $messdaten[0]);
         $spaltenanzahl = count($spaltennamen) - 1;   // letztes Element leer aufgrund der preg_split-Bedingung
@@ -258,7 +259,7 @@ class Parser {
             if ($i != 2) {
                 $sql = $sql . ",";
             }
-            $sql = $sql . "(?, ?, STR_TO_DATE(? ?, '%d.%m.%Y %H:%i:%s'), ?, ?)";
+            $sql = $sql . "(?, ?, STR_TO_DATE(? ?, '%d.%m.%Y %H:%i:%s,%f'), ?, ?)";
         }
         
         $statement_messung = $this->_db->createStatement($sql);
@@ -276,11 +277,9 @@ class Parser {
                 if ($j === count($messdaten) - 1 and count($messungsSpalte) === 1) {
                     continue;
                 } else {
-                    $executeError = array(
-                        'Error' => "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
-                        . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")"
-                    );
-                    throw new ParserException("Fehler in Funktion parseMetaDaten()", 0, null, $executeError);
+                    $executeError = "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
+                            . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")";
+                    $this->throwMessException($executeError);
                 }
             }
             $datum = $messungsSpalte[0];
@@ -305,7 +304,8 @@ class Parser {
             
             $this->_db->executeStatement($statement_messung, $values);
             if ($this->_db->error()) {
-                $this->throwMessException("Fehler beim INSERT von 'messung'");
+                $this->throwMessException("Fehler beim INSERT von 'messung' "
+                        . "(Zeile: " . ($j + $this->_zeilennummerMessdaten) . ")");
             }
         }
         ini_set('max_execution_time', $saveExTime);
@@ -324,14 +324,14 @@ class Parser {
     
     private function throwMetaException($msg) {
         $dbErrorMsg = array(
-            'DB Error' => $msg
+            'Fehler' => $msg
         );
         throw new ParserException("Fehler in Funktion parseMetaDaten()", 0, null, $dbErrorMsg);
     }
     
     private function throwMessException($msg) {
         $dbErrorMsg = array(
-            'DB Error' => $msg
+            'Fehler' => $msg
         );
         throw new ParserException("Fehler in Funktion parseMessDaten()", 0, null, $dbErrorMsg);
     }

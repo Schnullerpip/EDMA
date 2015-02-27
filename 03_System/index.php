@@ -75,7 +75,8 @@ $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
 $projektid = $projekt->data()->id;
 
 //Select für messreihenname, metadatenname, datentyp
-$db->query("SELECT messreihe.messreihenname, messreihe.datum, metainfo.metaname, messreihe_metainfo.metawert, datentyp.typ
+//TODO messreihen_id
+$db->query("SELECT messreihe.messreihenname, messreihe.id, messreihe.datum, metainfo.metaname, messreihe_metainfo.metawert, datentyp.typ
 					FROM messreihe INNER JOIN projekt ON messreihe.projekt_id = projekt.id
 					INNER JOIN messreihe_metainfo ON messreihe.id = messreihe_metainfo.messreihe_id
 					INNER JOIN metainfo ON metainfo.id = messreihe_metainfo.metainfo_id
@@ -105,6 +106,8 @@ $jsonselectsensor = json_encode($selectsensor);
     var select = <?php echo $jsonselectmeta; ?>;    //enthält den select
     var selectedMetafield;
 
+    var i;
+
     //Durch den folgenden Code ist nun eine array verfügbar, welche ausschließlich die verschiedenen Messreihen (jede genau ein mal) mit allen metafeldern aufzeigt
     var messreihen = [];
     var messreihennamen = [];
@@ -115,6 +118,7 @@ $jsonselectsensor = json_encode($selectsensor);
             var tmp_messreihe = {messreihenname: select[i].messreihenname};
             tmp_messreihe.datum = select[i].datum;
             tmp_messreihe.metafields = [];
+            tmp_messreihe.id = select[i].id;
             messreihen.push(tmp_messreihe);
             var o;
             for (o = i; o < select.length; o++) {
@@ -167,34 +171,31 @@ $jsonselectsensor = json_encode($selectsensor);
 
     //Sensnoren müssen einer Skala zugeordnet werden, entsprechende ZUweisung wurd in folgender Datenstruktur gespeichert
     var scalas = [];
+    var scala_unique_id; //gibt jeder Skala eine eigene id - sollte nach erstellung einer skala inkrementiert werden -> anhand dieser ID werden auch variable Faktoren wie Graphen bzw y-Achsen Farbe und Erscheinungsbild bestimmt sodass einzelne Graphen voneinander unterschieden werden können und einer y-Achse zugewiesen werden können
+    var patient_sensor = null; //diese referenz wird den sensor speichern, dem über das auswahlmodal eine skala zugewiesen werden soll
 
 
 
-    //keine doppelten sensoren zulassen-------------------------------
     for (i = 0; i < select_sensor.length; i++) {
-        //zunächst werden noch die elemente selected und scala beigefügt -> selected sagt aus ob der sensor gewählt wurde, scala auf welcher y-achse er dann angezeugt werden soll
+        /*zunächst werden noch die elemente selected und scala beigefügt -> selected sagt aus ob der sensor gewählt wurde,
+         * scala auf welcher y-achse er dann angezeugt werden soll*/
         select_sensor[i].selected = false;
         select_sensor[i].scala = null;
-        var o;
-        for (o = 0; o < sensors.length; o++) {
-            var already_exists = false;
-            if ((select_sensor[i].anzeigename == sensors[o].anzeigename)) {
-                //sensor already exists!!!
-                already_exists = true;
+        for(o=0;o<messreihen_copy.length;o++){ /*Da messreihe.id aus dem sensors select leder von der 
+                                                *sensor id überschrieben wird, muss ich sie hier manuell zuweisen*/
+            if(messreihen_copy[o].messreihenname == select_sensor[i].messreihenname){
+                select_sensor[i].messreihenid = messreihen_copy[o].id;
                 break;
             }
-        }
-        if (!already_exists) {
-            /*ONLY FOR DEBUG -> console.log("adding new sensor to sensors[]: " + select_sensor[i].anzeigename);*/
-            sensors.push(select_sensor[i]);
-        }
+        } 
+        sensors.push(select_sensor[i]);
     }
 
-    /* only for debug
+     /*only for debug
      console.log("##########");
      console.log(sensors);
      for(i = 0; i < sensors.length; i++){
-     console.log(sensors[i]);
+         console.log(sensors[i]);
      }
      console.log("##########");*/
     //-------------------------------------------------------------------------------------------
@@ -224,7 +225,6 @@ $jsonselectsensor = json_encode($selectsensor);
     //
     //------------------------------------Variablen, mit deren Hilfe unique-Ids erstellt werden können----------------------------------------------------------
     var uniqueId = 0; //Diese Variable sollte nach erstellen eines neuen Metafilters inkrementiert werden	
-    var look_up_unique_id = []; //Mit dieser Array kann die delMeta Funktion anhand der uniqueId zurückverfolgen
     //welches Metafeld in die Arbeitskopie messreihen_copy zurückgeführt werden muss
     var uniquei = 0; //für die <option> tags im metafilterselect "#selectBox"
     //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -283,17 +283,23 @@ $jsonselectsensor = json_encode($selectsensor);
 <h2 id="h2MessreihenWählen">Messreihen/Sensoren wählen</h2>
 <div id="messreihenSensorenFilterDiv" class="row">
 
-    <div id="messreihenDiv" class="col-xs-12 col-xs-6">
-        <small>Messreihen</small>
+    <div class="col-sm-6"> <small>Messreihen</small></div>
+    <div id="smallSensoren" class="col-sm-5"><small id="smallSensoren">Sensoren</small></div>
+    <div id="smallSkala" class="col-sm-1" style="padding-left:0px"><small>Skala</small></div>
+
+    <div id="messreihenDiv" class="col-xs-12 col-xs-6 scrollableAb200">
         <div id="messreihenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
     </div>
-    <div id="sensorenDiv" class="col-xs-12 col-xs-5">
-        <small>Sensoren</small>
-        <div id="sensorenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
-    </div>
-    <div id="scalaDiv" class="col-xs-12 col-xs-1">
-        <small>Scala</small>
-        <div id="skalenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
+
+    <div id="sensorsAndSkalas" class="col-xs-6 scrollableAb200">
+        <div class="row">
+            <div id="sensorenDiv" class="col-xs-10">
+                <div id="sensorenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
+            </div>
+            <div id="scalaDiv" class="col-xs-2">
+                <div id="skalenListe" class="btn-group-vertical" role="group"></div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -301,26 +307,108 @@ $jsonselectsensor = json_encode($selectsensor);
 <br>
 
 <!-- Weitere Einstellungen -->
+<script>
+    var step = 1;
+    var intervall1 = 0;
+    var intervall2 = 0;
+</script>
+
 <h2>Einstellungen</h2>
 <div class="form-group">
-    <div class="col-sm-12 col-md-6 col-lg-4"></div>
+    <div class="col-sm-1 col-sm-offset-3">
+       <div><label class="control-label">Schrittweite</label></div>
+        <br>
+       <div><label class="control-label">Intrevall</label></div>
+    </div>
+
+    <div class="col-sm-3 einstellungenInputDiv">
+        <div>
+            <input id="stepInput" class="col-sm-6 form-control einstellungenInput" type="text" name="IntervallInput" placeholder="z.B. 100 (er Schritte)"></input>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-sm-6">
+                <input id="intervallInput1" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="Von"></input>
+            </div>
+            <div class="col-sm-6">
+                <input id="intervallInput2" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="Bis"></input>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-sm-offset-4 anzeigeButtonDiv">
+        <button id="anzeigeButton"  type="button" class="btn btn-default" >Anzeigen!</a>
+    </div>
 </div>
 
 
-<!-- Small modal -->
-<div id="scalaModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
+<!--Skala Modal -->
+<div id="scalaModal" class="modal fade" aria-hidden="true">
+  <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Skalen</h4>
-            <button id="modalContentMenuButtonNewScala" class="btn">Neue Skala</button>
-        </div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel" style="text-align:center">Skalen Erstellen</h4>
+            <div calss="form-group"></div>
+        </div><!-- modal-header end-->
+        
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label class="control-label">Titel</label>
+                </div>
 
-        blablablablablablabla
-    </div>
-  </div>
-</div>
+                <div class="col-sm-6">
+                    <input id="scalaTitelInput" class="form-control scalaModalInput" type="text" name="scalaTitleInput" placeholder="z.B. Temperatur"></input>
+                </div>
+
+                <div class="col-sm-6">
+                    <label class="control-label">Einheit</label>
+                </div>
+
+                <div class="col-sm-6">
+                    <input id="scalaEinheitInput" class="form-control scalaModalInput" type="text" name="scalaEinheitInput" placeholder="z.B. in °C"></input>
+                </div>
+
+                <br>
+                <br>
+                <script> //Diese Variablen speichern die Zustände der Optionalen radio/check buttons/boxes
+                    var radioFloatBool = false;
+                    var rightSideScala = false;
+                </script>
+                
+                <div class="col-sm-6">
+                    <fieldset>
+                        <input type="radio" id="radioINT" name="Zahlengruppe" value="int" checked="checked"><label for="radioINT"> Int</label><br>
+                        <input type="radio" id="radioFLOAT" name="Zahlengruppe" value="float"><span id="radioFloatSpan"><label for="radioFLOAT"> Float</label></span>
+                    </fieldset>
+                </div>
+                <br>
+                <br>
+                <div class="col-sm-6">
+                    <fieldset>
+                        <input type="checkbox" id="rightSideScala" name="Position der Skala" value="left"><label for="rightSideScala"> Skala rechts vom Graphen anzeigen</label>
+                    </fieldset>
+                </div>
+
+            </div><!-- eigene row end-->
+            <button id="modalContentMenuButtonNewScala" class="btn">Neue Skala</button>
+            <hr>
+            <h4 id="scalaModalh4" style="text-align:center">Skalen auswählen</h4>
+            
+            <div class="table-responsive">
+              <table id="scalaModalContent" class="table"></table>
+            </div><!-- table-responsive end -->
+        </div><!-- modal-body end -->       
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div><!-- modal-footer end -->
+    </div><!-- model-content end -->
+  </div><!-- model-dialog end-->
+</div><!-- modal end-->
 
 
 
@@ -366,6 +454,7 @@ $jsonselectsensor = json_encode($selectsensor);
             }
             if (!exists_in_messreihe) {
                 to_delete.push(messreihen_copy[i]);
+                excludeIrrelevantSensors(messreihen_copy[i]);
             }
         }
         //Jetzt wissen wir (in to_delete) welche messreihen von messreihen_copy (der Arbeitskopie)
@@ -377,12 +466,6 @@ $jsonselectsensor = json_encode($selectsensor);
             }
         }
         messreihen_copy = $.extend(true, [], tmp_new_array);
-
-
-        for (i = 0; i < to_delete.length; i++) {
-            look_up_unique_id.push({id: uniqueId-1, messreihe: to_delete[i]});//Für delMeta(argid) Funktion, so kann rückverfolgt werden was wieso gelöscht wurde
-                /*da die unique id in addDefaultValueField schon inkrementiert wird müssen wir hier mit der vorherigen rechnen*/
-        }
 
         //Nun das SelectFeld neu generieren
         regenerateDocument();
@@ -441,7 +524,6 @@ $jsonselectsensor = json_encode($selectsensor);
 
 			if ($(valueFieldExists).hasClass("singleValueField") && isSingleValueFieldOperator) {
 		        //Feld muss nicht erneuert werden
-		        console.log("valueField already exists (single)");
 		        return;
         	}
             appendString = "<div id='metaValueField"+argsId+"' class='form-group'><div class='col-xs-8'><input id='metaValueInput"+argsId+"' class='singleValueField form-control valueField' type='text' placeholder='insert Value' name='stringInput"+argsId+"'></input></div><a class='btn' onclick='delMeta("+argsId+");'><span class='glyphicon glyphicon-remove'></span></a></div>";
@@ -449,7 +531,6 @@ $jsonselectsensor = json_encode($selectsensor);
 			//kann momentan nur "between sein"
 			if ($(valueFieldExists).hasClass("doubleValueField") && !(isSingleValueFieldOperator)) {
 		        //Feld muss nicht erneuert werden
-		        console.log("valueField already exists (double)");
             	return;
         	}
 			appendString = "<div id='metaValueField" + argsId + "' class='form-group'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input id='metaValueInput"+argsId+"' class='doubleValueField form-control valueField' type='text' placeholder='bis' name='stringInput"+argsId+"'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
@@ -483,27 +564,7 @@ $jsonselectsensor = json_encode($selectsensor);
         $("#metaNameField" + argid).parent().remove();
         $("#metaValueField" + argid).remove();
 
-        //TODO regenerate #selectBox da nun vorherig weggefallene messreihen wieder erlaubt sein können	
-        //füge der arbeitsopie wieder jene elemente hinzu welche durch das gelöschte metafeld beseitigt wurden (und NUR diese!)
-        for (i = 0; i < look_up_unique_id.length; i++) {
-            /*falls wegen des nun gelöschten metaelements anderere messreihen von der auswahl ausgeshlossen wurden, müssen diese nun wieder der auswahl hinzugefüht werden da die ursache nun beseitigt ist*/
-            if(look_up_unique_id[i].id == argid){
-                messreihen_copy.push(look_up_unique_id[i].messreihe);
-            }
-        }
-        //remove every entry in the look up array that holds the id = argid
-        var argid_is_in_lookup = true;
-        while(argid_is_in_lookup){
-            argid_is_in_lookup = false;
-            for(i = 0; i < look_up_unique_id.length; i++){
-                if(look_up_unique_id[i].id == argid){
-                    look_up_unique_id.splice(i, 1);
-                    argid_is_in_lokup = true;
-                    break;
-                }
-            }
-        }
-        regenerateDocument();
+        evaluateAllFilters();
     }
 
 
@@ -535,6 +596,29 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
+    function evaluateAllFilters(){
+        /*erstelle eine neue messreihen_copy von dem original anhand des filters auf alle verbleibenden filter*/
+        messreihen_copy = $.extend(true, [], messreihen); //Tiefe Kopie vom Original
+
+        var to_filter_number=$("#meta_value_div").children().length; //auf wie viele elemente muss dir filter funktion angewendet werden
+        var to_filter; //wird in der for schleife das momentane element enthalten mit dem als nächstes gefiltert werden muss
+        var target; //das target, welches filterMessreihen() als arument erwartet (das valuefield)
+        var to_filter_id; //wird entsprechend der iteration die id des zu filternden elements ehntahlten
+        //durch alle metadatenfilter durchiterieren und für jeden Filter die FIlterfunktion anwenden
+        for(i=0;i<to_filter_number;i++){
+            to_filter = $("#meta_value_div").children().eq(i);
+            if($(to_filter).children("div").length > 1){ //zwischen Operator zweites valuefield nehmen, da filtermessreihen das erwartet
+                target=$(to_filter).children("div").eq(1).children()["0"];
+            }else{
+                target = $(to_filter).children("div").children()["0"];
+            }
+
+            to_filter_id = target.getAttribute("id");
+            filterMessreihen(target, to_filter_id);
+        }
+
+        regenerateDocument();
+    }
 
 
 
@@ -573,15 +657,6 @@ $jsonselectsensor = json_encode($selectsensor);
         operator = operator.slice(0, cutoff_index);
 
 
-        //WICHTIG zunächst wird noch geprüft ob durch den selben metadatenfilter bereits etwas weggefiltert wurde, denn wenn nun der filter überschrieben wird müssen die weggefilterten ergebnisse nun wieder in Betracht gezogen werden
-        for(i = 0; i < look_up_unique_id.length; i++){
-            if(look_up_unique_id[i].id[0] == target_id){
-                messreihen_copy.push(look_up_unique_id[i].messreihe);
-                look_up_unique_id.splice(i, 1);
-                break;
-            }
-        }
-       
 		if((untergrenze != undefined) && (operator == "zwischen")){ // in diesem fall muss speziell behandelt werden, da es sich hier um zwei filterwerte handelt
             filterWith(metaname, data_type, "größer gleich", untergrenze, target_id);
             filterWith(metaname, data_type, "kleiner gleich",filterstring, target_id);
@@ -596,43 +671,63 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function filterWith(metaname, datatype, operator, value, target_id){
         //zunächst sollte der input bereinigt werden, zb falls der datatype numerisch ist sollte der input kein A-Z usw enthalten...
-        /*if(!checkInput(datatype, value))
-            return;*/
+        if(!checkInput(datatype, value))
+            return;
 
 
         /*jetzt sollte durch alle messreihen durchiteriert werden und geguckt werden ob wegen der eingegebenen werte eventuell
             *manche messreihen nicht mehr in die auswahl passen*/
         var tmp_array = [];//speichert die entstehend liste und wird am ende die arbeitskopie von messreihen übernommen
         var to_delete = [];
-        for(i = 0; i < messreihen_copy.length; i++){
+        var iterate_i;
+        var iterate_o;
+        for(iterate_i = 0; iterate_i < messreihen_copy.length; iterate_i++){
             var messreihe_fits = false;
-            for(o = 0; o < messreihen_copy[i].metafields.length; o++){
-                if(messreihen_copy[i].metafields[o].metaname == metaname){//match gefunden nun werte vergleichen
-                   if(elementFitsTheFilter(datatype, operator, value, messreihen_copy[i].metafields[o].wert)){
+            for(iterate_o = 0; iterate_o < messreihen_copy[iterate_i].metafields.length; iterate_o++){
+                if(messreihen_copy[iterate_i].metafields[iterate_o].metaname == metaname){//match gefunden nun werte vergleichen
+                   if(elementFitsTheFilter(datatype, operator, value, messreihen_copy[iterate_i].metafields[iterate_o].wert)){
                        messreihe_fits = true;
                    }
                    break;
                 }
             }
-            if(!messreihe_fits){
-                to_delete.push(messreihen_copy[i]);
+            if(messreihe_fits){
+                tmp_array.push(messreihen_copy[iterate_i]);
             }else{
-                tmp_array.push(messreihen_copy[i]);
+                //evtl wurden bereits sensoren von einer nun zu entfernenden Messreihe ausgewählt, diese müssen nun natürlich abgewählt werden
+                excludeIrrelevantSensors(messreihen_copy[iterate_i]);
             }
         }
         messreihen_copy = $.extend(true, [], tmp_array);
-
-        for(i=0; i<messreihen_copy.length;i++){
-        }
-
-        for(i = 0; i < to_delete.length; i++){
-            look_up_unique_id.push({id: target_id, messreihe: to_delete[i]});
-        }
-
-        regenerateDocument();
     }
 
 
+    function excludeIrrelevantSensors(messreihe){
+        var iterate_s;
+        var selSenLen = selected_sensors.length;
+        var to_delete = [];
+        for(iterate_s = 0; iterate_s<selSenLen;iterate_s++){ //ermittle alle Sensoren, welche zur ausgeschlossnen Messreihe gehören und merke sie dir in to_delete
+            var cond1, cond2;
+            cond1 = selected_sensors[iterate_s].messreihenname;
+            cond2 = messreihe.messreihenname;
+            if(cond1 == cond2){
+                to_delete.push(selected_sensors[iterate_s]);
+            }
+        }
+
+        for(iterate_s=0;iterate_s<to_delete.length;iterate_s++){
+            if(to_delete[iterate_s].selected){
+                to_delete[iterate_s].selected = false;
+                selected_sensors.splice($.inArray(to_delete[iterate_s], selected_sensors), 1);
+            }
+        }
+
+
+        number_sensors = selected_sensors.length;
+        $("#sensorenListe").html("");
+        $("#skalenListe").html("");
+        $("#h2MessreihenWählen").html("Messreihen/Sensoren <small>("+number_sensors+")</small> wählen");
+    }
 
 
     
@@ -640,10 +735,12 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function checkInput(datatype, value){
         if((datatype == "numerisch") && (isNaN(parseInt(value)))){
-            alert("Ein numerischer input sollte eine Zahl sein! 120k geht zum Beispiel auch, jedoch wird dann eben das k ignoriert.");
+            modalTextWarning("Ein numerischer input sollte eine Zahl sein! 120k geht zum Beispiel auch, jedoch wird dann eben das k ignoriert.");
+            $('#infoModal').modal();
             return false;
         }else if((datatype == "datum") && !(/[0-9]{4}-[0-9]{2}-[0-9]{2}$/).test(value)){
-            alert("Ein Datum muss von der Form yyy-mm-dd sein!");
+            modalTextWarning("Ein Datum sollte von der Form yyy-mm-dd sein!");
+            $('#infoModal').modal();
             return false;
         }
         return true;
@@ -724,21 +821,30 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     //Liste der angezeigten Messreihen regenerieren 
+    var lookup_selected_mesreihe = null;
     function regenerateMessreihenList() {
         var replace_string = [];
         for (i = 0; i < messreihen_copy.length; i++) {
             var hms = anySensorsSelectedFrom(messreihen_copy[i]["messreihenname"]); 
+            replace_string.push("<button class='btn btn-default' data-messreihe='"+messreihen_copy[i]["messreihenname"]+"'>");
             if(hms > 0){
-                replace_string.push("<button class='btn btn-default' data-messreihe='"+messreihen_copy[i]["messreihenname"]+"'>");
                 replace_string.push(messreihen_copy[i]["messreihenname"] + " " +messreihen_copy[i].datum);
                 replace_string.push(" <span class='glyphicon glyphicon-ok'></span>  <small>"+hms+"</small></button>");
             }else{
-               replace_string.push("<button class='btn btn-default' data-messreihe='"+messreihen_copy[i]["messreihenname"]+"'>");
                replace_string.push(messreihen_copy[i]["messreihenname"] + " " +messreihen_copy[i].datum + "</button>");
             }
         }
         $("#messreihenListe").html(replace_string.join(""));
+
+        if(selected_sensors.length > 0){
+            showSensorsOf(lookup_selected_messreihe);
+        }else{
+            showSensorsOf(messreihen_copy[0].messreihenname);
+        }
     }
+
+
+
 
     function anySensorsSelectedFrom(messreihe){
         var how_much_sensors = 0;
@@ -752,52 +858,57 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function showSensorsOf(arg) {
+        lookup_selected_messreihe = arg;
         sensors_string = [];
         scalas_string = [];
 
         for (i = 0; i < sensors.length; i++) {
             if (arg == sensors[i]["messreihenname"]) {
-                sensors_string.push("<button class='btn btn-default sensor-btn' style='width:100%' data-sensorID='"+sensors[i]["id"]+"'>");
+                sensors_string.push("<button class='btn btn-default sensor-btn' style='width:100%' data-messreihe='"+arg+"' data-sensorID='"+sensors[i]["id"]+"'>");
                 sensors_string.push(sensors[i]["anzeigename"]);
                 if(sensors[i].selected == true){
                     sensors_string.push("<span class='glyphicon glyphicon-ok'></span>");
                 }
                 sensors_string.push("</button>");
                 
-                scalas_string.push("<button class='btn btn-default scala-btn' style='width:100%' data-sensorID='"+sensors[i]["id"]+"'>");
+                scalas_string.push("<button class='btn btn-default scala-btn' style='width:100%' data-messreihe='"+arg+"' data-sensorID='"+sensors[i]["id"]+"'>");
                 scalas_string.push("<span class='glyphicon glyphicon-stats'></span>  ");
                 if(sensors[i]["scala"] != null){
-                    scalas_string.push(sensors[i]["scala"]);
+                    scalas_string.push(sensors[i]["scala"]["name"]);
                 }
                 scalas_string.push("</button>");
             }
         }
         $("#sensorenListe").html(sensors_string.join(""));
         $("#skalenListe").html(scalas_string.join(""));
+        $("#smallSensoren").html("Sensoren -> "+arg);
     }
 
 
 
     function selectSensor(target){
         var selected_id = target.getAttribute("data-sensorID");
+        var zugehörige_messreihe = target.getAttribute("data-messreihe");
         for(i = 0; i < sensors.length; i++){
-            if(sensors[i].id == selected_id){
+            if((sensors[i].id == selected_id) && (sensors[i].messreihenname == zugehörige_messreihe)){
                 if(sensors[i].selected == false){
                     $(target).append(" <span class='glyphicon glyphicon-ok'></span>");
                     sensors[i].selected = true;
                     selected_sensors.push(sensors[i]);
                     if(++number_sensors == max_number_sensors+1){
-                        alert("Attention! Good Performance is only guaranteed when 6 or less sensors are selected...");
+                        modalTextWarning("Achtung! Gute Performance ist nur mit "+max_number_sensors+" oder weniger Sensoren gewährleistet");
+                        $('#infoModal').modal();
                     }
                     break;
                 }else{
                     sensors[i].selected = false;
                     for(o=0;o<selected_sensors.length;o++){
-                        if(selected_sensors[o]["id"] == selected_id){
+                        if((selected_sensors[o]["id"] == selected_id) && (selected_sensors[o].messreihenname == zugehörige_messreihe)){
                             $(target).html(sensors[i]["anzeigename"]);
                             selected_sensors.splice(o, 1);
                             if(--number_sensors < 0){
-                                alert("number_sensors is negative... this is strange... thanks obama");
+                                modalTextWarning("number_sensors is negative... this is strange... thanks obama");
+                                $('#infoModal').modal();
                             }
                             break;
                         }
@@ -805,12 +916,131 @@ $jsonselectsensor = json_encode($selectsensor);
                 }
             }
         }
-        $("#h2MessreihenWählen").html("Messreihen/Sensoren wählen <span class='badge'>"+number_sensors+"</span>");
+        $("#h2MessreihenWählen").html("Messreihen/Sensoren <small>("+number_sensors+")</small> wählen");
         regenerateMessreihenList();
     }
 
+
+
+
+
+
+
     function selectScala(target){
-        console.log(target);
+        var target_sensor_id = target.getAttribute("data-sensorid");
+        var zugehörige_messreihe = target.getAttribute("data-messreihe");
+        for(i=0;i<sensors.length;i++){
+            if((sensors[i].id == target_sensor_id)&&(sensors[i].messreihenname == zugehörige_messreihe)){
+                patient_sensor = sensors[i]; //wenn anschließend eine skala aus se modal gewählt wurde wird sie dem sensor zugewiesen auf den patient_sensor zeigt
+                break;
+            }
+        }
+        if(patient_sensor == null){
+            modalTextWarning("patient_sensor ist 'null' da kann was nicht stimmen - function selsectScala.... thanks obama");
+            $('#infoModal').modal();
+        }
+        regenerateScalaModal();
+        $("#scalaModal").modal('show');
+    }
+
+
+
+
+
+    function regenerateScalaModal(){
+        var replace_string = [];
+        replace_string.push("<tr><th>Skala</th><th>Titel</th><th>Einheit</th><th>Int/Float</th><th>Position</th><th>choose</th></tr>");
+        for(i=0;i<scalas.length;i++){
+            replace_string.push("<tr>");
+            replace_string.push("<td>"+scalas[i].name+"</td>");
+            replace_string.push("<td>"+scalas[i].title.text+"</td>");
+
+            if(/.*\%\.[0-9]1*/.test(scalas[i].labels.stringFormat)){ //handelt sich um float
+                console.log("float");
+                replace_string.push("<td>"+scalas[i].labels.stringFormat.slice(5, 100)+"</td>");
+                replace_string.push("<td>FLOAT</td>");
+            }else{
+                console.log(scalas[i].labels.stringFormat.slice(3, 100));
+                replace_string.push("<td>"+scalas[i].labels.stringFormat.slice(3, 100)+"</td>");
+                replace_string.push("<td>INT</td>");
+            }
+            replace_string.push("<td>"+scalas[i].location+"</td>");
+            replace_string.push("<td><button class='btn choose-scala-btn btn-xs' data-scalaID='"+scalas[i].name+"'>Auswaehlen</button></td>");
+            replace_string.push("</tr>");
+        } 
+        $("#scalaModalContent").html(replace_string.join(""));
+        $("#scalaModalh4").html("Skala wählen für Sensor : <br>"+ patient_sensor.anzeigename);
+    }
+
+
+
+
+
+    function chooseScala(target){
+        var chosen_scala;
+        for(i=0;i<scalas.length;i++){
+            if(scalas[i].name == target){
+                patient_sensor.scala = scalas[i];
+                break;
+            }
+        }
+        patient_scala = null; //Referenz löschen
+        $("#scalaModal").modal('hide');
+        regenerateMessreihenList();
+    }
+
+
+
+    var unique_scala_id = 0;
+
+    function createNewScala(){
+        var chosen_title = $("#scalaTitelInput").val();
+        var chosen_unit = $("#scalaEinheitInput").val();
+        var chosen_location = 'left';
+        var chosen_int_float = '%d ';
+
+        if(rightSideScala){
+            chosen_location = 'right';
+        }
+        if(radioFloatBool){
+            chosen_int_float = "%."+$("#sel1").val()+"f ";
+        }
+        
+        if((chosen_title != "") && (titleDoesntExists(chosen_title))){
+            var new_scala = {
+                        name: "Skala: "+(unique_scala_id++),
+                        strokeStyle: '#FFFFFF',
+                        location: chosen_location,
+                        majorGridLines: {
+                            visible: false,
+                        },
+                        majorTickMarks: {
+                            strokeSTyle: '#FFFFFF',
+                        },
+                        title: {
+                            text: chosen_title,
+                            fillStyle: '#FFFFFF',
+                        },
+                        labels: {
+                            stringFormat: chosen_int_float.concat(chosen_unit),
+                            fillStyle: '#FFFFFF',
+                        },
+                    }
+
+
+            scalas.push(new_scala);
+            regenerateScalaModal();
+        }
+    }
+
+
+    function titleDoesntExists(titl){
+        for(i=0;i<scalas.length;i++){
+            if(scalas[i].title.text == titl){
+                return false;
+            }
+        }
+        return true;
     }
 //-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -822,16 +1052,16 @@ $jsonselectsensor = json_encode($selectsensor);
     }
 
 
-
     $(function () {
+
         regenerateDocument();
         $('#meta_select_button').click(function () {
             addMeta();
             $(this).blur();
         });
 
-		$('#meta_value_div').on("blur", ".valueField", function (e) {
-            filterMessreihen(e.target, $(this).attr("id"));
+		$('#meta_value_div').on("change", ".valueField", function (e) {
+            evaluateAllFilters();
         });
 
         //CLICK ON MESSREIHE
@@ -847,16 +1077,112 @@ $jsonselectsensor = json_encode($selectsensor);
         //CLICK ON SCALA
         $('#skalenListe').on("click", ".scala-btn", function (e) {
             selectScala(e.target);
-            $("#scalaModal").modal('show');
+            /*generiere den Modal inhalt für die skalenanzeige*/
+        });
+
+        //in Modal on click in modalContent -> click on a scala
+        $("#scalaModalContent").on("click", ".choose-scala-btn", function(e){
+            chooseScala(e.target.getAttribute("data-scalaID")); //wird der funktion eine scala id geben
         });
 
         //in Modal click on "neue skala"
         $('#modalContentMenuButtonNewScala').click(function(){
-            var new_scala; //TODO ich weiß noch nicht wirklich wie eine skala aussieht dafür brauch ich erst highcharts-erfahrung ist also eher n stub
-            scalas.push(new_scala);
+            createNewScala();
+        });
+
+        //in Modal on change in modals inputs -> radiobuttons 
+        $('#radioINT, #radioFLOAT').change(function(){
+            radioFloatBool = !radioFloatBool; 
+            if(radioFloatBool){
+                $("#radioFloatSpan").append("<div class='form-group'><label for='sel'>Anzahl Nachkommastellen:</label><select class='form-control' id='sel1'><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>");
+            }else{
+                $("#radioFloatSpan").html("<label for='radioFLOAT'> Float</label>");
+            }
+        });
+
+       //in Modal on click in modal inputs -> checkbox rightSideScala
+        $("#rightSideScala").click(function(){
+            rightSideScala = !rightSideScala;
+            console.log(rightSideScala);
+        });
+
+
+        //stepInput on change
+        $("#stepInput").change(function(e){
+            step = parseInt($(e.target).val());
+        });
+
+        //intervallInput1 on change
+        $("#intervallInput1").change(function(e){
+            intervall1 = parseInt($(e.target).val());
+        });
+
+        //intervallInput2 on change
+        $("#intervallInput2").change(function(e){
+            intervall2 = parseInt($(e.target).val());
+        });
+
+        //einstellungenInputDiv loses focus
+        $(".einstellungenInput").blur(function(e){
+            if(($("#stepInput").val() != "")&&($("#intervallInput1").val() != "")&&($("#intervallInput2").val() != "")){
+                if(intervall2 < step){
+                    intervall2 = intervall1+step;
+                    $(e.target).val(intervall1+step);
+                    modalTextWarning("Vorsicht! -> die Schrittweite ist höher als der Intervall!? Der Intervall wurde automatisch auf den kleinstmöglichen Wert gesetzt");
+                    $('#infoModal').modal();
+                }else if(intervall2 < intervall1){
+                    intervall2 = intervall1+step;
+                    $(e.target).val(intervall1+step);
+                    modalTextWarning("Vorsicht! -> 'Bis' ist kleiner als 'Von' -> Werte wurden automatisch logisch neu verteilt");
+                    $('#infoModal').modal();
+                }
+            }
+        });
+
+        //Anzeigen! button on click
+        $("#anzeigeButton").click(function(){
+            //die erste y-Achse (auf der linken Seite des Graphen) sollte zoom-enabled haben
+            for(i=0;i<scalas.length;i++){
+                if(scalas[i].location == "left"){
+                    scalas[i].zoomenabled = true;
+                    break;
+                }
+            }
+            //Nun sollten alle benötigte Daten gesammelt sein - also triggern wir jqCharts
+            var data = {
+                from:   intervall1,
+                to:     intervall2,
+                step:   step,
+            };
+
+            data.pair = [];
+            for(i=0;i<selected_sensors.length;i++){
+                tmp_array = [];
+                tmp_array.push(selected_sensors[i].id);
+                tmp_array.push(selected_sensors[i].messreihenid);
+
+                data.pair.push(tmp_array);
+            }
+            //Ab jetzt ist data fertig
+            //Nun wird noch eine Map benötigt in der schnell ausgelesen werden kann welch messreihen-sensor kmbination auf welche skala abgebildet werden soll
+            var skalaMap = {};
+            if(selected_sensors.length == 0){
+                    modalTextError("Vorsicht! -> Es wurden keine Sensoren ausgewählt, deren Messwerte anzuzeigen wären... Bitte erst berichtigen");
+                    $('#infoModal').modal();
+                    return;
+            }
+            for(i=0;i<selected_sensors.length;i++){
+                if(selected_sensors[i].scala == null){
+                    modalTextError("Vorsicht! -> "+ selected_sensors[i].anzeigename + " aus der Messreihe: '"+selected_sensors[i].messreihenname+"', wurde noch keiner Skala zugewiesen! Bitte erst berichtigen... ");
+                    $('#infoModal').modal();
+                    return;
+                }
+                skalaMap[selected_sensors[i].messreihenname+" - "+selected_sensors[i].anzeigename] = selected_sensors[i].scala.name;
+            }
+            console.log(data);
+            console.log(skalaMap);
         });
     });
-
 </script>
 
 <?php

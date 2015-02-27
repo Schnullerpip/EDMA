@@ -494,6 +494,19 @@ form .table#projektbeschreibungen {
 #scalaDiv div.btn-group-vertical{
     border-left:0px;
 }
+
+h2 small{
+    color:white;
+}
+
+.scrollableAb200 {
+    overflow-x:hide;
+    overflow-y:auto;
+    height:200px;
+
+}
+
+
 .btn-group-vertical>.btn:first-child:not(:last-child).sensor-btn {
     border-top-right-radius:0px;
 }
@@ -506,13 +519,39 @@ form .table#projektbeschreibungen {
 }
 .scala-btn {
     border-top-left-radius:0px;
+    background-color:#224565;
 }
 
 /*für das skalen-modal*/
 .modal-content .btn{
-    background-color: blue;
     border-color: black;
     color: black;
+}
+
+.modal-content input {
+    border-color: black;
+}
+
+.modal-header>input:first-of-type {
+    border-bottom: none;
+}
+
+.modal-content select{
+    border-color: black;
+    width:50px;
+}
+
+
+/*Anzeige der "Einstellungen"*/
+.einstellungenInputDiv {
+    padding-right:0px;
+}
+.anzeigeButtonDiv {
+    padding-top:10px;
+}
+
+#anzeigeButton {
+    width:50%;
 }
 /*---------------------------------------------------------------------*/
 
