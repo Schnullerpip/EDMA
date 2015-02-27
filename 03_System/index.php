@@ -76,7 +76,7 @@ $projektid = $projekt->data()->id;
 
 //Select für messreihenname, metadatenname, datentyp
 //TODO messreihen_id
-$db->query("SELECT messreihe.messreihenname, messreihe.datum, metainfo.metaname, messreihe_metainfo.metawert, datentyp.typ
+$db->query("SELECT messreihe.messreihenname, messreihe.id, messreihe.datum, metainfo.metaname, messreihe_metainfo.metawert, datentyp.typ
 					FROM messreihe INNER JOIN projekt ON messreihe.projekt_id = projekt.id
 					INNER JOIN messreihe_metainfo ON messreihe.id = messreihe_metainfo.messreihe_id
 					INNER JOIN metainfo ON metainfo.id = messreihe_metainfo.metainfo_id
@@ -118,6 +118,7 @@ $jsonselectsensor = json_encode($selectsensor);
             var tmp_messreihe = {messreihenname: select[i].messreihenname};
             tmp_messreihe.datum = select[i].datum;
             tmp_messreihe.metafields = [];
+            tmp_messreihe.id = select[i].id;
             messreihen.push(tmp_messreihe);
             var o;
             for (o = i; o < select.length; o++) {
@@ -180,6 +181,13 @@ $jsonselectsensor = json_encode($selectsensor);
          * scala auf welcher y-achse er dann angezeugt werden soll*/
         select_sensor[i].selected = false;
         select_sensor[i].scala = null;
+        for(o=0;o<messreihen_copy.length;o++){ /*Da messreihe.id aus dem sensors select leder von der 
+                                                *sensor id überschrieben wird, muss ich sie hier manuell zuweisen*/
+            if(messreihen_copy[o].messreihenname == select_sensor[i].messreihenname){
+                select_sensor[i].messreihenid = messreihen_copy[o].id;
+                break;
+            }
+        } 
         sensors.push(select_sensor[i]);
     }
 
@@ -330,7 +338,7 @@ $jsonselectsensor = json_encode($selectsensor);
     </div>
 
     <div class="col-sm-6 col-sm-offset-4 anzeigeButtonDiv">
-        <a class="btn btn-default anzeigeButton" href="">Anzeigen!</a>
+        <button id="anzeigeButton"  type="button" class="btn btn-default" >Anzeigen!</a>
     </div>
 </div>
 
@@ -595,7 +603,6 @@ $jsonselectsensor = json_encode($selectsensor);
             }else{
                 target = $(to_filter).children("div").children()["0"];
             }
-            console.log(target);
 
             to_filter_id = target.getAttribute("id");
             filterMessreihen(target, to_filter_id);
@@ -805,6 +812,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     //Liste der angezeigten Messreihen regenerieren 
+    var lookup_selected_mesreihe = null;
     function regenerateMessreihenList() {
         var replace_string = [];
         for (i = 0; i < messreihen_copy.length; i++) {
@@ -820,7 +828,7 @@ $jsonselectsensor = json_encode($selectsensor);
         $("#messreihenListe").html(replace_string.join(""));
 
         if(selected_sensors.length > 0){
-            showSensorsOf(selected_sensors[selected_sensors.length-1].messreihenname);
+            showSensorsOf(lookup_selected_messreihe);
         }else{
             showSensorsOf(messreihen_copy[0].messreihenname);
         }
@@ -841,6 +849,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function showSensorsOf(arg) {
+        lookup_selected_messreihe = arg;
         sensors_string = [];
         scalas_string = [];
 
@@ -950,7 +959,6 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function chooseScala(target){
-        console.log(target);
         var chosen_scala;
         for(i=0;i<scalas.length;i++){
             if(scalas[i].name == target){
@@ -973,7 +981,7 @@ $jsonselectsensor = json_encode($selectsensor);
         var chosen_location = 'left';
         var chosen_int_float = '%d ';
 
-        if($("#rightSideScala").val()){
+        if(rightSideScala){
             chosen_location = 'right';
         }
         if(radioFloatBool){
@@ -1068,7 +1076,8 @@ $jsonselectsensor = json_encode($selectsensor);
 
        //in Modal on click in modal inputs -> checkbox rightSideScala
         $("#rightSideScala").click(function(){
-            rightSideSCala = !rightSideScala;
+            rightSideScala = !rightSideScala;
+            console.log(rightSideScala);
         });
 
 
@@ -1099,7 +1108,41 @@ $jsonselectsensor = json_encode($selectsensor);
         });
 
         //Anzeigen! button on click
-        //TODO ich weiß ja noch nicht wirklich wie ich die parameter an den Großen Juliangeben muss...
+        $("#anzeigeButton").click(function(){
+            //Nun sollten alle benötigte Daten gesammelt sein - also triggern wir jqCharts
+            var data = {
+                from:   intervall1,
+                to:     intervall2,
+                step:   step,
+            };
+
+            data.pair = [];
+            for(i=0;i<selected_sensors.length;i++){
+                tmp_array = [];
+                tmp_array.push(selected_sensors[i].id);
+                tmp_array.push(selected_sensors[i].messreihenid);
+
+                data.pair.push(tmp_array);
+            }
+            //Ab jetzt ist data fertig
+            //Nun wird noch eine Map benötigt in der schnell ausgelesen werden kann welch messreihen-sensor kmbination auf welche skala abgebildet werden soll
+            var skalaMap = {};
+            if(selected_sensors.length == 0){
+                    modalTextError("Vorsicht! -> Es wurden keine Sensoren ausgewählt, deren Messwerte anzuzeigen wären... Bitte erst berichtigen");
+                    $('#infoModal').modal();
+                    return;
+            }
+            for(i=0;i<selected_sensors.length;i++){
+                if(selected_sensors[i].scala == null){
+                    modalTextError("Vorsicht! -> "+ selected_sensors[i].anzeigename + " aus der Messreihe: '"+selected_sensors[i].messreihenname+"', wurde noch keiner Skala zugewiesen! Bitte erst berichtigen... ");
+                    $('#infoModal').modal();
+                    return;
+                }
+                skalaMap[selected_sensors[i].messreihenname+" - "+selected_sensors[i].anzeigename] = selected_sensors[i].scala.name;
+            }
+            console.log(data);
+            console.log(skalaMap);
+        });
     });
 </script>
 
