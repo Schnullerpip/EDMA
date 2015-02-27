@@ -323,16 +323,16 @@ $jsonselectsensor = json_encode($selectsensor);
 
     <div class="col-sm-3 einstellungenInputDiv">
         <div>
-            <input id="stepInput" class="col-sm-6 form-control" type="text" name="IntervallInput" placeholder="z.B. 100 (er Schritte)"></input>
+            <input id="stepInput" class="col-sm-6 form-control einstellungenInput" type="text" name="IntervallInput" placeholder="z.B. 100 (er Schritte)"></input>
         </div>
         <br>
         <br>
         <div class="row">
             <div class="col-sm-6">
-                <input id="intervallInput1" class="form-control" type="text" name="IntervallInput" placeholder="Von"></input>
+                <input id="intervallInput1" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="Von"></input>
             </div>
             <div class="col-sm-6">
-                <input id="intervallInput2" class="form-control" type="text" name="IntervallInput" placeholder="Bis"></input>
+                <input id="intervallInput2" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="Bis"></input>
             </div>
         </div>
     </div>
@@ -350,9 +350,12 @@ $jsonselectsensor = json_encode($selectsensor);
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel" style="text-align:center">Skalen Menü</h4> <div calss="form-group"> <br>
+            <h4 class="modal-title" id="myModalLabel" style="text-align:center">Skalen Erstellen</h4>
+            <div calss="form-group"></div>
+        </div><!-- modal-header end-->
+        
+        <div class="modal-body">
             <div class="row">
-
                 <div class="col-sm-6">
                     <label class="control-label">Titel</label>
                 </div>
@@ -371,7 +374,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
                 <br>
                 <br>
-                <script> //nur für eine Zwischenvariablen
+                <script> //Diese Variablen speichern die Zustände der Optionalen radio/check buttons/boxes
                     var radioFloatBool = false;
                     var rightSideScala = false;
                 </script>
@@ -390,16 +393,22 @@ $jsonselectsensor = json_encode($selectsensor);
                     </fieldset>
                 </div>
 
-            </div>
+            </div><!-- eigene row end-->
             <button id="modalContentMenuButtonNewScala" class="btn">Neue Skala</button>
-        </div>
-       <br>
-       </div>
-       <h4 id="scalaModalh4" style="text-align:center">Skalen auswählen</h4>
-       <div id="scalaModalContent" class="btn-group-vertical" role="group"></div>
-    </div>
-  </div>
-</div>
+            <hr>
+            <h4 id="scalaModalh4" style="text-align:center">Skalen auswählen</h4>
+            
+            <div class="table-responsive">
+              <table id="scalaModalContent" class="table"></table>
+            </div><!-- table-responsive end -->
+        </div><!-- modal-body end -->       
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div><!-- modal-footer end -->
+    </div><!-- model-content end -->
+  </div><!-- model-dialog end-->
+</div><!-- modal end-->
 
 
 
@@ -940,18 +949,27 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function regenerateScalaModal(){
         var replace_string = [];
+        replace_string.push("<tr><th>Skala</th><th>Titel</th><th>Einheit</th><th>Int/Float</th><th>Position</th><th>choose</th></tr>");
         for(i=0;i<scalas.length;i++){
-            replace_string.push("<button class='btn choose-scala-btn' data-scalaID='"+scalas[i].name+"'>"+scalas[i].title);
-            if(/.*\%\.[0-9]1*/.test(scalas[i].labels.stringFormat)){
-                replace_string.push(" -  " + scalas[i].labels.stringFormat.slice(5, 100)+"</button>");
+            replace_string.push("<tr>");
+            replace_string.push("<td>"+scalas[i].name+"</td>");
+            replace_string.push("<td>"+scalas[i].title.text+"</td>");
+
+            if(/.*\%\.[0-9]1*/.test(scalas[i].labels.stringFormat)){ //handelt sich um float
+                console.log("float");
+                replace_string.push("<td>"+scalas[i].labels.stringFormat.slice(5, 100)+"</td>");
+                replace_string.push("<td>FLOAT</td>");
             }else{
-                replace_string.push(" -  " + scalas[i].labels.stringFormat.slice(3, 100)+"</button>");
+                console.log(scalas[i].labels.stringFormat.slice(3, 100));
+                replace_string.push("<td>"+scalas[i].labels.stringFormat.slice(3, 100)+"</td>");
+                replace_string.push("<td>INT</td>");
             }
-            replace_string.push(" Anzeigeposition:" + scalas[i].location+"<br> Int/Float: "+scalas[i].labels.stringFormat);
-            
+            replace_string.push("<td>"+scalas[i].location+"</td>");
+            replace_string.push("<td><button class='btn choose-scala-btn' data-scalaID='"+scalas[i].name+"'>Auswaehlen</button></td>");
+            replace_string.push("</tr>");
+        } 
         $("#scalaModalContent").html(replace_string.join(""));
         $("#scalaModalh4").html("Skala wählen für Sensor : <br>"+ patient_sensor.anzeigename);
-        }
     }
 
 
@@ -991,14 +1009,22 @@ $jsonselectsensor = json_encode($selectsensor);
         if((chosen_title != "") && (titleDoesntExists(chosen_title))){
             var new_scala = {
                         name: "Skala: "+(unique_scala_id++),
+                        strokeStyle: '#FFFFFF',
                         location: chosen_location,
                         majorGridLines: {
-                            visible: false
+                            visible: false,
                         },
-                        title: chosen_title,
+                        majorTickMarks: {
+                            strokeSTyle: '#FFFFFF',
+                        },
+                        title: {
+                            text: chosen_title,
+                            fillStyle: '#FFFFFF',
+                        },
                         labels: {
                             stringFormat: chosen_int_float.concat(chosen_unit),
-                        }
+                            fillStyle: '#FFFFFF',
+                        },
                     }
 
 
@@ -1094,21 +1120,34 @@ $jsonselectsensor = json_encode($selectsensor);
         //intervallInput2 on change
         $("#intervallInput2").change(function(e){
             intervall2 = parseInt($(e.target).val());
-            if(intervall2 < step){
-                intervall2 = intervall1+step;
-                $(e.target).val(intervall1+step);
-                modalTextWarning("Vorsicht! -> die Schrittweite ist höher als der Intervall!? Der Intervall wurde automatisch auf den kleinstmöglichen Wert gesetzt");
-                $('#infoModal').modal();
-            }else if(intervall2 < intervall1){
-                intervall2 = intervall1+step;
-                $(e.target).val(intervall1+step);
-                modalTextWarning("Vorsicht! -> 'Bis' ist kleiner als 'Von' -> Werte wurden automatisch logisch neu verteilt");
-                $('#infoModal').modal();
+        });
+
+        //einstellungenInputDiv loses focus
+        $(".einstellungenInput").blur(function(e){
+            if(($("#stepInput").val() != "")&&($("#intervallInput1").val() != "")&&($("#intervallInput2").val() != "")){
+                if(intervall2 < step){
+                    intervall2 = intervall1+step;
+                    $(e.target).val(intervall1+step);
+                    modalTextWarning("Vorsicht! -> die Schrittweite ist höher als der Intervall!? Der Intervall wurde automatisch auf den kleinstmöglichen Wert gesetzt");
+                    $('#infoModal').modal();
+                }else if(intervall2 < intervall1){
+                    intervall2 = intervall1+step;
+                    $(e.target).val(intervall1+step);
+                    modalTextWarning("Vorsicht! -> 'Bis' ist kleiner als 'Von' -> Werte wurden automatisch logisch neu verteilt");
+                    $('#infoModal').modal();
+                }
             }
         });
 
         //Anzeigen! button on click
         $("#anzeigeButton").click(function(){
+            //die erste y-Achse (auf der linken Seite des Graphen) sollte zoom-enabled haben
+            for(i=0;i<scalas.length;i++){
+                if(scalas[i].location == "left"){
+                    scalas[i].zoomenabled = true;
+                    break;
+                }
+            }
             //Nun sollten alle benötigte Daten gesammelt sein - also triggern wir jqCharts
             var data = {
                 from:   intervall1,
