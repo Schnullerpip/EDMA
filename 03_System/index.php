@@ -965,7 +965,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 replace_string.push("<td>INT</td>");
             }
             replace_string.push("<td>"+scalas[i].location+"</td>");
-            replace_string.push("<td><button class='btn choose-scala-btn' data-scalaID='"+scalas[i].name+"'>Auswaehlen</button></td>");
+            replace_string.push("<td><button class='btn choose-scala-btn btn-xs' data-scalaID='"+scalas[i].name+"'>Auswaehlen</button></td>");
             replace_string.push("</tr>");
         } 
         $("#scalaModalContent").html(replace_string.join(""));
