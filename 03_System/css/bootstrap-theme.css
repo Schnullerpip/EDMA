@@ -523,6 +523,10 @@ h2 small{
 }
 
 /*für das skalen-modal*/
+.scalaModalInput {
+    width:50%;
+}
+
 .modal-content .btn{
     border-color: black;
     color: black;
