@@ -11,13 +11,11 @@ require_once 'header.php';
 <!--[if IE]><script lang="javascript" type="text/javascript" src="./js/vendor/jqChart/excanvas.js"></script><![endif]-->
 
 <script>
-    var namen = [], daten = [];
+    
     
     function parseCSV(csvAsString, data) {
-//        console.log(csvAsString);
         var rows = csvAsString.split("\n");
-        //var colLength = rows[0].split(",").length;
-        var i, j, x;
+        var i, j, x, serien = [], werte = [];
         x = data.from;
         for (i = 0; i < rows.length; ++i) {
             var cols = rows[i].split(",");
@@ -27,15 +25,19 @@ require_once 'header.php';
             for (j = 0; j < cols.length; ++j) {
                 if (i === 0) {
                     //header
-                    namen.push(cols[j].trim());
-                    daten[j] = []; //new Array(rows.length - 2);
+                    serien.push(cols[j].trim());
+                    werte[j] = []; //new Array(rows.length - 2);
                 } else {
-                    //result[j][i] = [i, parseFloat(cols[j]), "25.02.2015", "11:10:00.12345"];
-                    daten[j].push([x, parseFloat(cols[j]), "25.02.2015", "11:10:00.12345"]);
+                    werte[j].push([x, parseFloat(cols[j]), "25.02.2015", "11:10:00.12345"]);
                 }
             }
             x += data.step;
         }
+        
+        return {
+            serien: serien,
+            werte: werte
+        };
     };
 
     $(document).ready(function () {
@@ -58,7 +60,7 @@ require_once 'header.php';
             };
         
 //        console.log("hole die csv datei");
-        var superData = [];
+        var seriesData = [];
         $.ajax({
             url: "./chartData.php",
             dataType: 'text',
@@ -66,45 +68,24 @@ require_once 'header.php';
             async: false,
             cache: false
         }).done(function (csvAsString) {
-
-//            console.log("parse daten:");
-            //console.log(csvAsString);
-            parseCSV(csvAsString, dataaa);
-//            console.log(daten);
+            var csvAsObj = parseCSV(csvAsString, dataaa);
             var i;
-            for (i = 0; i < namen.length; ++i) {
+            for (i = 0; i < csvAsObj.serien.length; ++i) {
                 // suche achse in sensors array
-                //var yAchse = '';
-                
-                superData.push( {
-                    title: namen[i],
+                seriesData.push( {
+                    title: csvAsObj.serien[i],
                     markers: null,
-                    data: daten[i],
-                    axisY: skala[namen[i]],
+                    data: csvAsObj.werte[i],
+                    axisY: skala[csvAsObj.serien[i]],
                     type: 'line',
                 });
             }
 
-//            t1 = csvAsArray[0];
-//            t2 = csvAsArray[1];
-//            zu = csvAsArray[2];
-//            ab = csvAsArray[3];
-//            wab = csvAsArray[4];
-//            wsl = csvAsArray[5];
             console.log("fertig");
         });
-        var background = {
-            type: 'linearGradient',
-            x0: 0,
-            y0: 0,
-            x1: 1,
-            y1: 1,
-            colorStops: [{offset: 0, color: 'white'},
-                {offset: 1, color: 'black'}]
-        };
+
         console.log("jq ab gehts");
         
-        //var maxVal = 120000
         $('#selector').jqChart({
             title: {
                 text: 'Trocknungslauf vom 25.02.2015',
@@ -214,7 +195,7 @@ require_once 'header.php';
                     },
                 }
             ],
-            series: superData,
+            series: seriesData,
 //                    [
 //                {
 //                    title: 'Trichter 1',

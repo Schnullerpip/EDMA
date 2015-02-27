@@ -338,10 +338,13 @@ $jsonselectsensor = json_encode($selectsensor);
     </div>
 
     <div class="col-sm-6 col-sm-offset-4 anzeigeButtonDiv">
-        <button id="anzeigeButton"  type="button" class="btn btn-default" >Anzeigen!</a>
+        <button id="anzeigeButton"  type="button" class="btn btn-default" >Anzeigen!</button>
     </div>
 </div>
 
+<div id="jqChart-wrapper" style="width: 100%; height: 800px;" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
+<a id="saveImg" class="btn btn-default" href="#" download="Chart.png">Speichern als Bild</a>
+<a id="saveCSV" class="btn btn-default" href="../datagross.csv" download="Daten.csv">Speichern als CSV</a>
 
 <!--Skala Modal -->
 <div id="scalaModal" class="modal fade" aria-hidden="true">
@@ -1181,6 +1184,90 @@ $jsonselectsensor = json_encode($selectsensor);
             }
             console.log(data);
             console.log(skalaMap);
+            
+            var seriesData = [];
+            $.ajax({
+                url: "./chartData.php",
+                dataType: 'text',
+                data: data,
+                async: false,
+                cache: false
+            }).done(function (csvAsString) {
+                var csvAsObj = parseCSV(csvAsString, data);
+                var i;
+                for (i = 0; i < csvAsObj.serien.length; ++i) {
+                    // suche achse in sensors array
+                    seriesData.push( {
+                        title: csvAsObj.serien[i],
+                        markers: null,
+                        data: csvAsObj.werte[i],
+                        axisY: scalas[csvAsObj.serien[i]],
+                        type: 'line'
+                    });
+                }
+
+                console.log("CSV Daten sind fertig");
+            });
+            
+            scalas.push({
+                name: 'x',
+                location: 'bottom',
+                zoomEnabled: true,
+                strokeStyle: '#FFFFFF',
+                labels: {
+                    fillStyle: '#FFFFFF'
+                },
+                majorTickMarks: {
+                    strokeStyle: '#FFFFFF'
+                }
+            });
+            
+            $('#jqChart-wrapper').jqChart({
+                title: {
+                    text: $(this).data('title'),
+                    fillStyle: '#FFFFFF'
+                },
+                background: '#36a7eb',
+                chartAreaBackground: '#FFFFFF',
+                border: {
+                    visible: false
+                },
+                legend: {
+                    location: 'bottom',
+                    textFillStyle: '#FFFFFF',
+                    border: {
+                        visible: false
+                    },
+                    margin: 10
+                },
+                axes: scalas,
+                series: seriesData,
+                tooltips: {
+                    type: 'shared'
+                }
+            });
+
+            $('#jqChart-wrapper').bind('tooltipFormat', function (e, data) {
+                var result = "<b>Zeitpunkt: ";
+                if (data.constructor === Array) {
+                    result += data[0].x + "</b><br>\n" +
+                            "<table id='tooltipTable'>\n" +
+                            "<tr><th>Serie</th><th>Wert</th><th>Datum</th><th>Uhrzeit</th></tr>\n";
+
+                    var i;
+                    for (i = 0; i < data.length; ++i) {
+                        result += buildRowForSeriespoint(data[i]);
+                    }
+
+                    result += "</table>";
+                } else {
+                    result += data.x + "</b><br>\n";
+                    result += "<table id='tooltipTable'>\n" +
+                            "<tr><th>Serie</th><th>Wert</th><th>Datum</th><th>Uhrzeit</th></tr>\n";
+                    result += buildRowForSeriespoint(data);
+                }
+                return result;
+            });
         });
     });
 </script>

@@ -68,6 +68,15 @@ if (Input::itemExists('projekt_cancel')) {
 
         <!-- IE10-Anzeigefenster-Hack für Fehler auf Surface und Desktop-Windows-8 -->
         <script src="js/ie10-viewport-bug-workaround.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="./css/vendor/jquery.jqChart.css" />
+        <link rel="stylesheet" type="text/css" href="./css/vendor/jquery.jqRangeSlider.css" />
+        <link rel="stylesheet" type="text/css" media="screen" 
+              href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.21/themes/smoothness/jquery-ui.css" />
+        <script src="./js/vendor/jqChart/jquery.jqChart.min.js" type="text/javascript"></script>
+        <script src="./js/vendor/jqChart/jquery.jqRangeSlider.min.js" type="text/javascript"></script>
+        <script src="./js/vendor/jqChart/jquery.mousewheel.js" type="text/javascript"></script>
+        <!--[if IE]><script lang="javascript" type="text/javascript" src="./js/vendor/jqChart/excanvas.js"></script><![endif]-->
     </head>
 
     <body>
