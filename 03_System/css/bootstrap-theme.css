@@ -522,6 +522,12 @@ h2 small{
     background-color:#224565;
 }
 
+
+/*damit chrome funktioniert*/
+#messreihenListe small, span {
+    pointer-events: none;
+}
+
 /*für das skalen-modal*/
 .scalaModalInput {
     width:50%;

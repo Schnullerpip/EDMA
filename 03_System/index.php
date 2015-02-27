@@ -97,11 +97,9 @@ $db->query("SELECT messreihe.messreihenname, messreihe.id, messreihe_sensor.anze
 $selectsensor = $db->results();
 $jsonselectsensor = json_encode($selectsensor);
 ?>
+
+
 <script>
-    //
-    //
-    //
-    //
     //-----------------------Variablen zur Auswahl aus dem Select----
     var select = <?php echo $jsonselectmeta; ?>;    //enthält den select
     var selectedMetafield;
@@ -147,20 +145,6 @@ $jsonselectsensor = json_encode($selectsensor);
     //Arbeitskopie von messreihen erstellen
     var messreihen_copy = $.extend(true, [], messreihen); //Tiefe Kopie
 
-    //only for debug
-    /*for(i = 0; i < messreihen.length; i++){
-     console.log(messreihen[i].metafields.length);
-     var o;
-     for(o = 0; o < messreihen[i].metafields.length; o++){
-     console.log(messreihen[i].metafields[o].metaname);	
-     }
-     }*/
-    //----------------------------------------------------------------------------------
-
-
-
-
-
 
     //Variablen für den Sensorzugriff
     var select_sensor = <?php echo $jsonselectsensor; ?>;
@@ -191,62 +175,26 @@ $jsonselectsensor = json_encode($selectsensor);
         sensors.push(select_sensor[i]);
     }
 
-     /*only for debug
-     console.log("##########");
-     console.log(sensors);
-     for(i = 0; i < sensors.length; i++){
-         console.log(sensors[i]);
-     }
-     console.log("##########");*/
-    //-------------------------------------------------------------------------------------------
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
     //----------------------Variablen zum Schutz der Selectbox und dem Auswahlbutton -> button zündet nur wenn etwas legales gewählt wurde----------
     var old_value = 0;
     var selectFlag = false; //nur falls eine Option aus dem select tag gewählt wurde darf der entsprechende button getriggert werden
     var selectChangedCount = 0;
     //----------------------------------------------------------------------------------------------------------------------------------------------
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
+
+
+
     //------------------------------------Variablen, mit deren Hilfe unique-Ids erstellt werden können----------------------------------------------------------
     var uniqueId = 0; //Diese Variable sollte nach erstellen eines neuen Metafilters inkrementiert werden	
     //welches Metafeld in die Arbeitskopie messreihen_copy zurückgeführt werden muss
     var uniquei = 0; //für die <option> tags im metafilterselect "#selectBox"
     //----------------------------------------------------------------------------------------------------------------------------------------------------------
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
+
+
     //------------------------------------Die Strings, aus denen zuletzt der Select gebildet wird-------------
     var QUERY_SELECT = "SELECT ";
     var QUERY_FROM = " FROM";
     var QUERY_WHERE = " WHERE";
     //--------------------------------------------------------------------------------------------------------
-    //
-    //
-    //
-    //
-    //
 </script>				
 
 <h2>Metadaten filtern</h2>
@@ -256,8 +204,6 @@ $jsonselectsensor = json_encode($selectsensor);
         <div class="col-sm-6" id="meta_name_operator_div"></div>
         <div id="meta_value_div" class="col-sm-6"></div>
     </div>
-
-
 
     <!-- Select element und Bestätigungsbutton -->
     <div class="form-group">
@@ -275,9 +221,6 @@ $jsonselectsensor = json_encode($selectsensor);
         </div>
     </div>
 </div>
-
-
-
 
 <!-- Filterung der Messreihen/Sensoren -->
 <h2 id="h2MessreihenWählen">Messreihen/Sensoren wählen</h2>
@@ -302,8 +245,6 @@ $jsonselectsensor = json_encode($selectsensor);
         </div>
     </div>
 </div>
-
-
 <br>
 
 <!-- Weitere Einstellungen -->
@@ -862,8 +803,8 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function showSensorsOf(arg) {
         lookup_selected_messreihe = arg;
-        sensors_string = [];
-        scalas_string = [];
+        var sensors_string = [];
+        var scalas_string = [];
 
         for (i = 0; i < sensors.length; i++) {
             if (arg == sensors[i]["messreihenname"]) {
@@ -930,7 +871,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function selectScala(target){
-        var target_sensor_id = target.getAttribute("data-sensorid");
+        var target_sensor_id = target.getAttribute("data-sensorID");
         var zugehörige_messreihe = target.getAttribute("data-messreihe");
         for(i=0;i<sensors.length;i++){
             if((sensors[i].id == target_sensor_id)&&(sensors[i].messreihenname == zugehörige_messreihe)){
