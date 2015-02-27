@@ -601,3 +601,9 @@ body.modal-open {
 .modal .modal-body {
     padding-bottom: 0;
 }
+
+ /* Chart */
+ 
+.tooltipTable th, td {
+    padding-right: 10px;
+}
