@@ -31,7 +31,7 @@ CREATE TABLE `anhang` (
   `inhalt` mediumblob NOT NULL,
   `groesse` int(10) unsigned NOT NULL,
   `dateityp` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB ROW_FORMAT=COMPRESSED DEFAULT CHARSET=utf8;
 
 ALTER TABLE `anhang`
 ADD CONSTRAINT pk_anhang PRIMARY KEY (id),
@@ -116,7 +116,7 @@ CREATE TABLE `messung` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `messung`
-ADD CONSTRAINT pk_messung PRIMARY KEY (messreihe_id, sensor_id, zeitpunkt);
+ADD CONSTRAINT pk_messung PRIMARY KEY (zeitpunkt, messreihe_id, sensor_id);
 
 -- --------------------------------------------------------
 
