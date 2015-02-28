@@ -203,6 +203,8 @@ a:active,
     min-width: 100%;
     overflow: hidden;
     border: none;
+    max-height: 400px;
+    overflow-y: scroll;
 }
 .btn-group.open .dropdown-toggle {
     -webkit-box-shadow: none;

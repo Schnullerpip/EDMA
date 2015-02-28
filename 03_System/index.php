@@ -210,14 +210,14 @@ $jsonselectsensor = json_encode($selectsensor);
         <div class="col-sm-2 col-sm-offset-4">
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    Metafeld auswählen<span class="caret"></span>
+                    Metafeld ausw&auml;hlen<span class="caret"></span>
                 </button>
-                <ul  id="selectBox" class="dropdown-menu" role="xmenu"></ul>
+                <ul id="selectBox" class="dropdown-menu" role="xmenu"></ul>
             </div>
         </div>
 
         <div class="col-sm-4">
-            <button id="meta_select_button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>Metafilter hinzufügen</button>
+            <button id="meta_select_button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span>Metafilter hinzuf&uuml;gen</button>
         </div>
     </div>
 </div>
