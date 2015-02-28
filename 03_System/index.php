@@ -230,11 +230,11 @@ $jsonselectsensor = json_encode($selectsensor);
     <div id="smallSensoren" class="col-sm-5"><small id="smallSensoren">Sensoren</small></div>
     <div id="smallSkala" class="col-sm-1" style="padding-left:0px"><small>Skala</small></div>
 
-    <div id="messreihenDiv" class="col-xs-12 col-xs-6 scrollableAb200">
+    <div id="messreihenDiv" class="col-xs-12 col-xs-6">
         <div id="messreihenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
     </div>
 
-    <div id="sensorsAndSkalas" class="col-xs-6 scrollableAb200">
+    <div id="sensorsAndSkalas" class="col-xs-6">
         <div class="row">
             <div id="sensorenDiv" class="col-xs-10">
                 <div id="sensorenListe" class="btn-group-vertical" style="width:100%" role="group"></div>
