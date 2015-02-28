@@ -168,7 +168,6 @@ a:active,
 .btn-primary:active {
     color: #224565;
     background-color: white;
-    border-color: white;
     outline: none;
     -webkit-box-shadow: none;
     box-shadow: none;
