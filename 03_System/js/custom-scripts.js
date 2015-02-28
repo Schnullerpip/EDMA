@@ -72,6 +72,9 @@ $(document).ready(function () {
         $(this).find('p').show();
         $('#delete-modal .error').hide();
     });
+    
+    // Scrollbar für Messreihen + Sensoren
+    $('.scrollbar-inner').scrollbar();
 });
 
 // Append Modal Methods

@@ -50,14 +50,13 @@ if (Input::itemExists('projekt_cancel')) {
         <link href="css/bootstrap-theme.css" rel="stylesheet">
 
         <!-- Vendor-JavaScript -->
-        <!-- Bootstrap Datepicker -->
         <script src="js/vendor/jquery.min.js"></script>
         <script src="js/vendor/bootstrap.min.js"></script>
         <script src="js/vendor/bootstrap-datepicker.min.js"></script>
         <script src="js/vendor/locales/bootstrap-datepicker.de.js"></script>
         <script src="js/vendor/string_score.min.js"></script>
-        <!-- Dynatable für Suche/Filter bei Tabellen-->
         <script src="js/vendor/dynatable.min.js"></script>
+        <script src="js/vendor/scrollbar.min.js"></script>
 
 
         <!-- Unterstützung für Media Queries und HTML5-Elemente in IE8 über HTML5 shim und Respond.js -->
