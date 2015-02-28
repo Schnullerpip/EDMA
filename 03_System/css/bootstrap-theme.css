@@ -67,6 +67,10 @@ h2 {
 /* Helpers */
 /* ------------------------------- */
 
+.no-padding {
+    padding: 0;
+}
+
 .mb-0 {
     margin-bottom: 0px;
 }
@@ -226,6 +230,21 @@ a:active,
     cursor: pointer;
 }
 
+.modal .btn-link {
+    color: #224565;
+}
+.modal .btn-link:hover,
+.modal .btn-link:focus,
+.modal .btn-link:active {
+    color: #224565;
+    text-decoration: underline;
+}
+
+.controls .btn {
+    padding: 0;
+    border: none;
+}
+
 
 /* Inputs */
 /* ------------------------------- */
@@ -303,6 +322,9 @@ table td.hidden-close {
 }
 table td .glyphicon {
     visibility: hidden;
+}
+table td .controls .glyphicon {
+    visibility: visible;
 }
 
 table tr:hover .glyphicon {
@@ -436,22 +458,28 @@ form .table#projektbeschreibungen {
     padding: 0;
 }
 .accordeon .controls li a,
-.controlled-table tr td:last-child .controls li a {
+.controlled-table tr td:last-child .controls li a,
+.controlled-table tr td:last-child .controls li button   {
     display: block;
     color: white;
 }
+
 .accordeon .controls li a:hover,
 .controlled-table tr td:last-child .controls li a:hover,
+.controlled-table tr td:last-child .controls li button:hover,
 .accordeon .controls li a:focus,
 .controlled-table tr td:last-child .controls li a:focus,
+.controlled-table tr td:last-child .controls li button:focus,
 .accordeon .controls li a:active,
-.controlled-table tr td:last-child .controls li a:active {
+.controlled-table tr td:last-child .controls li a:active,
+.controlled-table tr td:last-child .controls li button:active {
     background-color: white;
     color: #224565;
     border-bottom: none;
 }
 .accordeon .controls li a .glyphicon,
-.controlled-table tr td:last-child .controls li a .glyphicon {
+.controlled-table tr td:last-child .controls li a .glyphicon,
+.controlled-table tr td:last-child .controls li button .glyphicon {
     font-size: 16px;
     top: 0;
     padding: 12px;
@@ -523,11 +551,6 @@ h2 small{
 }
 
 /*für das skalen-modal*/
-.modal-content .btn{
-    border-color: black;
-    color: black;
-}
-
 .modal-content input {
     border-color: black;
 }
@@ -626,4 +649,7 @@ body.modal-open {
 }
 .modal .modal-body {
     padding-bottom: 0;
+}
+#delete-modal .error {
+    margin-bottom: 0;
 }
