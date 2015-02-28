@@ -41,7 +41,7 @@ if (Input::itemExists('projekt_cancel')) {
         <!-- Favicon -->
         <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
         <!-- Bootstrap-CSS -->
-        <link href="css/vendor/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
         
         <!-- Bootstrap-Datepicker -->
         <link href="css/vendor/datepicker.css" rel="stylesheet">
