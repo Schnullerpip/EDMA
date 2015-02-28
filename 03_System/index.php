@@ -1072,6 +1072,7 @@ $jsonselectsensor = json_encode($selectsensor);
             s = $("#stepInput").val();
             v = $("#intervallInput1").val();
             b = $("#intervallInput2").val();
+            //Verschiedene Fälle beachten - nur wenn manche Eingaben geleistet wurden können sie auch überprüft werden...
 
             if(v != ""){
                 if(intervall1 < 0){
