@@ -528,10 +528,9 @@ h2 small{
 }
 
 .scrollableAb200 {
-    overflow-x:hide;
-    overflow-y:auto;
-    height:200px;
-
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 200px;
 }
 
 
@@ -550,7 +549,17 @@ h2 small{
     background-color:#224565;
 }
 
+
+/*damit chrome funktioniert*/
+#messreihenListe small, span {
+    pointer-events: none;
+}
+
 /*für das skalen-modal*/
+.scalaModalInput {
+    width:50%;
+}
+
 .modal-content input {
     border-color: black;
 }
@@ -563,10 +572,19 @@ h2 small{
     border-color: black;
     width:50px;
 }
-/*---------------------------------------------------------------------*/
 
 
+/*Anzeige der "Einstellungen"*/
+.einstellungenInputDiv {
+    padding-right:0px;
+}
+.anzeigeButtonDiv {
+    padding-top:10px;
+}
 
+#anzeigeButton {
+    width:50%;
+}
 
 
 /* Footer */
@@ -652,4 +670,11 @@ body.modal-open {
 }
 #delete-modal .error {
     margin-bottom: 0;
+}
+
+/* Chart */
+/* ------------------------------- */
+ 
+.tooltipTable th, td {
+    padding-right: 10px;
 }

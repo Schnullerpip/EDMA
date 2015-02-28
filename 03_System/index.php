@@ -76,7 +76,7 @@ $projektid = $projekt->data()->id;
 
 //Select für messreihenname, metadatenname, datentyp
 //TODO messreihen_id
-$db->query("SELECT messreihe.messreihenname, messreihe.datum, metainfo.metaname, messreihe_metainfo.metawert, datentyp.typ
+$db->query("SELECT messreihe.messreihenname, messreihe.id, messreihe.datum, metainfo.metaname, messreihe_metainfo.metawert, datentyp.typ
 					FROM messreihe INNER JOIN projekt ON messreihe.projekt_id = projekt.id
 					INNER JOIN messreihe_metainfo ON messreihe.id = messreihe_metainfo.messreihe_id
 					INNER JOIN metainfo ON metainfo.id = messreihe_metainfo.metainfo_id
@@ -97,11 +97,9 @@ $db->query("SELECT messreihe.messreihenname, messreihe.id, messreihe_sensor.anze
 $selectsensor = $db->results();
 $jsonselectsensor = json_encode($selectsensor);
 ?>
+
+
 <script>
-    //
-    //
-    //
-    //
     //-----------------------Variablen zur Auswahl aus dem Select----
     var select = <?php echo $jsonselectmeta; ?>;    //enthält den select
     var selectedMetafield;
@@ -118,6 +116,7 @@ $jsonselectsensor = json_encode($selectsensor);
             var tmp_messreihe = {messreihenname: select[i].messreihenname};
             tmp_messreihe.datum = select[i].datum;
             tmp_messreihe.metafields = [];
+            tmp_messreihe.id = select[i].id;
             messreihen.push(tmp_messreihe);
             var o;
             for (o = i; o < select.length; o++) {
@@ -146,20 +145,6 @@ $jsonselectsensor = json_encode($selectsensor);
     //Arbeitskopie von messreihen erstellen
     var messreihen_copy = $.extend(true, [], messreihen); //Tiefe Kopie
 
-    //only for debug
-    /*for(i = 0; i < messreihen.length; i++){
-     console.log(messreihen[i].metafields.length);
-     var o;
-     for(o = 0; o < messreihen[i].metafields.length; o++){
-     console.log(messreihen[i].metafields[o].metaname);	
-     }
-     }*/
-    //----------------------------------------------------------------------------------
-
-
-
-
-
 
     //Variablen für den Sensorzugriff
     var select_sensor = <?php echo $jsonselectsensor; ?>;
@@ -180,65 +165,36 @@ $jsonselectsensor = json_encode($selectsensor);
          * scala auf welcher y-achse er dann angezeugt werden soll*/
         select_sensor[i].selected = false;
         select_sensor[i].scala = null;
+        for(o=0;o<messreihen_copy.length;o++){ /*Da messreihe.id aus dem sensors select leder von der 
+                                                *sensor id überschrieben wird, muss ich sie hier manuell zuweisen*/
+            if(messreihen_copy[o].messreihenname == select_sensor[i].messreihenname){
+                select_sensor[i].messreihenid = messreihen_copy[o].id;
+                break;
+            }
+        } 
         sensors.push(select_sensor[i]);
     }
 
-     /*only for debug
-     console.log("##########");
-     console.log(sensors);
-     for(i = 0; i < sensors.length; i++){
-         console.log(sensors[i]);
-     }
-     console.log("##########");*/
-    //-------------------------------------------------------------------------------------------
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
     //----------------------Variablen zum Schutz der Selectbox und dem Auswahlbutton -> button zündet nur wenn etwas legales gewählt wurde----------
     var old_value = 0;
     var selectFlag = false; //nur falls eine Option aus dem select tag gewählt wurde darf der entsprechende button getriggert werden
     var selectChangedCount = 0;
     //----------------------------------------------------------------------------------------------------------------------------------------------
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
+
+
+
     //------------------------------------Variablen, mit deren Hilfe unique-Ids erstellt werden können----------------------------------------------------------
     var uniqueId = 0; //Diese Variable sollte nach erstellen eines neuen Metafilters inkrementiert werden	
     //welches Metafeld in die Arbeitskopie messreihen_copy zurückgeführt werden muss
     var uniquei = 0; //für die <option> tags im metafilterselect "#selectBox"
     //----------------------------------------------------------------------------------------------------------------------------------------------------------
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
+
+
     //------------------------------------Die Strings, aus denen zuletzt der Select gebildet wird-------------
     var QUERY_SELECT = "SELECT ";
     var QUERY_FROM = " FROM";
     var QUERY_WHERE = " WHERE";
     //--------------------------------------------------------------------------------------------------------
-    //
-    //
-    //
-    //
-    //
 </script>				
 
 <h2>Metadaten filtern</h2>
@@ -248,8 +204,6 @@ $jsonselectsensor = json_encode($selectsensor);
         <div class="col-sm-6" id="meta_name_operator_div"></div>
         <div id="meta_value_div" class="col-sm-6"></div>
     </div>
-
-
 
     <!-- Select element und Bestätigungsbutton -->
     <div class="form-group">
@@ -267,9 +221,6 @@ $jsonselectsensor = json_encode($selectsensor);
         </div>
     </div>
 </div>
-
-
-
 
 <!-- Filterung der Messreihen/Sensoren -->
 <h2 id="h2MessreihenWählen">Messreihen/Sensoren wählen</h2>
@@ -294,38 +245,61 @@ $jsonselectsensor = json_encode($selectsensor);
         </div>
     </div>
 </div>
-
-
 <br>
 
 <!-- Weitere Einstellungen -->
+<script>
+    var step = 1;
+    var intervall1 = 0;
+    var intervall2 = 0;
+</script>
+
 <h2>Einstellungen</h2>
 <div class="form-group">
-    <div class="col-sm-12 col-md-6 col-lg-4">
-        <label class="control-label">Schrittweite</label>
-        <label class="control-label">Intrevall</label>
+    <div class="col-sm-1 col-sm-offset-3">
+       <div><label class="control-label">Schrittweite</label></div>
+        <br>
+       <div><label class="control-label">Intrevall</label></div>
     </div>
 
-    <div class="col-sm-12 col-md-6 col-lg-4">
-        <input class="col-sm-6 form-control" type="text" name="INtervallInput" placeholder="z.B. 100"></input>
-        <div class="row">
-            <input class="col-sm-6 form-control" type="text" name="INtervallInput" placeholder="z.B. 100"></input>
-            <input class="col-sm-6 form-control" type="text" name="INtervallInput" placeholder="z.B. 100"></input>
+    <div class="col-sm-3 einstellungenInputDiv">
+        <div>
+            <input id="stepInput" class="col-sm-6 form-control einstellungenInput" type="text" name="IntervallInput" placeholder="z.B. 100 (er Schritte)"></input>
         </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-sm-6">
+                <input id="intervallInput1" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="Von"></input>
+            </div>
+            <div class="col-sm-6">
+                <input id="intervallInput2" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="Bis"></input>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-sm-offset-4 anzeigeButtonDiv">
+        <button id="anzeigeButton"  type="button" class="btn btn-default" >Anzeigen!</button>
     </div>
 </div>
 
+<div id="jqChart-wrapper" style="width: 100%; height: 800px;" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
+<a id="saveImg" class="btn btn-default" href="#" download="Chart.png">Speichern als Bild</a>
+<a id="saveCSV" class="btn btn-default" href="../datagross.csv" download="Daten.csv">Speichern als CSV</a>
 
-<!--Modal -->
+<!--Skala Modal -->
 <div id="scalaModal" class="modal fade" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel" style="text-align:center">Skalen Menü</h4> <div calss="form-group"> <br>
+            <h4 class="modal-title" id="myModalLabel" style="text-align:center">Skalen Erstellen</h4>
+            <div calss="form-group"></div>
+        </div><!-- modal-header end-->
+        
+        <div class="modal-body">
             <div class="row">
-
                 <div class="col-sm-6">
                     <label class="control-label">Titel</label>
                 </div>
@@ -344,7 +318,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
                 <br>
                 <br>
-                <script> //nur für eine Zwischenvariablen
+                <script> //Diese Variablen speichern die Zustände der Optionalen radio/check buttons/boxes
                     var radioFloatBool = false;
                     var rightSideScala = false;
                 </script>
@@ -363,16 +337,22 @@ $jsonselectsensor = json_encode($selectsensor);
                     </fieldset>
                 </div>
 
-            </div>
+            </div><!-- eigene row end-->
             <button id="modalContentMenuButtonNewScala" class="btn">Neue Skala</button>
-        </div>
-       <br>
-       </div>
-       <h4 id="scalaModalh4" style="text-align:center">Skalen auswählen</h4>
-       <div id="scalaModalContent" class="btn-group-vertical" role="group"></div>
-    </div>
-  </div>
-</div>
+            <hr>
+            <h4 id="scalaModalh4" style="text-align:center">Skalen auswählen</h4>
+            
+            <div class="table-responsive">
+              <table id="scalaModalContent" class="table"></table>
+            </div><!-- table-responsive end -->
+        </div><!-- modal-body end -->       
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div><!-- modal-footer end -->
+    </div><!-- model-content end -->
+  </div><!-- model-dialog end-->
+</div><!-- modal end-->
 
 
 
@@ -576,7 +556,6 @@ $jsonselectsensor = json_encode($selectsensor);
             }else{
                 target = $(to_filter).children("div").children()["0"];
             }
-            console.log(target);
 
             to_filter_id = target.getAttribute("id");
             filterMessreihen(target, to_filter_id);
@@ -786,6 +765,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     //Liste der angezeigten Messreihen regenerieren 
+    var lookup_selected_mesreihe = null;
     function regenerateMessreihenList() {
         var replace_string = [];
         for (i = 0; i < messreihen_copy.length; i++) {
@@ -801,7 +781,7 @@ $jsonselectsensor = json_encode($selectsensor);
         $("#messreihenListe").html(replace_string.join(""));
 
         if(selected_sensors.length > 0){
-            showSensorsOf(selected_sensors[selected_sensors.length-1].messreihenname);
+            showSensorsOf(lookup_selected_messreihe);
         }else{
             showSensorsOf(messreihen_copy[0].messreihenname);
         }
@@ -822,8 +802,9 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function showSensorsOf(arg) {
-        sensors_string = [];
-        scalas_string = [];
+        lookup_selected_messreihe = arg;
+        var sensors_string = [];
+        var scalas_string = [];
 
         for (i = 0; i < sensors.length; i++) {
             if (arg == sensors[i]["messreihenname"]) {
@@ -890,7 +871,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function selectScala(target){
-        var target_sensor_id = target.getAttribute("data-sensorid");
+        var target_sensor_id = target.getAttribute("data-sensorID");
         var zugehörige_messreihe = target.getAttribute("data-messreihe");
         for(i=0;i<sensors.length;i++){
             if((sensors[i].id == target_sensor_id)&&(sensors[i].messreihenname == zugehörige_messreihe)){
@@ -912,18 +893,27 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function regenerateScalaModal(){
         var replace_string = [];
+        replace_string.push("<tr><th>Skala</th><th>Titel</th><th>Einheit</th><th>Int/Float</th><th>Position</th><th>choose</th></tr>");
         for(i=0;i<scalas.length;i++){
-            replace_string.push("<button class='btn choose-scala-btn' data-scalaID='"+scalas[i].name+"'>"+scalas[i].title);
-            if(/.*\%\.[0-9]1*/.test(scalas[i].labels.stringFormat)){
-                replace_string.push(" -  " + scalas[i].labels.stringFormat.slice(5, 100)+"</button>");
+            replace_string.push("<tr>");
+            replace_string.push("<td>"+scalas[i].name+"</td>");
+            replace_string.push("<td>"+scalas[i].title.text+"</td>");
+
+            if(/.*\%\.[0-9]1*/.test(scalas[i].labels.stringFormat)){ //handelt sich um float
+                console.log("float");
+                replace_string.push("<td>"+scalas[i].labels.stringFormat.slice(5, 100)+"</td>");
+                replace_string.push("<td>FLOAT</td>");
             }else{
-                replace_string.push(" -  " + scalas[i].labels.stringFormat.slice(3, 100)+"</button>");
+                console.log(scalas[i].labels.stringFormat.slice(3, 100));
+                replace_string.push("<td>"+scalas[i].labels.stringFormat.slice(3, 100)+"</td>");
+                replace_string.push("<td>INT</td>");
             }
-            replace_string.push(" Anzeigeposition:" + scalas[i].location+"<br> Int/Float: "+scalas[i].labels.stringFormat);
-            
+            replace_string.push("<td>"+scalas[i].location+"</td>");
+            replace_string.push("<td><button class='btn choose-scala-btn btn-xs' data-scalaID='"+scalas[i].name+"'>Auswaehlen</button></td>");
+            replace_string.push("</tr>");
+        } 
         $("#scalaModalContent").html(replace_string.join(""));
         $("#scalaModalh4").html("Skala wählen für Sensor : <br>"+ patient_sensor.anzeigename);
-        }
     }
 
 
@@ -931,7 +921,6 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function chooseScala(target){
-        console.log(target);
         var chosen_scala;
         for(i=0;i<scalas.length;i++){
             if(scalas[i].name == target){
@@ -954,7 +943,7 @@ $jsonselectsensor = json_encode($selectsensor);
         var chosen_location = 'left';
         var chosen_int_float = '%d ';
 
-        if($("#rightSideScala").val()){
+        if(rightSideScala){
             chosen_location = 'right';
         }
         if(radioFloatBool){
@@ -964,14 +953,22 @@ $jsonselectsensor = json_encode($selectsensor);
         if((chosen_title != "") && (titleDoesntExists(chosen_title))){
             var new_scala = {
                         name: "Skala: "+(unique_scala_id++),
+                        strokeStyle: '#FFFFFF',
                         location: chosen_location,
                         majorGridLines: {
-                            visible: false
+                            visible: false,
                         },
-                        title: chosen_title,
+                        majorTickMarks: {
+                            strokeSTyle: '#FFFFFF',
+                        },
+                        title: {
+                            text: chosen_title,
+                            fillStyle: '#FFFFFF',
+                        },
                         labels: {
                             stringFormat: chosen_int_float.concat(chosen_unit),
-                        }
+                            fillStyle: '#FFFFFF',
+                        },
                     }
 
 
@@ -997,7 +994,6 @@ $jsonselectsensor = json_encode($selectsensor);
         regenerateMetaSelect();
         regenerateMessreihenList();
     }
-
 
 
     $(function () {
@@ -1046,14 +1042,175 @@ $jsonselectsensor = json_encode($selectsensor);
             }else{
                 $("#radioFloatSpan").html("<label for='radioFLOAT'> Float</label>");
             }
-            });
         });
 
        //in Modal on click in modal inputs -> checkbox rightSideScala
         $("#rightSideScala").click(function(){
-            rightSideSCala = !rightSideScala;
+            rightSideScala = !rightSideScala;
+            console.log(rightSideScala);
         });
 
+
+        //stepInput on change
+        $("#stepInput").change(function(e){
+            step = parseInt($(e.target).val());
+        });
+
+        //intervallInput1 on change
+        $("#intervallInput1").change(function(e){
+            intervall1 = parseInt($(e.target).val());
+        });
+
+        //intervallInput2 on change
+        $("#intervallInput2").change(function(e){
+            intervall2 = parseInt($(e.target).val());
+        });
+
+        //einstellungenInputDiv loses focus
+        $(".einstellungenInput").blur(function(e){
+            if(($("#stepInput").val() != "")&&($("#intervallInput1").val() != "")&&($("#intervallInput2").val() != "")){
+                if(intervall2 < step){
+                    intervall2 = intervall1+step;
+                    $(e.target).val(intervall1+step);
+                    modalTextWarning("Vorsicht! -> die Schrittweite ist höher als der Intervall!? Der Intervall wurde automatisch auf den kleinstmöglichen Wert gesetzt");
+                    $('#infoModal').modal();
+                }else if(intervall2 < intervall1){
+                    intervall2 = intervall1+step;
+                    $(e.target).val(intervall1+step);
+                    modalTextWarning("Vorsicht! -> 'Bis' ist kleiner als 'Von' -> Werte wurden automatisch logisch neu verteilt");
+                    $('#infoModal').modal();
+                }
+            }
+        });
+
+        //Anzeigen! button on click
+        $("#anzeigeButton").click(function(){
+            //die erste y-Achse (auf der linken Seite des Graphen) sollte zoom-enabled haben
+            for(i=0;i<scalas.length;i++){
+                if(scalas[i].location == "left"){
+                    scalas[i].zoomenabled = true;
+                    break;
+                }
+            }
+            //Nun sollten alle benötigte Daten gesammelt sein - also triggern wir jqCharts
+            var data = {
+                from:   intervall1,
+                to:     intervall2,
+                step:   step,
+            };
+
+            data.pair = [];
+            for(i=0;i<selected_sensors.length;i++){
+                tmp_array = [];
+                tmp_array.push(selected_sensors[i].id);
+                tmp_array.push(selected_sensors[i].messreihenid);
+
+                data.pair.push(tmp_array);
+            }
+            //Ab jetzt ist data fertig
+            //Nun wird noch eine Map benötigt in der schnell ausgelesen werden kann welch messreihen-sensor kmbination auf welche skala abgebildet werden soll
+            var skalaMap = {};
+            if(selected_sensors.length == 0){
+                    modalTextError("Vorsicht! -> Es wurden keine Sensoren ausgewählt, deren Messwerte anzuzeigen wären... Bitte erst berichtigen");
+                    $('#infoModal').modal();
+                    return;
+            }
+            for(i=0;i<selected_sensors.length;i++){
+                if(selected_sensors[i].scala == null){
+                    modalTextError("Vorsicht! -> "+ selected_sensors[i].anzeigename + " aus der Messreihe: '"+selected_sensors[i].messreihenname+"', wurde noch keiner Skala zugewiesen! Bitte erst berichtigen... ");
+                    $('#infoModal').modal();
+                    return;
+                }
+                skalaMap[selected_sensors[i].messreihenname+" - "+selected_sensors[i].anzeigename] = selected_sensors[i].scala.name;
+            }
+            console.log(data);
+            console.log(skalaMap);
+            
+            var seriesData = [];
+            $.ajax({
+                url: "./chartData.php",
+                dataType: 'text',
+                data: data,
+                async: false,
+                cache: false
+            }).done(function (csvAsString) {
+                var csvAsObj = parseCSV(csvAsString, data);
+                var i;
+                for (i = 0; i < csvAsObj.serien.length; ++i) {
+                    // suche achse in sensors array
+                    seriesData.push( {
+                        title: csvAsObj.serien[i],
+                        markers: null,
+                        data: csvAsObj.werte[i],
+                        axisY: scalas[csvAsObj.serien[i]],
+                        type: 'line'
+                    });
+                }
+
+                console.log("CSV Daten sind fertig");
+            });
+            
+            scalas.push({
+                name: 'x',
+                location: 'bottom',
+                zoomEnabled: true,
+                strokeStyle: '#FFFFFF',
+                labels: {
+                    fillStyle: '#FFFFFF'
+                },
+                majorTickMarks: {
+                    strokeStyle: '#FFFFFF'
+                }
+            });
+            
+            $('#jqChart-wrapper').jqChart({
+                title: {
+                    text: $(this).data('title'),
+                    fillStyle: '#FFFFFF'
+                },
+                background: '#36a7eb',
+                chartAreaBackground: '#FFFFFF',
+                border: {
+                    visible: false
+                },
+                legend: {
+                    location: 'bottom',
+                    textFillStyle: '#FFFFFF',
+                    border: {
+                        visible: false
+                    },
+                    margin: 10
+                },
+                axes: scalas,
+                series: seriesData,
+                tooltips: {
+                    type: 'shared'
+                }
+            });
+
+            $('#jqChart-wrapper').bind('tooltipFormat', function (e, data) {
+                var result = "<b>Zeitpunkt: ";
+                if (data.constructor === Array) {
+                    result += data[0].x + "</b><br>\n" +
+                            "<table id='tooltipTable'>\n" +
+                            "<tr><th>Serie</th><th>Wert</th><th>Datum</th><th>Uhrzeit</th></tr>\n";
+
+                    var i;
+                    for (i = 0; i < data.length; ++i) {
+                        result += buildRowForSeriespoint(data[i]);
+                    }
+
+                    result += "</table>";
+                } else {
+                    result += data.x + "</b><br>\n";
+                    result += "<table id='tooltipTable'>\n" +
+                            "<tr><th>Serie</th><th>Wert</th><th>Datum</th><th>Uhrzeit</th></tr>\n";
+                    result += buildRowForSeriespoint(data);
+                }
+                return result;
+            });
+        });
+    });
 </script>
 
 <?php

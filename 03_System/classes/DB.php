@@ -99,6 +99,49 @@ class DB {
         }
         return $this;
     }
+    
+    /**
+     * So wie {@link query()} allerdings wird kein FetchAll ausgefuerht.
+     * Die Daten muessen danach per {@link fetch()} Zeilenweise ausgelesen
+     * werden.
+     * @param type $sql Komplettes Statement mit ? statt Parameterwerte.
+     * @param type $params array mit Parameterwerten, welche die ? ersetzen.
+     * @return boolean True bei Erfolg, sonst False.
+     */
+    public function justquery($sql, $params = array()) {
+        // Felder zurücksetzen
+        $this->_error = false;
+        $this->_count = 0;
+        $this->_results = array();
+        
+        if ($this->_query = $this->_pdo->prepare($sql)) {
+            $x = 1;
+            if (count($params)) {
+                foreach ($params as $param) {
+                    $this->_query->bindValue($x, $param);
+                    $x++;
+                }
+            }
+
+            if ($this->_query->execute()) {
+                return true;
+            } else {
+                $this->_error = true;
+            }
+        } else {
+            $this->_error = true;
+        }
+        return false;
+    }
+    
+    /**
+     * Gibt einen Datenstatz zurueck, der zuvor mit {@link justquery()} 
+     * abgerufen wurde.
+     * @return type Datensatz als Objekt falls vorhanden sonst False.
+     */
+    public function fetch() {
+        return $this->_query->fetchObject();
+    }
 
     private function action($action, $table, $where = array()) {
         if (count($where) === 3) {
