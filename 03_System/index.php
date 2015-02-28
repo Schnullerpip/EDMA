@@ -1068,19 +1068,56 @@ $jsonselectsensor = json_encode($selectsensor);
 
         //einstellungenInputDiv loses focus
         $(".einstellungenInput").blur(function(e){
-            if(($("#stepInput").val() != "")&&($("#intervallInput1").val() != "")&&($("#intervallInput2").val() != "")){
-                if(intervall2 < step){
-                    intervall2 = intervall1+step;
-                    $(e.target).val(intervall1+step);
-                    modalTextWarning("Vorsicht! -> die Schrittweite ist höher als der Intervall!? Der Intervall wurde automatisch auf den kleinstmöglichen Wert gesetzt");
+            var s,v,b; //step, von, bis
+            s = $("#stepInput").val();
+            v = $("#intervallInput1").val();
+            b = $("#intervallInput2").val();
+
+            if(v != ""){
+                if(intervall1 < 0){
+                    intervall1 = 0;
+                    $("#intervallInput1").val(0);
+                    modalTextWarning("Vorsicht! -> 'Von' is negativ und wurde automatisch auf 0 gesetzt");
                     $('#infoModal').modal();
-                }else if(intervall2 < intervall1){
+                }
+            }
+
+            if(b != ""){
+                if(intervall2 < 0){
+                    intervall2 = 0;
+                    $("#intervallInput2").val(0);
+                    modalTextWarning("Vorsicht! -> 'Bis' is negativ und wurde automatisch auf 0 gesetzt");
+                    $('#infoModal').modal();
+                }
+            }
+
+            if(s != ""){
+                if(step <= 0){
+                    step = 1;
+                    $("#stepInput").val("1");
+                    modalTextWarning("Vorsicht! -> 'Schrittweite' ist kleiner/gleich 0 -> Wert wurde automatisch auf 1 gesetzt");
+                    $('#infoModal').modal();
+                }
+                if(b != ""){
+                    if(intervall2 < step){
+                        intervall2 = intervall1+step;
+                        $("#intervallInput2").val(intervall1+step);
+                        modalTextWarning("Vorsicht! -> die Schrittweite ist höher als der Intervall!? Der Intervall wurde automatisch auf den kleinstmöglichen Wert gesetzt");
+                        $('#infoModal').modal();
+                    }
+                }
+            }
+
+            if((v != "")&&(b != "")){
+                if(intervall2 < intervall1){
                     intervall2 = intervall1+step;
-                    $(e.target).val(intervall1+step);
+                    $("#intervallInput2").val(intervall1+step);
                     modalTextWarning("Vorsicht! -> 'Bis' ist kleiner als 'Von' -> Werte wurden automatisch logisch neu verteilt");
                     $('#infoModal').modal();
                 }
             }
+
+                
         });
 
         //Anzeigen! button on click
