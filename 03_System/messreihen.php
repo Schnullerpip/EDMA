@@ -197,6 +197,17 @@ if (Input::exists('post')) {
                         </div>
                     </div>
                 <?php endforeach; ?>
+                
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-5">
+                        <button data-toggle="modal" data-target="#delete-modal" class="btn btn-link no-padding" 
+                                data-element="messreihe" data-redirect="messreihen" type="button"
+                                data-id="<?php echo escape($inp); ?>"
+                                title="Diese Messreihe l&ouml;schen">
+                            Diese Messreihe löschen
+                        </button>
+                    </div>
+                </div>
 
                 <br>
                 <input type="hidden" name="messreihenid" value="<?php echo $inp; ?>">
@@ -263,9 +274,12 @@ if (Input::exists('post')) {
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" class="delete" data-messreihenid="<?php echo escape($messreihe->id); ?>" title="Messreihe &quot;<?php echo escape($messreihe->messreihenname); ?>&quot; löschen">
+                                            <button data-toggle="modal" data-target="#delete-modal" class="btn btn-link" 
+                                                    data-element="messreihe" data-redirect="" type="button"
+                                                    data-id="<?php echo escape($messreihe->id); ?>"
+                                                    title="Messreihe &quot;<?php echo escape($messreihe->messreihenname); ?>&quot; l&ouml;schen">
                                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                            </a>
+                                            </button>
                                         </li>
                                     </ul>
                                 </div>

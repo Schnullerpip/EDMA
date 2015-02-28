@@ -265,8 +265,18 @@ if (is_object($projekt->data())) {
         <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
         <div class="form-group">
             <div class="col-sm-offset-4 col-sm-5">
+                <button data-toggle="modal" data-target="#delete-modal"class="btn btn-link no-padding" 
+                        data-element="projekt" data-redirect="logout" type="button"
+                        data-id="<?php echo escape($projekt->data()->id); ?>"
+                        title="Projekt &quot;<?php echo escape($projekt->data()->projektname); ?>&quot; l&ouml;schen">
+                    Dieses Projekt l&ouml;schen
+                </button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-5">
                 <button name="projekt_save" type="submit" class="btn btn-default">Speichern</button>
-                <button name="projekt_cancel" type="submit" class="btn btn-default">Abbrechen</button>
+                <button name="projekt_cancel" type="submit" class="btn btn-link">Abbrechen</button>
             </div>
         </div>
 
@@ -342,7 +352,6 @@ if (is_object($projekt->data())) {
                     }
                 });
             });
-
 
             $("#projektbeschreibungen").on("click", ".glyphicon-remove", function (e) {
                 $.ajax({

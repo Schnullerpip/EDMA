@@ -1,28 +1,76 @@
 $(document).ready(function () {
-    $('[data-toggle="popover"]').popover();
+    // Für das Delete-modal
+    var button, target, id, element;
     
+    $('[data-toggle="popover"]').popover();
+
     clickcounter = 0;
-    $('#collapseMessreihenLabel').click(function() {
+    $('#collapseMessreihenLabel').click(function () {
         clickcounter++;
-        if (clickcounter == 2) {
+        if (clickcounter === 2) {
             clickcounter = 0;
             $(this).blur();
         }
     });
-    
+
     $('.input-group.date').datepicker({
         format: "dd.mm.yyyy",
         language: "de",
         autoclose: true,
         clearBtn: true
     });
-    
+
     // Resette Modal Texte nach ausblenden
     $('#infoModal').on('hidden.bs.modal', function (e) {
         $('#infoModal section').each(function () {
             $(this).find('content').empty();
             $(this).hide();
         });
+    });
+
+    // Delete Modal confirm-Funktionalität
+    $('#delete-modal').on('show.bs.modal', function (event) {
+        button = $(event.relatedTarget);
+        id = button.data('id');
+        element = button.data('element');
+        target = button.data('redirect');
+        
+        var text = (element === 'messreihe' ? 'die Messreihe' : 'das Projekt');
+        $('.type').text(text);
+    });
+    $('#confirm-delete').on('click', function () {
+        var errorbox = $('#delete-modal .error');
+        errorbox.hide();
+        // Element löschen
+        $.ajax({
+            type: "POST",
+            url: "ajaxHandler.php",
+            data: {function: "delete", element: element, id: id, ajax: true}
+        }).done(function (msg) {
+            msg = JSON.parse(msg);
+            if (msg.failed.length === 0) {
+                // Erfolg:
+                // Modal ausblenden und weiterleiten oder sonstiges
+                $('#delete-modal').modal('hide');
+                $('#delete-modal').on('hidden.bs.modal', function () {
+                    if (target === undefined) {
+                        button.closest('tr').fadeOut("slow");
+                    } else {
+                        window.location = target + '.php';
+                    } 
+                });
+            } else {
+                // Fehler:
+                // Fehler-Alert im Modal anzeigen
+                $('#delete-modal section.error .content').html("<strong>" + msg.failed.name + "</strong>: " + msg.failed.message);
+                errorbox.siblings('p').hide();
+                errorbox.toggle();
+            }
+        });
+    });
+    $('#delete-modal').on('hidden.bs.modal', function () {
+        $(this).find('p').show();
+        $('#delete-modal .error').hide();
     });
 });
 
@@ -36,7 +84,6 @@ function modalTextError(msg) {
 function modalTextWarning(msg) {
     $('#infoModal').find('.modal-body .warning').show().find('.content').html(msg);
 }
-
 
 // Upload-Funktionalitaet
 var app = app || {};
@@ -64,7 +111,7 @@ var app = app || {};
                             failed: this.response,
                         };
                     }
-                    
+
                     if (uploaded.failed.length != 0) {
                         if (typeof o.options.error === 'function') {
                             o.options.error(uploaded.failed);
@@ -77,7 +124,7 @@ var app = app || {};
                     }
                     if (uploaded.succeeded.length != 0) {
                         if (typeof o.options.finished === 'function') {
-                            
+
                             o.options.finished(uploaded.succeeded);
                         }
                     }
@@ -114,7 +161,7 @@ var app = app || {};
         data.append('ajax', true);
         data.append('maxsize', o.options.maxsize);
         data.append('projektID', o.options.projektID);
-        
+
         if (o.options.projektID !== 'undefined') {
             data.append('projektid', o.options.projektID);
         }
@@ -128,7 +175,7 @@ var app = app || {};
 
     o.uploader = function (options) {
         o.options = options;
-        
+
         if (o.options.files !== undefined) {
             ajax(getFormData(o.options.files.files));
         }
@@ -153,12 +200,12 @@ function checkMaxsize(size, files) {
     return '';
 }
 
-function convertArray (possibleArray) {
+function convertArray(possibleArray) {
     var result = possibleArray;
     if (Array.isArray(possibleArray) || typeof possibleArray === 'object') {
         result = "";
         for (var prop in possibleArray) {
-            if (possibleArray.hasOwnProperty(prop)) { 
+            if (possibleArray.hasOwnProperty(prop)) {
                 if (typeof possibleArray[prop] === 'object') {
                     result += convertArray(possibleArray[prop]);
                 } else {
