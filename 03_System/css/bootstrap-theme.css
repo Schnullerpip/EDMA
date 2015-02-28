@@ -1,0 +1,655 @@
+/* EDMA-Custom Theme */
+
+
+/* Resets */
+/* ------------------------------- */
+
+th,
+b,
+strong,
+label {
+    font-weight: normal;
+    font-family: 'RobotoMedium', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+
+/* General Stuff */
+/* ------------------------------- */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    background-color: #36a7eb;
+    color: white;
+    height: 100%;
+    margin-bottom: 90px;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow-y: scroll;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Regular.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/Roboto-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('../fonts/Roboto-Regular.woff2') format('woff2'), /* Super Modern Browsers */
+        url('../fonts/Roboto-Regular.woff') format('woff'), /* Pretty Modern Browsers */
+        url('../fonts/Roboto-Regular.ttf')  format('truetype'), /* Safari, Android, iOS */
+        url('../fonts/Roboto-Regular.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+    font-family: 'RobotoMedium';
+    src: url('../fonts/Roboto-Medium.eot'); /* IE9 Compat Modes */
+    src: url('../fonts/Roboto-Medium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('../fonts/Roboto-Medium.woff2') format('woff2'), /* Super Modern Browsers */
+        url('../fonts/Roboto-Medium.woff') format('woff'), /* Pretty Modern Browsers */
+        url('../fonts/Roboto-Medium.ttf')  format('truetype'), /* Safari, Android, iOS */
+        url('../fonts/Roboto-Medium.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+::selection {
+    background-color: #224565;
+    color: white;
+}
+
+::-moz-selection {
+    background-color: #224565;
+    color: white;
+}
+
+h2 {
+    margin-bottom: 25px;
+}
+
+/* Helpers */
+/* ------------------------------- */
+
+.no-padding {
+    padding: 0;
+}
+
+.mb-0 {
+    margin-bottom: 0px;
+}
+
+.mb-5 {
+    margin-bottom: 5px;
+}
+
+.mb-15 {
+    margin-bottom: 15px;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}
+
+
+/* Navbar */
+/* ------------------------------- */
+
+.navbar {
+    background-color: #224565;
+    border: none;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-nav > li > a,
+a {
+    color: white;
+}
+a:hover,
+a:focus,
+a:active,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus,
+.navbar-default .navbar-brand:active,
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus,
+.navbar-default .navbar-nav > li > a:active {
+    color: white;
+    text-decoration: underline;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+    background-color: white;
+    color: #224565;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: white;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    border-color: white;
+    background-color: white;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: white;
+}
+.navbar-default .navbar-toggle:hover .icon-bar ,
+.navbar-default .navbar-toggle:focus .icon-bar {
+    background-color: #224565;
+}
+
+
+/* Buttons */
+/* ------------------------------- */
+
+.btn .caret {
+    margin-left: 5px;
+}
+
+.btn-default {
+    background-color: transparent;
+    border-color: white;
+    color: white;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active {
+    background-color: white;
+    border-color: white;
+    color: #36a7eb;
+}
+
+.btn-primary {
+    background-color: #224565;
+    border-color: #224565;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    color: #224565;
+    background-color: white;
+    border-color: white;
+    outline: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.btn-link,
+.btn-link:hover,
+.btn-link:focus,
+.btn-link:active {
+    color: white;
+}
+
+.btn:active,
+.btn.active {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.btn-40 {
+    height: 40px;
+}
+
+.input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle) {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.btn-group {
+    width: 100%;
+}
+.btn-group.open .dropdown-menu {
+    margin: 0;
+    margin-top: 1px;
+    padding: 0;
+    min-width: 100%;
+    overflow: hidden;
+    border: none;
+}
+.btn-group.open .dropdown-toggle {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.open > .dropdown-toggle.btn-default {
+    color: #36a7eb;
+    background-color: white;
+    border-color: white;
+}
+.btn-group.open .dropdown-menu li {
+    width: 100%;
+    padding: 0;
+}
+.btn-group.open .dropdown-menu li a {
+    padding: 8px 25px;
+}
+.btn-group.open .dropdown-menu li a:hover,
+.btn-group.open .dropdown-menu li a:active,
+.btn-group.open .dropdown-menu li a:focus {
+    color: white;
+    background-color: #224565;
+    cursor: pointer;
+}
+
+.modal .btn-link {
+    color: #224565;
+}
+.modal .btn-link:hover,
+.modal .btn-link:focus,
+.modal .btn-link:active {
+    color: #224565;
+    text-decoration: underline;
+}
+
+.controls .btn {
+    padding: 0;
+    border: none;
+}
+
+
+/* Inputs */
+/* ------------------------------- */
+
+.form-control {
+    border: 1px solid #fff;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.form-control:focus {
+    border-color: #224565;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(34,69,101,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(34,69,101,0.6);
+}
+
+.input-group-addon {
+    background-color: #224565;
+    border: 1px solid #224565;
+    color: white;
+}
+
+.form-horizontal .upload {
+    min-height: 27px;
+    padding-top: 5px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+
+/* Panels */
+/* ------------------------------- */
+
+.panel {
+    background: none;
+    border: 1px solid white;
+    overflow: hidden;
+}
+
+.panel-default > .panel-heading {
+    color: white;
+    background: none;
+}
+
+.panel > .panel-body + .table,
+.panel > .panel-body + .table-responsive,
+.panel > .table + .panel-body,
+.panel > .table-responsive + .panel-body {
+    border-top: 2px solid white;
+}
+
+
+/* Tables */
+/* ------------------------------- */
+
+table {
+    border-color: white;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+    line-height: 1.65;
+}
+
+.table > thead > tr > th {
+    border-bottom-color: white;
+}
+
+table td.hidden-close {
+    width: 5%;
+    min-width: 15px;
+}
+table td .glyphicon {
+    visibility: hidden;
+}
+table td .controls .glyphicon {
+    visibility: visible;
+}
+
+table tr:hover .glyphicon {
+    visibility: visible;
+    cursor: pointer;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+    border-top-color: white;
+}
+
+.table.controlled-table tr td:last-child {
+    padding: 0;
+}
+
+.table .table-controls {
+    width: 100px;
+}
+
+form .table#projektbeschreibungen {
+    border-bottom: 2px solid white;
+}
+
+.table#projektbeschreibungen {
+    border-bottom: none;
+}
+
+.panel .upload-progress {
+    height: 5px;
+    width: 0%;
+    background-color: white;
+}
+
+
+/* Accordeon */
+/* ------------------------------- */
+
+.accordeon .panel > .list-group:first-child .list-group-item:first-child,
+.accordeon .panel > .panel-collapse > .list-group:first-child .list-group-item:first-child {
+    border-radius: 0;
+}
+
+.accordeon.panel-group .panel-heading+.panel-collapse>.panel-body,
+.accordeon.panel-group .panel-heading+.panel-collapse>.list-group {
+    border-top: 1px solid white;
+}
+
+.accordeon .list-group-item {
+    background-color: transparent;
+}
+
+.accordeon .panel-title {
+    font-size: 14px;
+}
+
+.accordeon .panel-default > .panel-heading {
+    border: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.accordeon .panel-heading .glyphicon {
+    top: 2px;
+    padding: 0 6px;
+    -webkit-transition: -webkit-transform 0.3s ease-out;
+    -moz-transition:    -moz-transform 0.3s ease-out;
+    -o-transition:      -o-transform 0.3s ease-out;
+    -ms-transition:     -ms-transform 0.3s ease-out;
+    transition:         transform 0.3s ease-out;
+}
+
+.accordeon .panel-heading.collapsed:hover,
+.accordeon .panel-heading.collapsed:focus,
+.accordeon .panel-heading.collapsed:active,
+.accordeon .panel-heading:hover,
+.accordeon .panel-heading:focus,
+.accordeon .panel-heading:active {
+    color: #36a7eb ;
+    background-color: white;
+    border-color: white;
+}
+.accordeon .panel-heading.collapsed {
+    background-color: transparent;
+    color: white;
+}
+.accordeon .panel-heading.collapsed .glyphicon {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -webkit-transition: -webkit-transform 0.3s ease-out;
+    -moz-transition:    -moz-transform 0.3s ease-out;
+    -o-transition:      -o-transform 0.3s ease-out;
+    -ms-transition:     -ms-transform 0.3s ease-out;
+    transition:         transform 0.3s ease-out;
+}
+
+.accordeon .btn:active,
+.accordeon .btn.active {
+    box-shadow: none;
+}
+
+.accordeon li {
+    border-bottom: 1px solid white;
+}
+.accordeon li:last-child {
+    border: none;
+}
+
+.accordeon li > .row .list-content {
+    padding: 10px 15px;
+}
+
+.accordeon .controls {
+    height: 100%;
+}
+.accordeon .controls li,
+.controlled-table tr td:last-child .controls li {
+    width: 40px;
+    height: 40px;
+    display: block;
+    background-color: #224565;
+    border: none;
+    border-left: 1px solid white; 
+    float: left;
+    padding: 0;
+}
+.accordeon .controls li a,
+.controlled-table tr td:last-child .controls li a,
+.controlled-table tr td:last-child .controls li button   {
+    display: block;
+    color: white;
+}
+
+.accordeon .controls li a:hover,
+.controlled-table tr td:last-child .controls li a:hover,
+.controlled-table tr td:last-child .controls li button:hover,
+.accordeon .controls li a:focus,
+.controlled-table tr td:last-child .controls li a:focus,
+.controlled-table tr td:last-child .controls li button:focus,
+.accordeon .controls li a:active,
+.controlled-table tr td:last-child .controls li a:active,
+.controlled-table tr td:last-child .controls li button:active {
+    background-color: white;
+    color: #224565;
+    border-bottom: none;
+}
+.accordeon .controls li a .glyphicon,
+.controlled-table tr td:last-child .controls li a .glyphicon,
+.controlled-table tr td:last-child .controls li button .glyphicon {
+    font-size: 16px;
+    top: 0;
+    padding: 12px;
+    padding-right: 11px;
+    visibility: visible;
+}
+
+
+/* Messages */
+/* ------------------------------- */
+
+.alert-top {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    text-align: center;
+}
+
+
+/* Metadatenfilter */
+/* ------------------------------- */
+
+
+#addMetaDiv button.btn {
+    width: 100%;
+}
+#addMetaDiv button.btn .glyphicon {
+    margin-right: 5px;
+}
+
+
+/*--------------------------------------------------kleiner Julian-----*/
+/*für index.php damit die anzeige der sensoren und die der skalen schön aussehen*/
+#scalaDiv {
+    padding-left:0px;
+}
+#sensorenDiv {
+    padding-right:0px;
+}
+#scalaDiv div.btn-group-vertical{
+    border-left:0px;
+}
+
+h2 small{
+    color:white;
+}
+
+.scrollableAb200 {
+    overflow-x:hide;
+    overflow-y:auto;
+    height:200px;
+
+}
+
+
+.btn-group-vertical>.btn:first-child:not(:last-child).sensor-btn {
+    border-top-right-radius:0px;
+}
+.sensor-btn {
+    border-right: none;
+    border-bottom-right-radius: 0px;
+}
+.btn-group-vertical>.btn:last-child:not(:first-child).scala-btn {
+    border-bottom-left-radius:0px;
+}
+.scala-btn {
+    border-top-left-radius:0px;
+    background-color:#224565;
+}
+
+/*für das skalen-modal*/
+.modal-content input {
+    border-color: black;
+}
+
+.modal-header>input:first-of-type {
+    border-bottom: none;
+}
+
+.modal-content select{
+    border-color: black;
+    width:50px;
+}
+/*---------------------------------------------------------------------*/
+
+
+
+
+
+/* Footer */
+/* ------------------------------- */
+
+.footer {
+    position: absolute;
+    width: 100%;
+    height: 70px;
+    background-color: #224565;
+    bottom: 0;
+    padding: 12px;
+}
+
+.footer img {
+    max-height: 50px;
+}
+
+.footer ul {
+    margin-bottom: 0;
+    margin: 15px 0;
+}
+
+
+/* Popovers */
+/* ------------------------------- */
+
+.popover {
+    padding: 0;
+    border-color: white;
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: white;
+    width: 300px;
+}
+
+.popover .popover-title {
+    background-color: #224565;
+    border-bottom: none;
+    color: white;
+}
+
+.popover.right > .arrow {
+    border-right-color: white;
+}
+.popover.right > .arrow:after {
+    border-right-color: #36a7eb;
+}
+
+
+/* Bootstrap Datepicker */
+/* ------------------------------- */
+
+.datepicker table tr td.active.active, .datepicker table tr td.active:hover.active {
+    background-color: #224565;
+    background-image: none;
+}
+
+
+/* Bootstrap Modalbox Fix */
+/* ------------------------------- */
+
+body.modal-open {
+    overflow-y: scroll;
+}
+
+.modal {
+    color: black;
+}
+
+.modal .modal-body .success {
+    display: none;
+}
+.modal .modal-body .warning{
+    display: none;
+}
+.modal .modal-body .error {
+    display: none;
+}
+.modal .modal-body {
+    padding-bottom: 0;
+}
+#delete-modal .error {
+    margin-bottom: 0;
+}

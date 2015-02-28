@@ -1,33 +1,29 @@
-INSERT INTO `passwort` (hash, projekt_id)
-VALUES (SHA2('master', 256), null);
+INSERT INTO `passwort` (hash, projekt_id, salt)
+VALUES (SHA2('masterabcdefghijklmnopqRsTuvWXzY!@#$%^', 256), null, 'abcdefghijklmnopqRsTuvWXzY!@#$%^');
 
-INSERT INTO `projekt` (projektname, salt)
-VALUES ('Testprojekt zum Testen', 'abcdefghijklmnopqRsTuvWXzY!@#$%^');
+INSERT INTO `projekt` (projektname)
+VALUES ('Testprojekt zum Testen');
 
-INSERT INTO `passwort` (hash, projekt_id)
-VALUES (SHA2((SELECT CONCAT('Testprojekt', salt) FROM `projekt` WHERE projektname = 'Testprojekt zum Testen'), 256), (SELECT id fROM `projekt` WHERE projektname = 'Testprojekt zum Testen')); 
+INSERT INTO `passwort` (hash, projekt_id, salt)
+VALUES (SHA2('TestprojektA3G57VsJ^8Ch*5$pqRsTuvWXzY!F#$%^', 256), (SELECT id FROM `projekt` WHERE projektname = 'Testprojekt zum Testen'), 'A3G57VsJ^8Ch*5$pqRsTuvWXzY!F#$%^'); 
 
-INSERT INTO `messreihe` (projekt_id)
-VALUES ((SELECT id FROM `projekt` WHERE projektname = 'Testprojekt zum Testen')); 
+INSERT INTO `messreihe` (messreihenname, datum, projekt_id)
+VALUES ('Trocknungslauf kont. Förderung', '2014-10-14', (SELECT id FROM `projekt` WHERE projektname = 'Testprojekt zum Testen')); 
 
 INSERT INTO `datentyp` (typ)
-VALUES ('datum'), ('string'), ('int'), ('float'); 
+VALUES ('datum'), ('string'), ('numerisch'); 
 
 INSERT INTO `metainfo` (metaname, datentyp_id)
-VALUES ('Name', (SELECT id FROM `datentyp` where typ = 'string')),
-       ('Datum', (SELECT id FROM `datentyp` where typ = 'datum')),
-       ('Material', (SELECT id FROM `datentyp` where typ = 'string')),
-       ('Trocknungstemp', (SELECT id FROM `datentyp` where typ = 'string')),
-       ('Taupunkt', (SELECT id FROM `datentyp` where typ = 'string')),
-       ('Masse', (SELECT id FROM `datentyp` where typ = 'string'));
+VALUES ('Material', (SELECT id FROM `datentyp` where typ = 'string')),
+       ('Trocknungstemp', (SELECT id FROM `datentyp` where typ = 'numerisch')),
+       ('Taupunkt', (SELECT id FROM `datentyp` where typ = 'numerisch')),
+       ('Masse', (SELECT id FROM `datentyp` where typ = 'numerisch'));
 
 INSERT INTO `messreihe_metainfo` (messreihe_id, metainfo_id, metawert)
-VALUES ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Name'), 'Trocknungslauf kont. Förderung'),
-       ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Datum'), '14.10.2014'),
-       ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Material'), 'PA6'),
+VALUES ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Material'), 'PA6'),
        ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Trocknungstemp'), '80'),
        ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Taupunkt'), '-15'),
-       ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Masse'), 'kont. Förderung	kg');
+       ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `metainfo` WHERE metaname = 'Masse'), '100');
 
 INSERT INTO `sensor` (sensorname)
 VALUE ('Material Eintritt'), ('Trichter 1'), ('Trichter 2'),	('Trichter 3'),
@@ -40,16 +36,15 @@ VALUES ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `
 ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), 'Trichter Mitte'),
 ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `sensor` WHERE sensorname = 'Trichter 4'), 'Trichter Abluft');
 
-INSERT INTO `messung` (sensor_id, messreihe_id, zeitpunkt, messwert)
-VALUES ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.882503),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.379281),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.378268),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.980477),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.865348),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.981266),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.999486),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.998877),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.789654);
-
+INSERT INTO `messung` (sensor_id, messreihe_id, zeitpunkt, messwert, datum_uhrzeit)
+VALUES ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.882503, '2014-10-14 12:30:01'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.379281, '2014-10-14 13:30:02'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.378268, '2014-10-14 12:30:03'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.980477, '2014-10-14 12:30:01'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.865348, '2014-10-14 12:30:02'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.981266, '2014-10-14 12:30:03'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.999486, '2014-10-14 12:30:01'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.998877, '2014-10-14 12:30:02'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.789654, '2014-10-14 12:30:03');
 
 

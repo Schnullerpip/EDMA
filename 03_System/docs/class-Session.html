@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Session</title>
+
+	<link rel="stylesheet" href="resources/style.css?331665766">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+		</div>
+
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-AjaxController.html">AjaxController</a></li>
+				<li><a href="class-Config.html">Config</a></li>
+				<li><a href="class-Cookie.html">Cookie</a></li>
+				<li><a href="class-DB.html">DB</a></li>
+				<li><a href="class-DeleteController.html">DeleteController</a></li>
+				<li><a href="class-Hash.html">Hash</a></li>
+				<li><a href="class-Input.html">Input</a></li>
+				<li><a href="class-Parser.html">Parser</a></li>
+				<li><a href="class-Projekt.html">Projekt</a></li>
+				<li><a href="class-Redirect.html">Redirect</a></li>
+				<li class="active"><a href="class-Session.html">Session</a></li>
+				<li><a href="class-Token.html">Token</a></li>
+				<li><a href="class-UploadController.html">UploadController</a></li>
+				<li><a href="class-Utils.html">Utils</a></li>
+				<li><a href="class-Validate.html">Validate</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Session</h1>
+
+
+	<div class="description">
+	<p>Hilfs-Klasse um einfach Session-Variablen zu prüfen und bearbeiten.</p>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		
+
+				<b>Author:</b>
+				Sandro
+<br>
+		<b>Located at</b> <a href="source-class-Session.html#3-73" title="Go to source code">Session.php</a><br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="exists" id="_exists">
+
+		<td class="attributes"><code>
+			 public static
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_exists">#</a>
+		<code><a href="source-class-Session.html#10-18" title="Go to source code">exists</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			<p>Prüft ob die Session-Variable $name gesetzt ist.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Prüft ob die Session-Variable $name gesetzt ist.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>Name der Session-Variablen
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>true, wenn sie gesetzt ist, false wenn nicht
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="put" id="_put">
+
+		<td class="attributes"><code>
+			 public static
+
+			string/numeric
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_put">#</a>
+		<code><a href="source-class-Session.html#20-29" title="Go to source code">put</a>( <span>string <var>$name</var></span>, <span>string/numeric <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Legt eine neue Session-Variable mit dem Namen $name und dem Wert $value an.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Legt eine neue Session-Variable mit dem Namen $name und dem Wert $value an.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>Name der Session-Variablen
+</dd>
+					<dt><var>$value</var></dt>
+					<dd>Wert der Session-Variablen
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string/numeric</code><br>der Wert, der gesetzt wurde
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get" id="_get">
+
+		<td class="attributes"><code>
+			 public static
+
+			string/numeric
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get">#</a>
+		<code><a href="source-class-Session.html#31-39" title="Go to source code">get</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			<p>Holt die Session-Variable mit dem Namen $name.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Holt die Session-Variable mit dem Namen $name.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>Name der Session-Variablen
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string/numeric</code><br>Wert der Session-Variablen
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="delete" id="_delete">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_delete">#</a>
+		<code><a href="source-class-Session.html#41-50" title="Go to source code">delete</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			<p>Löscht eine Session-Variable, falls diese gesetzt wurde.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Löscht eine Session-Variable, falls diese gesetzt wurde.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>Name der zu löschenden Session-Variable
+</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="flash" id="_flash">
+
+		<td class="attributes"><code>
+			 public static
+
+			string/numeric
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_flash">#</a>
+		<code><a href="source-class-Session.html#52-71" title="Go to source code">flash</a>( <span>string <var>$name</var></span>, <span>string/numeric <var>$message</var> = <span class="php-quote">''</span></span> )</code>
+
+		<div class="description short">
+			<p>Eine Hilfs-Funktion um Session-Variablen zu flashen.
+Dabei wird beim ersten aufruf eine Session-Variable mit dem Namen $name
+und der Nachricht $message (optional) gesetzt.
+Beim zweiten aufruf wird die Session-Variable zurückgegeben und gelöscht.
+Voraussetzung: Zwei identische Aufrufe mit den gleichen Parametern</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Eine Hilfs-Funktion um Session-Variablen zu flashen.
+Dabei wird beim ersten aufruf eine Session-Variable mit dem Namen $name
+und der Nachricht $message (optional) gesetzt.
+Beim zweiten aufruf wird die Session-Variable zurückgegeben und gelöscht.
+Voraussetzung: Zwei identische Aufrufe mit den gleichen Parametern</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>Name der Session-Variable
+</dd>
+					<dt><var>$message</var></dt>
+					<dd>Nachricht die geflasht werden soll.
+</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string/numeric</code><br>falls die Session-Variable gesetzt wurde, ansonsten void
+
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js?721046668"></script>
+<script src="elementlist.js?1546880440"></script>
+</body>
+</html>
