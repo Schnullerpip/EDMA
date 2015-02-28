@@ -79,6 +79,15 @@ if (Input::itemExists('projekt_cancel')) {
     </head>
 
     <body>
+        <noscript>
+            <div class="no-javascript">
+                <img src="images/error.png" alt="Bild: ACHTUNG! JavaScript deaktiviert!" title="ACHTUNG! JavaScript deaktiviert!">
+                <h1>ACHTUNG:</h1>
+                <p>In Ihrem Browser ist JavaScript deaktiviert!</p>
+                <p>Um diese Webseite nutzen zu k&ouml;nnen, aktivieren Sie bitte JavaScript!</p>
+            </div>
+        </noscript>
+        
         <?php if (Session::exists('error')) : ?>
             <div class="alert alert-top alert-danger alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Schließen</span></button>
@@ -126,5 +135,8 @@ if (Input::itemExists('projekt_cancel')) {
             </div>
         </nav>
 
-        <div class="container page-wrap">
+        <div class="container page-wrap" style="display: none;">
+            <script>
+                $('.page-wrap').show();
+            </script>
             <!-- Content begins -->

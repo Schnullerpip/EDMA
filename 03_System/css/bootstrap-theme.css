@@ -674,6 +674,28 @@ h2 small{
     padding-right: 10px;
 }
 
+
+/* Kein Javascript Fehlermeldung */
+/* ------------------------------- */
+
+.no-javascript {
+    position: fixed;
+    background-color: #e42727;
+    height: 100%;
+    width: 100%;
+    z-index: 9999;
+    top: 0; 
+    left: 0;
+    text-align: center;
+    color: black;
+    font-size: 30px;
+}
+.no-javascript img {
+    padding-top: 10%;
+    max-width: 250px;
+}
+
+
 /* Scrollbar */
 /* ------------------------------- */
 
