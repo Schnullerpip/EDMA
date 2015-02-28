@@ -27,6 +27,11 @@ class DeleteController extends AjaxController {
 
                 break;
 
+            case 'projekt':
+                $this->deleteProjekt();
+
+                break;
+
             default:
                 break;
         }
@@ -65,6 +70,21 @@ class DeleteController extends AjaxController {
             $this->_failed = array(
                 'name' => $messreihe->messreihenname,
                 'message' => 'Die Messreihe konnte nicht gelöscht werden!'
+            );
+        }
+    }
+    
+    private function deleteProjekt() {
+        $this->_db->get('projekt', array('id', '=', $this->_id));
+        $projekt = $this->_db->first();
+        
+        $this->_db->delete('projekt', array('id', '=', $this->_id));
+        
+        // Not in if wegmachen! 
+       if ($this->_db->error()) {
+            $this->_failed = array(
+                'name' => $projekt->projektname,
+                'message' => 'Das Projekt konnte nicht gelöscht werden!'
             );
         }
     }
