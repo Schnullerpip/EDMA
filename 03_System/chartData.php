@@ -11,8 +11,17 @@ $db = DB::getInstance();
 
 $whereZeitpunkt = "";
 if ($step === 1) {
-    // Wenn jeder Zeitpunkt benutzt, kann BETWEEN genutzt werden.
-    $whereZeitpunkt = "messung.zeitpunkt BETWEEN {$von} AND {$bis}";
+    if ($von === 0 && $bis === 0) {
+        // Zeitpunkt spielt keine rolle
+        $whereZeitpunkt = "TRUE";
+    } else if ($von === 0) {
+        $whereZeitpunkt = "messung.zeitpunkt < {$bis}";
+    } else if ($bis === 0) {
+        $whereZeitpunkt = "messung.zeitpunkt > {$von}";
+    } else {
+        // Wenn jeder Zeitpunkt benutzt, kann BETWEEN genutzt werden.
+        $whereZeitpunkt = "messung.zeitpunkt BETWEEN {$von} AND {$bis}";
+    }
 } else {
     // zeitpunkte (n,n,....,n) als string fuer IN Operator
     $zeitpunkte = "(";
