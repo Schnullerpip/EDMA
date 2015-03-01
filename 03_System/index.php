@@ -301,7 +301,7 @@ $jsonselectsensor = json_encode($selectsensor);
                     var radioFloatBool = false;
                     var rightSideScala = false;
                 </script>
-                
+
                 <div class="form-group">
                     <label class="col-sm-4 control-label" for="scalaTitelInput">Titel</label>
                     <div class="col-sm-6">
@@ -311,25 +311,26 @@ $jsonselectsensor = json_encode($selectsensor);
 
                 <div class="form-group">
                     <label class="col-sm-4 control-label" for="scalaEinheitInput">Einheit</label>
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <input id="scalaEinheitInput" class="form-control scalaModalInput" type="text" name="scalaEinheitInput" placeholder="z.B. in °C"></input>
                     </div>
+                    <div class="col-sm-2">
+                        <input type="radio" id="radioINT" name="Zahlengruppe" value="int" checked="checked"><label for="radioINT">Int</label><br>
+                        <input type="radio" id="radioFLOAT" name="Zahlengruppe" value="float"><span id="radioFloatSpan"><label for="radioFLOAT">Float</label></span>
+                    </div>
                 </div>
+
 
                 <div class="form-group">
-                    <div class="col-sm-6">
-                        <fieldset>
-                            <input type="radio" id="radioINT" name="Zahlengruppe" value="int" checked="checked"><label for="radioINT"> Int</label><br>
-                            <input type="radio" id="radioFLOAT" name="Zahlengruppe" value="float"><span id="radioFloatSpan"><label for="radioFLOAT">Float</label></span>
-                        </fieldset>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <fieldset>
-                            <input type="checkbox" id="rightSideScala" name="Position der Skala" value="left"><label for="rightSideScala">Skala rechts vom Graphen anzeigen</label>
-                        </fieldset>
+                    <div class="col-sm-offset-4 col-sm-6">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="rightSideScala" name="Position der Skala" value="left"> Skala rechts vom Graphen anzeigen
+                            </label>
+                        </div>
                     </div>
                 </div>
+
                 <button id="modalContentMenuButtonNewScala" class="btn btn-primary">Neue Skala</button>
 
                 <hr>
