@@ -1153,6 +1153,8 @@ $jsonselectsensor = json_encode($selectsensor);
         $("#anzeigeButton").click(function(){
             //Es wird eine Map benötigt in der schnell ausgelesen werden kann welch messreihen-sensor kmbination auf welche skala abgebildet werden soll
             var skalaMap = {};
+            scalas_copy = [];
+
 
 
             if(selected_sensors.length == 0){
