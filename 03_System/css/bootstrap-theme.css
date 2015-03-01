@@ -12,7 +12,6 @@ label {
     font-family: 'RobotoMedium', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-
 /* General Stuff */
 /* ------------------------------- */
 
@@ -61,6 +60,10 @@ body {
 
 h2 {
     margin-bottom: 25px;
+}
+
+.heading {
+    margin-bottom: 30px;
 }
 
 /* Helpers */
@@ -599,10 +602,6 @@ h2 small{
 }
 .anzeigeButtonDiv {
     padding-top:10px;
-}
-
-#anzeigeButton {
-    width:50%;
 }
 
 

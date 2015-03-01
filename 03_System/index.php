@@ -3,7 +3,7 @@ require_once 'header.php';
 $db = DB::getInstance();
 ?>
 
-<p>Projekt: <?php echo escape($projekt->data()->projektname); ?></p>
+<h1 class="heading"><?php echo escape($projekt->data()->projektname); ?></h1>
 
 <?php
 $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
@@ -254,31 +254,30 @@ $jsonselectsensor = json_encode($selectsensor);
 </script>
 
 <h2>Einstellungen</h2>
-<div class="row form-group">
-    <div class="col-sm-1 col-sm-offset-3">
-        <div><label class="control-label">Schrittweite</label></div>
-        <br>
-        <div><label class="control-label">Intrevall</label></div>
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-4 control-label" for="stepInput">Schrittweite</label>
+        <div class="col-sm-4">
+            <input id="stepInput" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="z.B. 100 (er Schritte)">
+        </div>
     </div>
 
-    <div class="col-sm-3 einstellungenInputDiv">
-        <div>
-            <input id="stepInput" class="col-sm-6 form-control einstellungenInput" type="text" name="IntervallInput" placeholder="z.B. 100 (er Schritte)"></input>
-        </div>
-        <br>
-        <br>
-        <div class="row">
-            <div class="col-sm-6">
-                <input id="intervallInput1" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="Von"></input>
+    <div class="form-group">
+        <label class="col-sm-4 control-label" for="intervallInput1">Intervall</label>
+        <div class="einstellungenInputDiv">
+            <div class="col-sm-2">
+                <input id="intervallInput1" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="Von">
             </div>
-            <div class="col-sm-6">
-                <input id="intervallInput2" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="Bis"></input>
+            <div class="col-sm-2">
+                <input id="intervallInput2" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="Bis">
             </div>
         </div>
     </div>
 
-    <div class="col-sm-6 col-sm-offset-4 anzeigeButtonDiv">
-        <button id="anzeigeButton"  type="button" class="btn btn-default" >Anzeigen!</button>
+    <div class="form-group">
+        <div class="col-sm-4 col-sm-offset-4 anzeigeButtonDiv">
+            <button id="anzeigeButton"  type="button" class="btn btn-default btn-block" >Anzeigen!</button>
+        </div>
     </div>
 </div>
 
@@ -1158,13 +1157,13 @@ $jsonselectsensor = json_encode($selectsensor);
         //Anzeigen! button on click
         $("#anzeigeButton").click(function () {
             $('.loading-div, #anzeigeButton').toggle();
-            
+
             //Es wird eine Map benötigt in der schnell ausgelesen werden kann welch messreihen-sensor kmbination auf welche skala abgebildet werden soll
             var skalaMap = {};
             scalas_copy = [];
-            
-            
-            
+
+
+
             if (selected_sensors.length == 0) {
                 modalTextError("Vorsicht! -> Es wurden keine Sensoren ausgewählt, deren Messwerte anzuzeigen wären... Bitte erst berichtigen");
                 $('#infoModal').modal();
@@ -1193,7 +1192,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 if ($.inArray(selected_sensors[i].scala, scalas_copy) < 0) {
                     scalas_copy.push(selected_sensors[i].scala);
                 }
-                
+
                 skalaMap[selected_sensors[i].messreihenname + " - " + selected_sensors[i].anzeigename] = selected_sensors[i].scala.name;
             }
 
@@ -1266,7 +1265,7 @@ $jsonselectsensor = json_encode($selectsensor);
                     type: 'shared'
                 }
             });
-            
+
             $('.loading-div, #anzeigeButton').toggle();
 
             $('#jqChart-wrapper').bind('tooltipFormat', function (e, data) {
