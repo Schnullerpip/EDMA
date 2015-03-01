@@ -53,7 +53,7 @@ $(document).ready(function () {
                 // Modal ausblenden und weiterleiten oder sonstiges
                 $('#delete-modal').modal('hide');
                 $('#delete-modal').on('hidden.bs.modal', function () {
-                    if (target === undefined) {
+                    if (target === '') {
                         button.closest('tr').fadeOut("slow");
                     } else {
                         window.location = target + '.php';
