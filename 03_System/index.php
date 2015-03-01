@@ -286,7 +286,7 @@ $jsonselectsensor = json_encode($selectsensor);
 <a id="saveCSV" class="btn btn-default" href="../datagross.csv" download="Daten.csv">Speichern als CSV</a>
 
 <!--Skala Modal -->
-<div id="scalaModal" class="modal fade" aria-hidden="true">
+<div id="scalaModal" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -311,15 +311,39 @@ $jsonselectsensor = json_encode($selectsensor);
 
                 <div class="form-group">
                     <label class="col-sm-4 control-label" for="scalaEinheitInput">Einheit</label>
-                    <div class="col-sm-4">
+                    <div class="col-sm-6">
                         <input id="scalaEinheitInput" class="form-control scalaModalInput" type="text" name="scalaEinheitInput" placeholder="z.B. in °C"></input>
-                    </div>
-                    <div class="col-sm-2">
-                        <input type="radio" id="radioINT" name="Zahlengruppe" value="int" checked="checked"><label for="radioINT">Int</label><br>
-                        <input type="radio" id="radioFLOAT" name="Zahlengruppe" value="float"><span id="radioFloatSpan"><label for="radioFLOAT">Float</label></span>
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <div class="col-sm-offset-4 col-sm-2 einheit-datentyp">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" id="radioINT" name="Zahlengruppe" value="int" checked="checked">
+                                Int
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" id="radioFLOAT" name="Zahlengruppe" value="float">
+                                Float
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group nachkommastellen-wrapper" style="display: none;">
+                    <label class="col-sm-4 control-label" for="scalaEinheitInput">Nachkommastellen</label>
+                    <div class="col-sm-2">
+                        <select id="sel1" class="form-control">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-6">
@@ -331,16 +355,22 @@ $jsonselectsensor = json_encode($selectsensor);
                     </div>
                 </div>
 
-                <button id="modalContentMenuButtonNewScala" class="btn btn-primary">Neue Skala</button>
+                <div class="row">
+                    <div class="col-sm-offset-4 col-sm-3">
+                        <button id="modalContentMenuButtonNewScala" class="btn btn-primary">Skala erstellen</button>
+                    </div>
+                </div>
 
                 <hr>
 
                 <h4 id="scalaModalh4">Skalen auswählen</h4>
 
                 <div class="form-group">
-                    <div class="table-responsive">
-                        <table id="scalaModalContent" class="table"></table>
-                    </div><!-- table-responsive end -->
+                    <div class="col-xs-12">
+                        <div class="table-responsive">
+                            <table id="scalaModalContent" class="table"></table>
+                        </div><!-- table-responsive end -->
+                    </div>
                 </div>
             </div><!-- modal-body end -->       
 
@@ -758,7 +788,7 @@ $jsonselectsensor = json_encode($selectsensor);
             }
         }
     }
-//----------------------------------Funktionen zum Bearbeiten der "Messreihen/Sensoren-Filtern" Felder ------------------------------
+    //----------------------------------Funktionen zum Bearbeiten der "Messreihen/Sensoren-Filtern" Felder ------------------------------
 
 
     //Liste der angezeigten Messreihen regenerieren 
@@ -890,7 +920,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function regenerateScalaModal() {
         var replace_string = [];
-        replace_string.push("<tr><th>Skala</th><th>Titel</th><th>Einheit</th><th>Int/Float</th><th>Position</th><th>choose</th></tr>");
+        replace_string.push("<tr><th>Skala</th><th>Titel</th><th>Einheit</th><th>Int/Float</th><th colspan='2'>Position</th></tr>");
         for (i = 0; i < scalas.length; i++) {
             replace_string.push("<tr>");
             replace_string.push("<td>" + scalas[i].name + "</td>");
@@ -906,7 +936,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 replace_string.push("<td>INT</td>");
             }
             replace_string.push("<td>" + scalas[i].location + "</td>");
-            replace_string.push("<td><button class='btn choose-scala-btn btn-xs' data-scalaID='" + scalas[i].name + "'>Auswaehlen</button></td>");
+            replace_string.push("<td><button class='btn btn-primary choose-scala-btn btn-sm pull-right' data-scalaID='" + scalas[i].name + "'>Ausw&auml;hlen</button></td>");
             replace_string.push("</tr>");
         }
         $("#scalaModalContent").html(replace_string.join(""));
@@ -983,7 +1013,7 @@ $jsonselectsensor = json_encode($selectsensor);
         }
         return true;
     }
-//-----------------------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -1035,9 +1065,9 @@ $jsonselectsensor = json_encode($selectsensor);
         $('#radioINT, #radioFLOAT').change(function () {
             radioFloatBool = !radioFloatBool;
             if (radioFloatBool) {
-                $("#radioFloatSpan").append("<div class='form-group'><label for='sel'>Anzahl Nachkommastellen:</label><select class='form-control' id='sel1'><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>");
+                $(".nachkommastellen-wrapper").show();
             } else {
-                $("#radioFloatSpan").html("<label for='radioFLOAT'> Float</label>");
+                $(".nachkommastellen-wrapper").hide();
             }
         });
 
