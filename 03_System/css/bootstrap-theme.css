@@ -390,6 +390,10 @@ form .table#projektbeschreibungen {
     background-color: white;
 }
 
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #ededed;
+}
+
 
 /* Accordeon */
 /* ------------------------------- */
@@ -576,12 +580,8 @@ h2 small{
 }
 
 /*für das skalen-modal*/
-.scalaModalInput {
-    width:50%;
-}
-
 .modal-content input {
-    border-color: black;
+    border-color: #224565;
 }
 
 .modal-header>input:first-of-type {
@@ -589,8 +589,7 @@ h2 small{
 }
 
 .modal-content select{
-    border-color: black;
-    width:50px;
+    border-color: #224565;
 }
 
 
@@ -669,7 +668,7 @@ h2 small{
 /* ------------------------------- */
 
 .modal {
-    color: black;
+    color: #224565;;
 }
 
 .modal .modal-body .success {
@@ -690,7 +689,7 @@ h2 small{
 
 /* Chart */
 /* ------------------------------- */
- 
+
 .tooltipTable th, td {
     padding-right: 10px;
 }
