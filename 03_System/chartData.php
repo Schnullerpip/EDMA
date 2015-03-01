@@ -125,7 +125,7 @@ while ($row = $db->fetch()) {
 //foreach ($results as $index => $messung) {
     $line .= $row->messwert;
 //    fwrite($myfile, "index, count, Wert:{$index},{$count}, " . $row->messwert . "\n");
-    if ($index !== 0 && $index % $count === $count-1) {
+    if (($count === 1 || $index !== 0) && $index % $count === $count-1) {
         $line .= "\n";
         echo $line;
 //        fwrite($myfile, $line);
