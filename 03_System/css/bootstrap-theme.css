@@ -576,12 +576,8 @@ h2 small{
 }
 
 /*für das skalen-modal*/
-.scalaModalInput {
-    width:50%;
-}
-
 .modal-content input {
-    border-color: black;
+    border-color: #224565;
 }
 
 .modal-header>input:first-of-type {
@@ -669,7 +665,7 @@ h2 small{
 /* ------------------------------- */
 
 .modal {
-    color: black;
+    color: #224565;;
 }
 
 .modal .modal-body .success {
