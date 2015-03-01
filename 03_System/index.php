@@ -927,7 +927,6 @@ $jsonselectsensor = json_encode($selectsensor);
             replace_string.push("<td>" + scalas[i].name + "</td>");
             replace_string.push("<td>" + scalas[i].title.text + "</td>");
 
-<<<<<<< HEAD
             if(/.*\%\.[0-9]1*/.test(scalas[i].labels.stringFormat)){ //handelt sich um float
                 replace_string.push("<td>"+scalas[i].labels.stringFormat.slice(5, 100)+"</td>");
                 replace_string.push("<td>FLOAT</td>");
@@ -1151,7 +1150,6 @@ $jsonselectsensor = json_encode($selectsensor);
         });
 
         //Anzeigen! button on click
-<<<<<<< HEAD
         $("#anzeigeButton").click(function(){
             if(selected_sensors.length == 0){
                     modalTextError("Vorsicht! -> Es wurden keine Sensoren ausgewählt, deren Messwerte anzuzeigen wären... Bitte erst berichtigen");
@@ -1165,13 +1163,6 @@ $jsonselectsensor = json_encode($selectsensor);
             for(i=0;i<scalas_copy.length;i++){
                 if(scalas_copy[i].location == "left"){
                     scalas_copy[i].zoomenabled = true;
-=======
-        $("#anzeigeButton").click(function () {
-            //die erste y-Achse (auf der linken Seite des Graphen) sollte zoom-enabled haben
-            for (i = 0; i < scalas.length; i++) {
-                if (scalas[i].location == "left") {
-                    scalas[i].zoomenabled = true;
->>>>>>> cf6fd4990a21648de2e5f179b0caebce4163cc7c
                     break;
                 }
             }
@@ -1193,33 +1184,16 @@ $jsonselectsensor = json_encode($selectsensor);
             //Ab jetzt ist data fertig
             //Nun wird noch eine Map benötigt in der schnell ausgelesen werden kann welch messreihen-sensor kmbination auf welche skala abgebildet werden soll
             var skalaMap = {};
-<<<<<<< HEAD
             
             for(i=0;i<selected_sensors.length;i++){
                 if(selected_sensors[i].scala == null){
                     modalTextError("Vorsicht! -> "+ selected_sensors[i].anzeigename + " aus der Messreihe: '"+selected_sensors[i].messreihenname+"', wurde noch keiner Skala zugewiesen! Bitte erst berichtigen... ");
-=======
-            if (selected_sensors.length == 0) {
-                modalTextError("Vorsicht! -> Es wurden keine Sensoren ausgewählt, deren Messwerte anzuzeigen wären... Bitte erst berichtigen");
-                $('#infoModal').modal();
-                return;
-            }
-            for (i = 0; i < selected_sensors.length; i++) {
-                if (selected_sensors[i].scala == null) {
-                    modalTextError("Vorsicht! -> " + selected_sensors[i].anzeigename + " aus der Messreihe: '" + selected_sensors[i].messreihenname + "', wurde noch keiner Skala zugewiesen! Bitte erst berichtigen... ");
->>>>>>> cf6fd4990a21648de2e5f179b0caebce4163cc7c
                     $('#infoModal').modal();
                     return;
                 }
                 skalaMap[selected_sensors[i].messreihenname + " - " + selected_sensors[i].anzeigename] = selected_sensors[i].scala.name;
             }
-<<<<<<< HEAD
-            
-=======
-            console.log(data);
-            console.log(skalaMap);
 
->>>>>>> cf6fd4990a21648de2e5f179b0caebce4163cc7c
             var seriesData = [];
             $.ajax({
                 url: "./chartData.php",
@@ -1243,13 +1217,9 @@ $jsonselectsensor = json_encode($selectsensor);
 
                 console.log("CSV Daten sind fertig");
             });
-<<<<<<< HEAD
             
             scalas_copy.push({
-=======
 
-            scalas.push({
->>>>>>> cf6fd4990a21648de2e5f179b0caebce4163cc7c
                 name: 'x',
                 location: 'bottom',
                 zoomEnabled: true,
@@ -1262,10 +1232,6 @@ $jsonselectsensor = json_encode($selectsensor);
                 }
             });
 
-<<<<<<< HEAD
-            
-=======
->>>>>>> cf6fd4990a21648de2e5f179b0caebce4163cc7c
             $('#jqChart-wrapper').jqChart({
                 title: {
                     text: $(this).data('title'),
@@ -1284,7 +1250,7 @@ $jsonselectsensor = json_encode($selectsensor);
                     },
                     margin: 10
                 },
-                axes: scalas,
+                axes: scalas_copy,
                 series: seriesData,
                 tooltips: {
                     type: 'shared'
