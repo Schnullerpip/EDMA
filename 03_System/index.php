@@ -392,7 +392,7 @@ $jsonselectsensor = json_encode($selectsensor);
     function selectChanged(val) { //val ist von der Form val[i, o] über i wird die MEssreihe erfasst und über o das Metafeld
         var io = val.split("");
         selectedMetafield = messreihen_copy[io[0]].metafields[io[1]];
-        seleanctFlag = true;
+        selectFlag = true;
         selectChangedCount++;
         $("#meta_select_button").html("<span class='glyphicon glyphicon-plus'></span>" + selectedMetafield["metaname"] + " filter hinzufügen");
     }
@@ -793,7 +793,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     //Liste der angezeigten Messreihen regenerieren 
-    var lookup_selected_mesreihe = null;
+    var lookup_selected_messreihe = null;
     function regenerateMessreihenList() {
         var replace_string = [];
         for (i = 0; i < messreihen_copy.length; i++) {
@@ -1151,20 +1151,14 @@ $jsonselectsensor = json_encode($selectsensor);
 
         //Anzeigen! button on click
         $("#anzeigeButton").click(function(){
+            //Es wird eine Map benötigt in der schnell ausgelesen werden kann welch messreihen-sensor kmbination auf welche skala abgebildet werden soll
+            var skalaMap = {};
+
+
             if(selected_sensors.length == 0){
                     modalTextError("Vorsicht! -> Es wurden keine Sensoren ausgewählt, deren Messwerte anzuzeigen wären... Bitte erst berichtigen");
                     $('#infoModal').modal();
                     return;
-            }
-
-            scalas_copy = $.extend(true, [], scalas); //Tiefe Kopie
-
-            //die erste y-Achse (auf der linken Seite des Graphen) sollte zoom-enabled haben
-            for(i=0;i<scalas_copy.length;i++){
-                if(scalas_copy[i].location == "left"){
-                    scalas_copy[i].zoomenabled = true;
-                    break;
-                }
             }
             
             var data = {
@@ -1175,23 +1169,28 @@ $jsonselectsensor = json_encode($selectsensor);
 
             data.pair = [];
             for (i = 0; i < selected_sensors.length; i++) {
-                tmp_array = [];
-                tmp_array.push(selected_sensors[i].id);
-                tmp_array.push(selected_sensors[i].messreihenid);
-
-                data.pair.push(tmp_array);
-            }
-            //Ab jetzt ist data fertig
-            //Nun wird noch eine Map benötigt in der schnell ausgelesen werden kann welch messreihen-sensor kmbination auf welche skala abgebildet werden soll
-            var skalaMap = {};
-            
-            for(i=0;i<selected_sensors.length;i++){
                 if(selected_sensors[i].scala == null){
                     modalTextError("Vorsicht! -> "+ selected_sensors[i].anzeigename + " aus der Messreihe: '"+selected_sensors[i].messreihenname+"', wurde noch keiner Skala zugewiesen! Bitte erst berichtigen... ");
                     $('#infoModal').modal();
                     return;
                 }
+
+                var tmp_array = [];
+                tmp_array.push(selected_sensors[i].id);
+                tmp_array.push(selected_sensors[i].messreihenid);
+
+                data.pair.push(tmp_array);
+                scalas_copy.push(selected_sensors[i].scala);
+
                 skalaMap[selected_sensors[i].messreihenname + " - " + selected_sensors[i].anzeigename] = selected_sensors[i].scala.name;
+            }
+
+            //die erste y-Achse (auf der linken Seite des Graphen) sollte zoom-enabled haben
+            for(i=0;i<scalas_copy.length;i++){
+                if(scalas_copy[i].location == "left"){
+                    scalas_copy[i].zoomenabled = true;
+                    break;
+                }
             }
 
             var seriesData = [];
