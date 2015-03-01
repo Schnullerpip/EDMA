@@ -251,6 +251,27 @@ a:active,
     right: 10px;
 }
 
+#messreihenDiv .btn-default,
+#sensorenDiv .btn-default {
+    text-align: left;
+}
+
+#messreihenDiv .scroll-scrolly_visible .btn-default,
+.scroll-scrolly_visible #sensorenDiv .btn-default {
+    padding-left: 4%;
+}
+
+#messreihenListe small {
+    position: absolute;
+    right: 12px;
+    top: 11px;
+}
+#messreihenListe span {
+    position: absolute;
+    right: 20px;
+    top: 8px;
+}
+
 
 /* Inputs */
 /* ------------------------------- */
