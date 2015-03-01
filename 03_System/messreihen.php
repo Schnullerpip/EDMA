@@ -89,12 +89,14 @@ if (Input::exists('post')) {
         <script>
             $('#upload').click(function (event) {
                 $('.loading-div, #upload').toggle();
+                var ansehenButton = $('#infoModal').find('.modal-footer a');
                 var f = $('#files')[0];
                 var button = $('#upload');
                 var maxSize = $('#files').data('maxsize');
                 var progressBar = $('.upload-progress');
                 var projektID = $('#files').data('projektid');
 
+                ansehenButton.hide();
                 event.preventDefault();
                 button.blur();
 
@@ -110,8 +112,10 @@ if (Input::exists('post')) {
                     projektID: projektID,
                     finished: function (data) {
                         var succMsg = convertArray(data);
+                        var new_href = "messreihen.php?id=" + data[0].messreiheID;
                         progressBar.width(0);
                         modalTextSuccess(succMsg);
+                        ansehenButton.attr("href", new_href).show();
                         $('#infoModal').modal();
                         $('.loading-div, #upload').toggle();
                     },
