@@ -78,7 +78,7 @@ if (Input::exists()) {
                 </div>
             </div>
             <input name="token" type="hidden" value="<?php echo Token::generate(); ?>">
-            <input class="btn btn-lg btn-default btn-block" type="submit" value="&Ouml;ffnen">
+            <input class="btn btn-default btn-block" type="submit" value="&Ouml;ffnen">
         </form>
     </div>
 </div>
