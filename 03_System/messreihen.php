@@ -111,8 +111,9 @@ if (Input::exists('post')) {
                     processor: 'ajaxHandler.php',
                     projektID: projektID,
                     finished: function (data) {
-                        var succMsg = convertArray(data);
                         var new_href = "messreihen.php?id=" + data[0].messreiheID;
+                        delete data[0].messreiheID;
+                        var succMsg = convertArray(data);
                         progressBar.width(0);
                         modalTextSuccess(succMsg);
                         ansehenButton.attr("href", new_href).show();
