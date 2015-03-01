@@ -1162,9 +1162,9 @@ $jsonselectsensor = json_encode($selectsensor);
             //Es wird eine Map benötigt in der schnell ausgelesen werden kann welch messreihen-sensor kmbination auf welche skala abgebildet werden soll
             var skalaMap = {};
             scalas_copy = [];
-
-
-
+            
+            
+            
             if (selected_sensors.length == 0) {
                 modalTextError("Vorsicht! -> Es wurden keine Sensoren ausgewählt, deren Messwerte anzuzeigen wären... Bitte erst berichtigen");
                 $('#infoModal').modal();
@@ -1193,7 +1193,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 if ($.inArray(selected_sensors[i].scala, scalas_copy) < 0) {
                     scalas_copy.push(selected_sensors[i].scala);
                 }
-
+                
                 skalaMap[selected_sensors[i].messreihenname + " - " + selected_sensors[i].anzeigename] = selected_sensors[i].scala.name;
             }
 
