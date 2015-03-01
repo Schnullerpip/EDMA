@@ -1,4 +1,4 @@
-<?php
+    <?php
 require_once 'header.php';
 $db = DB::getInstance();
 ?>
@@ -1180,8 +1180,10 @@ $jsonselectsensor = json_encode($selectsensor);
                 tmp_array.push(selected_sensors[i].messreihenid);
 
                 data.pair.push(tmp_array);
-                scalas_copy.push(selected_sensors[i].scala);
-
+                if($.inArray(selected_sensors[i].scala, scalas_copy) < 0){
+                    scalas_copy.push(selected_sensors[i].scala);
+                }
+                
                 skalaMap[selected_sensors[i].messreihenname + " - " + selected_sensors[i].anzeigename] = selected_sensors[i].scala.name;
             }
 
