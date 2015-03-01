@@ -155,6 +155,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     //Sensnoren müssen einer Skala zugeordnet werden, entsprechende ZUweisung wurd in folgender Datenstruktur gespeichert
     var scalas = [];
+    var scalas_copy = []; //Wird später der jqChart übergeben, da die anzeige anweisung noch eine x-achse pusht
     var scala_unique_id; //gibt jeder Skala eine eigene id - sollte nach erstellung einer skala inkrementiert werden -> anhand dieser ID werden auch variable Faktoren wie Graphen bzw y-Achsen Farbe und Erscheinungsbild bestimmt sodass einzelne Graphen voneinander unterschieden werden können und einer y-Achse zugewiesen werden können
     var patient_sensor = null; //diese referenz wird den sensor speichern, dem über das auswahlmodal eine skala zugewiesen werden soll
 
@@ -200,7 +201,7 @@ $jsonselectsensor = json_encode($selectsensor);
 <h2>Metadaten filtern</h2>
 <div class="form-horizontal mb-15" id="addMetaDiv">
     <!-- Anzeigefelder für die ausgewählten Metadatenfilter -->
-    <div class="form-group">
+    <div class="form-group" style="display:none">
         <div class="col-sm-6" id="meta_name_operator_div"></div>
         <div id="meta_value_div" class="col-sm-6"></div>
     </div>
@@ -366,7 +367,7 @@ $jsonselectsensor = json_encode($selectsensor);
     function selectChanged(val) { //val ist von der Form val[i, o] über i wird die MEssreihe erfasst und über o das Metafeld
         var io = val.split("");
         selectedMetafield = messreihen_copy[io[0]].metafields[io[1]];
-        selectFlag = true;
+        seleanctFlag = true;
         selectChangedCount++;
         $("#meta_select_button").html("<span class='glyphicon glyphicon-plus'></span>" + selectedMetafield["metaname"] + " filter hinzufügen");
     }
@@ -902,11 +903,9 @@ $jsonselectsensor = json_encode($selectsensor);
             replace_string.push("<td>"+scalas[i].title.text+"</td>");
 
             if(/.*\%\.[0-9]1*/.test(scalas[i].labels.stringFormat)){ //handelt sich um float
-                console.log("float");
                 replace_string.push("<td>"+scalas[i].labels.stringFormat.slice(5, 100)+"</td>");
                 replace_string.push("<td>FLOAT</td>");
             }else{
-                console.log(scalas[i].labels.stringFormat.slice(3, 100));
                 replace_string.push("<td>"+scalas[i].labels.stringFormat.slice(3, 100)+"</td>");
                 replace_string.push("<td>INT</td>");
             }
@@ -1001,7 +1000,9 @@ $jsonselectsensor = json_encode($selectsensor);
     $(function () {
 
         regenerateDocument();
+
         $('#meta_select_button').click(function () {
+            $("#meta_name_operator_div").parent().show();
             addMeta();
             $(this).blur();
         });
@@ -1049,7 +1050,6 @@ $jsonselectsensor = json_encode($selectsensor);
        //in Modal on click in modal inputs -> checkbox rightSideScala
         $("#rightSideScala").click(function(){
             rightSideScala = !rightSideScala;
-            console.log(rightSideScala);
         });
 
 
@@ -1125,14 +1125,22 @@ $jsonselectsensor = json_encode($selectsensor);
 
         //Anzeigen! button on click
         $("#anzeigeButton").click(function(){
+            if(selected_sensors.length == 0){
+                    modalTextError("Vorsicht! -> Es wurden keine Sensoren ausgewählt, deren Messwerte anzuzeigen wären... Bitte erst berichtigen");
+                    $('#infoModal').modal();
+                    return;
+            }
+
+            scalas_copy = $.extend(true, [], scalas); //Tiefe Kopie
+
             //die erste y-Achse (auf der linken Seite des Graphen) sollte zoom-enabled haben
-            for(i=0;i<scalas.length;i++){
-                if(scalas[i].location == "left"){
-                    scalas[i].zoomenabled = true;
+            for(i=0;i<scalas_copy.length;i++){
+                if(scalas_copy[i].location == "left"){
+                    scalas_copy[i].zoomenabled = true;
                     break;
                 }
             }
-            //Nun sollten alle benötigte Daten gesammelt sein - also triggern wir jqCharts
+            
             var data = {
                 from:   intervall1,
                 to:     intervall2,
@@ -1150,11 +1158,7 @@ $jsonselectsensor = json_encode($selectsensor);
             //Ab jetzt ist data fertig
             //Nun wird noch eine Map benötigt in der schnell ausgelesen werden kann welch messreihen-sensor kmbination auf welche skala abgebildet werden soll
             var skalaMap = {};
-            if(selected_sensors.length == 0){
-                    modalTextError("Vorsicht! -> Es wurden keine Sensoren ausgewählt, deren Messwerte anzuzeigen wären... Bitte erst berichtigen");
-                    $('#infoModal').modal();
-                    return;
-            }
+            
             for(i=0;i<selected_sensors.length;i++){
                 if(selected_sensors[i].scala == null){
                     modalTextError("Vorsicht! -> "+ selected_sensors[i].anzeigename + " aus der Messreihe: '"+selected_sensors[i].messreihenname+"', wurde noch keiner Skala zugewiesen! Bitte erst berichtigen... ");
@@ -1163,8 +1167,6 @@ $jsonselectsensor = json_encode($selectsensor);
                 }
                 skalaMap[selected_sensors[i].messreihenname+" - "+selected_sensors[i].anzeigename] = selected_sensors[i].scala.name;
             }
-            console.log(data);
-            console.log(skalaMap);
             
             var seriesData = [];
             $.ajax({
@@ -1190,7 +1192,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 console.log("CSV Daten sind fertig");
             });
             
-            scalas.push({
+            scalas_copy.push({
                 name: 'x',
                 location: 'bottom',
                 zoomEnabled: true,
@@ -1202,6 +1204,7 @@ $jsonselectsensor = json_encode($selectsensor);
                     strokeStyle: '#FFFFFF'
                 }
             });
+
             
             $('#jqChart-wrapper').jqChart({
                 title: {

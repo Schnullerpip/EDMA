@@ -571,7 +571,7 @@ h2 small{
 
 
 /*damit chrome funktioniert*/
-#messreihenListe small, span {
+#messreihenListe  small, span {
     pointer-events: none;
 }
 
