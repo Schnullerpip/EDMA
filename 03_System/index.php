@@ -285,6 +285,12 @@ $jsonselectsensor = json_encode($selectsensor);
     </div>
 </div>
 
+<!-- Spinner waehrend Chart laedt -->
+<div class="loading-div" style="display: none">
+    <div class="loading-spinner"></div>
+    <h4 class="text-center">Chart wird geladen, bitte warten...</h4>
+</div>
+
 <div id="jqChart-wrapper" style="width: 100%; height: 800px;" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
 <a id="saveImg" class="btn btn-default" href="#" download="Chart.png">Speichern als Bild</a>
 <a id="saveCSV" class="btn btn-default" href="../datagross.csv" download="Daten.csv">Speichern als CSV</a>
@@ -1125,6 +1131,8 @@ $jsonselectsensor = json_encode($selectsensor);
 
         //Anzeigen! button on click
         $("#anzeigeButton").click(function(){
+            $('.loading-div, #anzeigeButton').toggle();
+            
             //die erste y-Achse (auf der linken Seite des Graphen) sollte zoom-enabled haben
             for(i=0;i<scalas.length;i++){
                 if(scalas[i].location == "left"){
@@ -1227,6 +1235,8 @@ $jsonselectsensor = json_encode($selectsensor);
                     type: 'shared'
                 }
             });
+            
+            $('.loading-div, #anzeigeButton').toggle();
 
             $('#jqChart-wrapper').bind('tooltipFormat', function (e, data) {
                 var result = "<b>Zeitpunkt: ";
