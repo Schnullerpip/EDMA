@@ -390,6 +390,10 @@ form .table#projektbeschreibungen {
     background-color: white;
 }
 
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #ededed;
+}
+
 
 /* Accordeon */
 /* ------------------------------- */
@@ -685,7 +689,7 @@ h2 small{
 
 /* Chart */
 /* ------------------------------- */
- 
+
 .tooltipTable th, td {
     padding-right: 10px;
 }

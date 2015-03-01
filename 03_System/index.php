@@ -368,7 +368,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 <div class="form-group">
                     <div class="col-xs-12">
                         <div class="table-responsive">
-                            <table id="scalaModalContent" class="table"></table>
+                            <table id="scalaModalContent" class="table table-striped"></table>
                         </div><!-- table-responsive end -->
                     </div>
                 </div>
@@ -1059,6 +1059,7 @@ $jsonselectsensor = json_encode($selectsensor);
         //in Modal click on "neue skala"
         $('#modalContentMenuButtonNewScala').click(function () {
             createNewScala();
+            $('#scalaModal').modal('handleUpdate');
         });
 
         //in Modal on change in modals inputs -> radiobuttons 
