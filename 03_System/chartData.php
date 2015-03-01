@@ -123,7 +123,7 @@ while ($row = $db->fetch()) {
     
     
 //foreach ($results as $index => $messung) {
-    $line .= $row->messwert;
+    $line .= "{$row->messwert};{$row->datum_uhrzeit}";
 //    fwrite($myfile, "index, count, Wert:{$index},{$count}, " . $row->messwert . "\n");
     if (($count === 1 || $index !== 0) && $index % $count === $count-1) {
         $line .= "\n";
