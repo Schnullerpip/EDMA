@@ -257,7 +257,7 @@ $jsonselectsensor = json_encode($selectsensor);
 </script>
 
 <h2>Einstellungen</h2>
-<div class="form-group">
+<div class="row form-group">
     <div class="col-sm-1 col-sm-offset-3">
        <div><label class="control-label">Schrittweite</label></div>
         <br>
