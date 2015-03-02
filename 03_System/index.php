@@ -1004,6 +1004,8 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
             scalas.push(new_scala);
+            $("#scalaTitelInput").val("");
+            $("#scalaEinheitInput").val("");
             regenerateScalaModal();
         }
     }
@@ -1225,12 +1227,10 @@ $jsonselectsensor = json_encode($selectsensor);
                         title: csvAsObj.serien[i],
                         markers: null,
                         data: csvAsObj.werte[i],
-                        axisY: scalas[csvAsObj.serien[i]],
+                        axisY: skalaMap[csvAsObj.serien[i]],
                         type: 'line'
                     });
                 }
-
-                console.log("CSV Daten sind fertig");
             });
 
             scalas_copy.push({
