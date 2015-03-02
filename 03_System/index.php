@@ -287,9 +287,9 @@ $jsonselectsensor = json_encode($selectsensor);
     <h4 class="text-center">Chart wird geladen, bitte warten...</h4>
 </div>
 
-<div id="jqChart-wrapper" style="width: 100%; height: 800px;" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
-<a id="saveImg" class="btn btn-default" href="#" download="Chart.png">Speichern als Bild</a>
-<a id="saveCSV" class="btn btn-default" href="../datagross.csv" download="Daten.csv">Speichern als CSV</a>
+<div id="jqChart-wrapper" style="width: 100%; height: 800px; display:none" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
+<a id="saveImg" style="display:none" class="btn btn-default" href="#" download="Chart.png">Speichern als Bild</a>
+<a id="saveCSV" style="display:none" class="btn btn-default" href="../datagross.csv" download="Daten.csv">Speichern als CSV</a>
 
 <!--Skala Modal -->
 <div id="scalaModal" class="modal fade" tabindex="-1" aria-hidden="true">
@@ -1156,8 +1156,6 @@ $jsonselectsensor = json_encode($selectsensor);
 
         //Anzeigen! button on click
         $("#anzeigeButton").click(function () {
-            $('.loading-div, #anzeigeButton').toggle();
-
             //Es wird eine Map benötigt in der schnell ausgelesen werden kann welch messreihen-sensor kmbination auf welche skala abgebildet werden soll
             var skalaMap = {};
             scalas_copy = [];
@@ -1195,6 +1193,13 @@ $jsonselectsensor = json_encode($selectsensor);
 
                 skalaMap[selected_sensors[i].messreihenname + " - " + selected_sensors[i].anzeigename] = selected_sensors[i].scala.name;
             }
+
+            //nun ist sichergestellt dass Sensoren ausgewählt wurden und jeder einer Skala zugewiesen wurde, deshalb kann nun das loading-div (spinner) getoggelt werden
+            $('.loading-div, #anzeigeButton').toggle();
+            //Außerdem kann nun das jqWrapper div angezeigt werden, sowie die Buttons zum Speichern des Graphen als img/csv
+            $("#jqChart-wrapper").show();
+            $("#saveImg").show();
+            $("#saveCSV").show();
 
             //die erste y-Achse (auf der linken Seite des Graphen) sollte zoom-enabled haben
             for (i = 0; i < scalas_copy.length; i++) {
