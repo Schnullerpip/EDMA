@@ -285,9 +285,11 @@ $jsonselectsensor = json_encode($selectsensor);
     </div>
 </div>
 
-<div id="jqChart-wrapper" style="width: 100%; height: 800px;" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
-<a id="saveImg" class="btn btn-default" href="#" download="Chart.png">Speichern als Bild</a>
-<a id="saveCSV" class="btn btn-default" href="../datagross.csv" download="Daten.csv">Speichern als CSV</a>
+<div id="jqChart-area" style="display: none;">
+    <div id="jqChart-wrapper" style="width: 100%; height: 800px;" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
+    <a id="saveImg" class="btn btn-default" href="#" download="Chart.png">Speichern als Bild</a>
+    <a id="saveCSV" class="btn btn-default" download="Daten.csv" target=_blank>Speichern als CSV</a>
+</div>
 
 <!--Skala Modal -->
 <div id="scalaModal" class="modal fade" aria-hidden="true">
@@ -1165,6 +1167,7 @@ $jsonselectsensor = json_encode($selectsensor);
             }
             console.log(data);
             console.log(skalaMap);
+            data.mode = "chart";
             
             var seriesData = [];
             $.ajax({
@@ -1203,6 +1206,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 }
             });
             
+            $('#jqChart-area').show();
             $('#jqChart-wrapper').jqChart({
                 title: {
                     text: $(this).data('title'),
@@ -1227,7 +1231,7 @@ $jsonselectsensor = json_encode($selectsensor);
                     type: 'shared'
                 }
             });
-
+            
             $('#jqChart-wrapper').bind('tooltipFormat', function (e, data) {
                 var result = "<b>Zeitpunkt: ";
                 if (data.constructor === Array) {
@@ -1248,6 +1252,34 @@ $jsonselectsensor = json_encode($selectsensor);
                     result += buildRowForSeriespoint(data);
                 }
                 return result;
+            });
+            
+            $('#saveImg').click(function() {
+                var image;
+                $("#jqChart-wrapper").find("canvas").each(function(index) {
+                    image = $(this)[0].toDataURL("image/png");
+                    // return false innerhalb each() ist wie continue
+                    return false;
+                });
+                $(this).attr("href", image);
+            });
+            
+            $('#saveCSV').click(function() {                
+                var url = "chartData.php?";
+                data.mode = "CSV";
+                for (key in data) {
+                    url += key;
+                    url += "=";
+                    
+                    // wenn value von key ein Array ist muss es erst in JSON umgewandelt werden
+                    if (data[key].constructor === Array) {
+                        url += encodeURIComponent(JSON.stringify(data[key]))
+                    } else {
+                        url +=encodeURIComponent(data[key]);
+                    }
+                    url += "&";
+                }
+                $(this).attr("href",url);
             });
         });
     });

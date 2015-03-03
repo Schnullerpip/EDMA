@@ -5,7 +5,14 @@ require_once 'core/init.php';
 $von = intval(Input::get("from"));
 $bis = intval(Input::get("to"));
 $step = intval(Input::get("step"));
-$paare = Input::get("pair");
+$modus = Input::get("mode");
+
+// bei CSV wird pair als JSON uebermittelt und muss erst konvertiert werden
+if ($modus === "CSV") {
+    $paare = json_decode(Input::get("pair"), true);
+} else {
+    $paare = Input::get("pair");
+}
 
 $db = DB::getInstance();
 
@@ -71,7 +78,7 @@ if ($db->error()) {
 $results = $db->results();
 $line = "";
 $first = true;
-// baue erste Zeile mit Namen
+// baue erste Zeile mit Namen aus messreihenname - anzeigename
 foreach ($results as $namen) {
     if ($first) {
         $first = false;
@@ -83,20 +90,17 @@ foreach ($results as $namen) {
 
 $line .= "\n";
 echo $line;
-//fwrite($myfile, $line);
 
 $sql = "SELECT * FROM messung "
         . "WHERE {$whereZeitpunkt} AND {$whereSensoren} "
         . "ORDER BY zeitpunkt, messreihe_id, sensor_id";
-//$db->query($sql);
         
-//if ($db->error()) {
 if (!$db->justquery($sql)) {
     echo "FEHLER MESSUNG!";
+    echo $sql;
     die();
 }
 
-//$results = $db->results();
 $count = count($paare);
 $line = "";
 $index = 0;
@@ -104,31 +108,41 @@ $positions = array();
 $sollPosition = 0;
 // echo pro Zeile, eine Zeile entspricht einem Zeitpunkt
 while ($row = $db->fetch()) {
+    // baue id fuer paar
     $id = "{$row->messreihe_id}{$row->sensor_id}";
+
     if (array_key_exists($id, $positions)) {
+        // pruefe ob id an ihrer sollPosition vorkommt, falls nicht hat eine
+        // frueheres Paar keine Datensaetz mehr und muss "simuliert" werden
         $delta = $positions[$id] - $sollPosition;
         if ($delta < 0) {
             $delta += $count;
         }
         if ($delta !== 0) {
-            // korrektur;
-//            fwrite($myfile, "Korrektur index, soll, delta:{$index},{$sollPosition}, {$delta}\n");
+            // korrektur: fuelle fehlende Daten auf, sodass alle paare gleich
+            // viele datensaetze haben
             $line .= correctData($delta, $count, $sollPosition);
             $sollPosition = $positions[$id];
             $index += $delta;
         }
     } else {
+        // weise jedem paar eine zielposition (=Spalte) im resultat zu
+        // else darf nur beim 1. durchlauf pro Paar eintreten
         $positions[$id] = count($positions);
     }
     
-    
-//foreach ($results as $index => $messung) {
-    $line .= "{$row->messwert};{$row->datum_uhrzeit}";
-//    fwrite($myfile, "index, count, Wert:{$index},{$count}, " . $row->messwert . "\n");
+    // fuer CSV export nur messwerte ausgeben, sonst messwert und datum_uhrzeit
+    if ($modus === "CSV") {
+        $line .= $row->messwert;
+    } else {
+        $line .= "{$row->messwert};{$row->datum_uhrzeit}";
+    }
+
+    // wenn mehr als ein paar existiert, darf index nicht 0 sein ansonsten
+    // wuerde nach dem 1. Datensatz eine falscher Zeilenumbruch ausgegeben
     if (($count === 1 || $index !== 0) && $index % $count === $count-1) {
         $line .= "\n";
         echo $line;
-//        fwrite($myfile, $line);
         $line = "";
     } else {
         $line .= ",";
@@ -139,6 +153,7 @@ while ($row = $db->fetch()) {
 }
 
 if ($line) {
+    // Wenn line nicht leer ist haben die Paare unterschiedlich viele Datensaetze
     for (; $sollPosition < $count; ++$sollPosition) {
         $line .= "";
         if ($sollPosition !== $count-1) {
@@ -148,7 +163,6 @@ if ($line) {
         }
     }
     echo $line;
-//    fwrite($myfile, $line);
 }
 
 function correctData($delta, $count, $sollPosition) {

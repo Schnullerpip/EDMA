@@ -249,13 +249,13 @@ function parseCSV(csvAsString, data) {
     };
 };
     
-    function buildRowForSeriespoint(point) {
-        var result = "<tr>";
-        var series = point.series;
-        result += "<td><span style='color:" + series.fillStyle + "'>" + series.title + "</span>:</td>";
-        result += "<td><b>" + point.y + "</b></td>";
-        result += "<td>" + point.dataItem[2] + "</td>";
-        result += "<td>" + point.dataItem[3] + "</td>\n";
+function buildRowForSeriespoint(point) {
+    var result = "<tr>";
+    var series = point.series;
+    result += "<td><span style='color:" + series.fillStyle + "'>" + series.title + "</span>:</td>";
+    result += "<td><b>" + point.y + "</b></td>";
+    result += "<td>" + point.dataItem[2] + "</td>";
+    result += "<td>" + point.dataItem[3] + "</td>\n";
 
-        return result;
-    };
+    return result;
+};
