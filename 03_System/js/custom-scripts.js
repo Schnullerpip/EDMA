@@ -221,39 +221,41 @@ function convertArray(possibleArray) {
 }
 
 function parseCSV(csvAsString, data) {
-        var rows = csvAsString.split("\n");
-        var i, j, x, serien = [], werte = [];
-        x = data.from;
-        for (i = 0; i < rows.length; ++i) {
-            var cols = rows[i].split(",");
-            if (cols.length === 0 || cols[0].length === 0) {
-                continue;
-            }
-            for (j = 0; j < cols.length; ++j) {
-                if (i === 0) {
-                    //header
-                    serien.push(cols[j].trim());
-                    werte[j] = []; //new Array(rows.length - 2);
-                } else {
-                    werte[j].push([x, parseFloat(cols[j]), "25.02.2015", "11:10:00.12345"]);
-                }
-            }
-            x += data.step;
+    var rows = csvAsString.split("\n");
+    var i, j, x, serien = [], werte = [];
+    x = data.from;
+    for (i = 0; i < rows.length; ++i) {
+        var cols = rows[i].split(",");
+        if (cols.length === 0 || cols[0].length === 0) {
+            continue;
         }
-        
-        return {
-            serien: serien,
-            werte: werte
-        };
-    };
-    
-    function buildRowForSeriespoint(point) {
-        var result = "<tr>";
-        var series = point.series;
-        result += "<td><span style='color:" + series.fillStyle + "'>" + series.title + "</span>:</td>";
-        result += "<td><b>" + point.y + "</b></td>";
-        result += "<td>" + point.dataItem[2] + "</td>";
-        result += "<td>" + point.dataItem[3] + "</td>\n";
+        for (j = 0; j < cols.length; ++j) {
+            if (i === 0) {
+                //header
+                serien.push(cols[j].trim());
+                werte[j] = []; //new Array(rows.length - 2);
+            } else {
+                var cell = cols[j].split(";");
+                var datum_uhrzeit = cell[1].split(" ");
+                werte[j].push([x, parseFloat(cell[0]), datum_uhrzeit[0], datum_uhrzeit[1]]);
+            }
+        }
+        x += data.step;
+    }
 
-        return result;
+    return {
+        serien: serien,
+        werte: werte
     };
+};
+    
+function buildRowForSeriespoint(point) {
+    var result = "<tr>";
+    var series = point.series;
+    result += "<td><span style='color:" + series.fillStyle + "'>" + series.title + "</span>:</td>";
+    result += "<td><b>" + point.y + "</b></td>";
+    result += "<td>" + point.dataItem[2] + "</td>";
+    result += "<td>" + point.dataItem[3] + "</td>\n";
+
+    return result;
+};
