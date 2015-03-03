@@ -116,15 +116,15 @@ if (Input::itemExists('projekt_cancel')) {
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="index.php">EDMA</a>
+                    <a class="navbar-brand" href="index">EDMA</a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <?php if ($projekt->isLoggedIn()) : ?>
                         <ul class="nav navbar-nav">
-                            <li><a href="index.php">Startseite</a></li>
-                            <li><a href="projekt.php">Projektverwaltung</a></li>
+                            <li><a href="index">Startseite</a></li>
+                            <li><a href="projekt">Projektverwaltung</a></li>
                             <?php if ($projekt->isMaster()) : ?>
-                                <li><a href="messreihen.php">Messreihenverwaltung</a></li>
+                                <li><a href="messreihen">Messreihenverwaltung</a></li>
                             <?php endif; ?>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">

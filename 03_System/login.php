@@ -19,16 +19,16 @@ if (Input::exists()) {
 
             if ($login) {
                 if (Input::get('projekt') === 'new') {
-                    Redirect::to('projekt.php');
+                    Redirect::to('projekt');
                 } else {
-                    Redirect::to('index.php');
+                    Redirect::to('index');
                 }
             } else {
                 Session::flash('error', 'Sie haben ein falsches Passwort eingegeben oder keine Berechtigungen!');
                 Session::flash('inputProjekt', Input::get('projekt'));
                 
                 // Auskommentieren, um Weiterleitung zu verhindern und Fehler anzuzeigen
-                Redirect::to('login.php');
+                Redirect::to('login');
             }
         } else {
             foreach ($validation->errors() as $error) {

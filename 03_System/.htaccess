@@ -1,0 +1,15 @@
+RewriteEngine on
+
+RewriteRule ^\.htaccess$ - [F]
+
+RewriteRule ^login$ login.php [NC,L]
+
+RewriteRule ^logout$ logout.php [NC,L]
+
+RewriteRule ^index$ index.php [NC,L]
+
+RewriteRule ^projekt$ projekt.php [NC,L]
+
+RewriteRule ^messreihen$ messreihen.php
+RewriteRule ^messreihen/neu$ messreihen.php?id=neu
+RewriteRule ^messreihen/([0-9]+)$ messreihen.php?id=$1

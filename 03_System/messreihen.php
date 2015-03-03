@@ -81,7 +81,7 @@ if (Input::exists('post')) {
             <hr>
             <div class="form-group">
                 <div class="col-sm-5 col-sm-offset-4">
-                    <a href="messreihen.php" type="button" class="btn btn-default">Zurück zur Übersicht</a>
+                    <a href="messreihen" type="button" class="btn btn-default">Zurück zur Übersicht</a>
                 </div>
             </div>
         </form>
@@ -228,7 +228,7 @@ if (Input::exists('post')) {
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-5">
                         <button type="submit" class="btn btn-default">Speichern</button>
-                        <a href="messreihen.php" class="btn btn-link">Abbrechen</a>
+                        <a href="messreihen" class="btn btn-link">Abbrechen</a>
                     </div>
                 </div>
             </form>
