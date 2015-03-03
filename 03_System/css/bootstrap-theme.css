@@ -12,7 +12,6 @@ label {
     font-family: 'RobotoMedium', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-
 /* General Stuff */
 /* ------------------------------- */
 
@@ -61,6 +60,10 @@ body {
 
 h2 {
     margin-bottom: 25px;
+}
+
+.heading {
+    margin-bottom: 30px;
 }
 
 /* Helpers */
@@ -204,7 +207,7 @@ a:active,
     overflow: hidden;
     border: none;
     max-height: 400px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 .btn-group.open .dropdown-toggle {
     -webkit-box-shadow: none;
@@ -390,6 +393,10 @@ form .table#projektbeschreibungen {
     background-color: white;
 }
 
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #ededed;
+}
+
 
 /* Accordeon */
 /* ------------------------------- */
@@ -571,17 +578,13 @@ h2 small{
 
 
 /*damit chrome funktioniert*/
-#messreihenListe small, span {
+#messreihenListe  small, span {
     pointer-events: none;
 }
 
 /*für das skalen-modal*/
-.scalaModalInput {
-    width:50%;
-}
-
 .modal-content input {
-    border-color: black;
+    border-color: #224565;
 }
 
 .modal-header>input:first-of-type {
@@ -589,8 +592,7 @@ h2 small{
 }
 
 .modal-content select{
-    border-color: black;
-    width:50px;
+    border-color: #224565;
 }
 
 
@@ -600,10 +602,6 @@ h2 small{
 }
 .anzeigeButtonDiv {
     padding-top:10px;
-}
-
-#anzeigeButton {
-    width:50%;
 }
 
 
@@ -633,26 +631,13 @@ h2 small{
 /* ------------------------------- */
 
 .popover {
-    padding: 0;
-    border-color: white;
-    background-color: transparent;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    color: white;
+    color: #224565;
     width: 300px;
 }
 
-.popover .popover-title {
-    background-color: #224565;
-    border-bottom: none;
-    color: white;
-}
-
-.popover.right > .arrow {
-    border-right-color: white;
-}
-.popover.right > .arrow:after {
-    border-right-color: #36a7eb;
+.popover .popover-title,
+.popover a {
+    color: #224565;
 }
 
 
@@ -669,7 +654,7 @@ h2 small{
 /* ------------------------------- */
 
 .modal {
-    color: black;
+    color: #224565;;
 }
 
 .modal .modal-body .success {
@@ -690,7 +675,7 @@ h2 small{
 
 /* Chart */
 /* ------------------------------- */
- 
+
 .tooltipTable th, td {
     padding-right: 10px;
 }
@@ -858,3 +843,29 @@ h2 small{
 
 .scrollbar-inner > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_size { left: -12px; }
 .scrollbar-inner > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_size { top: -12px; }
+
+/* Spinner für Wartezeit bei Import/Graph */
+/* -------------------------------------- */
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner {
+  width: 75px;
+  height: 75px;
+  margin: 5rem auto;
+  border-radius: 50%;
+  border: 10px solid transparent;
+  border-bottom: 10px solid white;
+  border-top: 10px solid white;
+  animation-duration: 1.8s;
+  animation-name: spin;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}

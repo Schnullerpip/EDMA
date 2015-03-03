@@ -174,7 +174,8 @@ class UploadController extends AjaxController {
                 if (count($parser->errors()) == 0) {
                     $this->_succeeded[] = array(
                         'Dateiname' => $this->_files['file']['name'][0],
-                        'Import beendet' => 'Die Datei wurde erfolgreich importiert!'
+                        'Import beendet' => 'Die Datei wurde erfolgreich importiert!',
+                        'messreiheID' => $parser->getID()
                     );
                 }
                 else {

@@ -343,4 +343,8 @@ class Parser {
     public function warnings() {
         return $this->_warning;
     }
+    
+    public function getID() {
+        return $this->_messreiheID;
+    }
 }
