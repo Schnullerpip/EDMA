@@ -813,7 +813,7 @@ $jsonselectsensor = json_encode($selectsensor);
         }
         $("#messreihenListe").html(replace_string.join(""));
 
-        if (selected_sensors.length > 0) {
+        if (lookup_selected_messreihe != null) {
             showSensorsOf(lookup_selected_messreihe);
         } else {
             showSensorsOf(messreihen_copy[0].messreihenname);
