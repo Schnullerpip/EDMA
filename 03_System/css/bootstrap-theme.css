@@ -578,7 +578,11 @@ h2 small{
 
 
 /*damit chrome funktioniert*/
-#messreihenListe  small, span {
+#messreihenListe button small,
+#messreihenListe button span,  
+#sensorenListe button small,  
+#skalenListe button span,  
+{
     pointer-events: none;
 }
 
