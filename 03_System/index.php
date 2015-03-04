@@ -289,7 +289,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 <div id="jqChart-wrapper" style="width: 100%; height: 800px; display:none" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
 <a id="saveImg" style="display:none" class="btn btn-default" href="#" download="Chart.png">Speichern als Bild</a>
-<a id="saveCSV" style="display:none" class="btn btn-default" href="../datagross.csv" download="Daten.csv">Speichern als CSV</a>
+<a id="saveCSV" style="display:none" class="btn btn-default" download="Daten.csv" target=_blank>Speichern als CSV</a>
 
 <!--Skala Modal -->
 <div id="scalaModal" class="modal fade" tabindex="-1" aria-hidden="true">
@@ -1211,6 +1211,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 }
             }
 
+            data.mode = "chart";
             var seriesData = [];
             $.ajax({
                 url: "./chartData.php",
@@ -1293,6 +1294,34 @@ $jsonselectsensor = json_encode($selectsensor);
                     result += buildRowForSeriespoint(data);
                 }
                 return result;
+            });
+            
+            $('#saveImg').click(function() {
+                var image;
+                $("#jqChart-wrapper").find("canvas").each(function(index) {
+                    image = $(this)[0].toDataURL("image/png");
+                    // return false innerhalb each() ist wie continue
+                    return false;
+                });
+                $(this).attr("href", image);
+            });
+            
+            $('#saveCSV').click(function() {                
+                var url = "chartData.php?";
+                data.mode = "CSV";
+                for (key in data) {
+                    url += key;
+                    url += "=";
+                    
+                    // wenn value von key ein Array ist muss es erst in JSON umgewandelt werden
+                    if (data[key].constructor === Array) {
+                        url += encodeURIComponent(JSON.stringify(data[key]))
+                    } else {
+                        url +=encodeURIComponent(data[key]);
+                    }
+                    url += "&";
+                }
+                $(this).attr("href",url);
             });
         });
     });
