@@ -287,9 +287,11 @@ $jsonselectsensor = json_encode($selectsensor);
     <h4 class="text-center">Chart wird geladen, bitte warten...</h4>
 </div>
 
+
 <div id="jqChart-wrapper" style="width: 100%; height: 800px; display:none" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
-<a id="saveImg" style="display:none" class="btn btn-default" href="#" download="Chart.png">Speichern als Bild</a>
-<a id="saveCSV" style="display:none" class="btn btn-default" download="Daten.csv" target=_blank>Speichern als CSV</a>
+
+<a id="saveImg" style="display:none" class="btn btn-default" href="#">Speichern als Bild</a>
+<a id="saveCSV" style="display:none" class="btn btn-default" target=_blank href="../datagross.csv">Speichern als CSV</a>
 
 <!--Skala Modal -->
 <div id="scalaModal" class="modal fade" tabindex="-1" aria-hidden="true">
@@ -1032,6 +1034,13 @@ $jsonselectsensor = json_encode($selectsensor);
     $(function () {
 
         regenerateDocument();
+
+        //den Downloadbuttons den richtigen Titel usw. geben
+        var projekt_name = "<?php echo escape($projekt->data()->projektname); ?>";
+        var curr_date = new Date();
+        var curr_time = curr_date.getDate()+"/"+(curr_date.getMonth()+1)+"/"+curr_date.getFullYear()+" @"+curr_date.getHours()+":"+curr_date.getMinutes()+":"+curr_date.getSeconds();
+        $("#saveImg").attr("download", "Chart - "+projekt_name+" on "+curr_time+".png"); 
+        $("#saveCSV").attr("download", "Data - "+projekt_name+" on "+curr_time+".csv"); 
 
         $('#meta_select_button').click(function () {
             $("#meta_name_operator_div").parent().show();
