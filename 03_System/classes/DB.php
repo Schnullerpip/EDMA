@@ -320,7 +320,8 @@ class DB {
     }
 
     public function first() {
-        return $this->results()[0];
+        $resultSet = $this->results();
+        return $resultSet[0];
     }
 
     public function error() {

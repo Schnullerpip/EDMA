@@ -135,7 +135,7 @@ var app = app || {};
                     if (typeof o.options.error === 'function') {
                         console.log("status:" + this.status);
                         console.log(this.repsonse);
-                        o.options.error(uploaded.failed = "Prozessor Skript ungültig.");
+                        o.options.error("Prozessor Skript ungültig.");
                     }
                 }
             }

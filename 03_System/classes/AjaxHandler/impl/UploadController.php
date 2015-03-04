@@ -102,7 +102,7 @@ class UploadController extends AjaxController {
             
             if (array_key_exists($fileName, $uploadedFiles)) {
                 // Datei wurde gerade hochgeladen
-                $this->_succeeded[] = ["skipped"];
+                $this->_succeeded[] = array("skipped");
                 continue;
             }
             
@@ -118,7 +118,7 @@ class UploadController extends AjaxController {
                 // Pruefen ob Datei schon in der DB und damit schon in der Liste ist
                 $sql = 'SELECT id FROM anhang WHERE projekt_id = ? and dateiname = ?';
                 
-                if ($this->_db->query($sql, [$id, $fileName])->count() === 0) {
+                if ($this->_db->query($sql, array($id, $fileName))->count() === 0) {
                     // Noch nicht in der Liste
                     $refreshList = true;
                 }

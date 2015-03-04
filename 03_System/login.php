@@ -1,5 +1,5 @@
 <?php
-require_once 'header.php';
+require_once 'preHeader.php';
 
 $projekt->logout();
 
@@ -37,6 +37,7 @@ if (Input::exists()) {
         }
     }
 }
+require_once 'header.php';
 ?>
 
 <div class="row">

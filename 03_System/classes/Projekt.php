@@ -37,7 +37,8 @@ class Projekt {
     private function find($projekt = null) {
         if ($projekt) {
             if ($projekt === 'new') {
-                $this->_data->id = 'Neues Projekt';
+                $tmpData = array('id' => 'Neues Projekt');
+                $this->_data = (object) $tmpData;
 
                 return true;
             } else {
@@ -96,7 +97,7 @@ class Projekt {
     }
 
     public function exists() {
-        return (!empty($this->data())) ? true : false;
+        return !is_null($this->data());
     }
 
     public function logout() {
