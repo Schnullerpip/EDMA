@@ -187,7 +187,7 @@ class UploadController extends AjaxController {
                 
                 if (count($parser->warnings()) != 0) {
                     $this->_warned[] = array_merge($parser->warnings(), array(
-                        'Warnung' => "Import wird bei ignoriertem Pflichtfeld abgebrochen."
+                        'Info' => "Import wird nur bei ignoriertem/fehlendem Pflichtfeld (Name, Datum) abgebrochen."
                     ));
                 }
             } else {

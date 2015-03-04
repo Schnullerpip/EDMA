@@ -218,7 +218,19 @@ class Parser {
         $messdaten = array_slice($messdaten, 1);    // array_slice() löscht erstes Element, da leer aufgrund von explode(###)
 
         $spaltennamen = preg_split("/:[\t]?/", $messdaten[0]);
+        
         $spaltenanzahl = count($spaltennamen) - 1;   // letztes Element leer aufgrund der preg_split-Bedingung
+        if ($spaltenanzahl > 1) {
+            if ($spaltennamen[0] != "Datum") {     // 1. Spalte der Messungen muss Datum sein
+                $this->throwMessException("Die 1. Spalte der Messungen lautet nicht Datum sondern: " . $spaltennamen[0]);
+            }
+            if ($spaltennamen[1] != "Uhrzeit") {       // 2. Spalte der Messungen muss Uhrzeit sein
+                $this->throwMessException("Die 2. Spalte der Messungen lautet nicht Uhrzeit sondern: " . $spaltennamen[1]);
+            }
+            if ($spaltenanzahl < 3) {   // wenn kleiner 3, dann Fehler, da mindestens ein Sensor vorhanden sein muss (plus Datum und Uhrzeit)
+                $this->throwMessException("Keine Sensoren(-Namen) vorhanden, nur Datum und Uhrzeit");
+            }
+        }
         
         // insert sensor und messreihe_sensor
         $sensor_id_array = array();
