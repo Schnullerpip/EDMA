@@ -1277,13 +1277,14 @@ $jsonselectsensor = json_encode($selectsensor);
             $('#jqChart-wrapper').bind('tooltipFormat', function (e, data) {
                 var result = "<b>Zeitpunkt: ";
                 if (data.constructor === Array) {
-                    result += data[0].x + "</b><br>\n" +
+                    var xValue = data[0].x
+                    result += xValue + "</b><br>\n" +
                             "<table id='tooltipTable'>\n" +
                             "<tr><th>Serie</th><th>Wert</th><th>Datum</th><th>Uhrzeit</th></tr>\n";
 
                     var i;
                     for (i = 0; i < data.length; ++i) {
-                        result += buildRowForSeriespoint(data[i]);
+                        result += buildRowForSeriespoint(data[i], xValue);
                     }
 
                     result += "</table>";

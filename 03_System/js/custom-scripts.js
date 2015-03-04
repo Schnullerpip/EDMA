@@ -240,7 +240,10 @@ function parseCSV(csvAsString, data) {
                 werte[j].push([x, parseFloat(cell[0]), datum_uhrzeit[0], datum_uhrzeit[1]]);
             }
         }
-        x += data.step;
+        if (i > 0) {
+            // erst ab 2. Zeile X-Werte hochzaehlen (1 === 0 ist header)
+            x += data.step;
+        }
     }
 
     return {
@@ -249,13 +252,25 @@ function parseCSV(csvAsString, data) {
     };
 };
     
-function buildRowForSeriespoint(point) {
+function buildRowForSeriespoint(point, assertedX) {
     var result = "<tr>";
     var series = point.series;
     result += "<td><span style='color:" + series.fillStyle + "'>" + series.title + "</span>:</td>";
-    result += "<td><b>" + point.y + "</b></td>";
-    result += "<td>" + point.dataItem[2] + "</td>";
-    result += "<td>" + point.dataItem[3] + "</td>\n";
-
+    
+    var y, date, time;
+    if (point.x !== assertedX) {
+        // falls x Werte ableichen muessen die Daten "korrigiert" werden
+        var rightData = series.arrData[assertedX];
+        y = rightData[1];
+        date = rightData[2];
+        time = rightData[3];
+    } else {
+        y = point.y;
+        date = point.dataItem[2];
+        time = point.dataItem[3];
+    }
+    result += "<td><b>" + y + "</b></td>";
+    result += "<td>" + date + "</td>";
+    result += "<td>" + time + "</td>\n";
     return result;
 };
