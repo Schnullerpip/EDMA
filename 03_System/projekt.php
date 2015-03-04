@@ -140,12 +140,12 @@ if ($projekt->isMaster() && Input::exists()) {
                 }
             } catch (Exception $ex) {
                 Session::flash('error', $ex->getMessage());
-                Redirect::to('projekt.php');
+                Redirect::to('projekt');
             }
 
             if ($newProjekt) {
                 Session::flash('success', 'Projekt erfolgreich angelegt!');
-                Redirect::to('index.php');
+                Redirect::to('index');
             }
         } else {
             $message = "";
@@ -154,7 +154,7 @@ if ($projekt->isMaster() && Input::exists()) {
             }
             if (!Session::exists('error')) {
                 Session::flash('error', $message);
-                Redirect::to('projekt.php');
+                Redirect::to('projekt');
             }
         }
     }
