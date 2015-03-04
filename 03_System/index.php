@@ -716,7 +716,7 @@ $jsonselectsensor = json_encode($selectsensor);
             $('#infoModal').modal();
             return false;
         } else if ((datatype == "datum") && !(/[0-9]{4}-[0-9]{2}-[0-9]{2}$/).test(value)) {
-            modalTextWarning("Ein Datum sollte von der Form yyy-mm-dd sein!");
+            modalTextWarning("Ein Datum sollte von der Form yyyy-mm-dd sein!");
             $('#infoModal').modal();
             return false;
         }
