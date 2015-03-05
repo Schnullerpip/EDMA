@@ -1021,6 +1021,10 @@ $jsonselectsensor = json_encode($selectsensor);
         }
         return true;
     }
+    
+    function isInt(value) {
+        return /^\d+$/.test(value);
+   }
     //-----------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -1097,17 +1101,35 @@ $jsonselectsensor = json_encode($selectsensor);
 
         //stepInput on change
         $("#stepInput").change(function (e) {
-            step = parseInt($(e.target).val());
+            step = $(e.target).val();
+            if(!isInt(step)){
+                step = 1;
+                $("#stepInput").val("");
+                modalTextWarning("Schrittweite muss als positive ganze Zahl eingegeben werden... Bitte erst berichtigen");
+                $('#infoModal').modal();
+            }
         });
 
         //intervallInput1 on change
         $("#intervallInput1").change(function (e) {
-            intervall1 = parseInt($(e.target).val());
+            intervall1 = $(e.target).val();
+            if(!isInt(intervall1)){
+                intervall1 = 0;
+                $("#intervallInput1").val("");
+                modalTextWarning("Von muss als positive ganze Zahl eingegeben werden... Bitte erst berichtigen");
+                $('#infoModal').modal();
+            }
         });
 
         //intervallInput2 on change
         $("#intervallInput2").change(function (e) {
-            intervall2 = parseInt($(e.target).val());
+            intervall2 = $(e.target).val();
+            if(!isInt(intervall2)){
+                intervall2 = 0;
+                $("#intervallInput2").val("");
+                modalTextWarning("Bis muss als positive ganze Zahl eingegeben werden... Bitte erst berichtigen");
+                $('#infoModal').modal();
+            }
         });
 
         //einstellungenInputDiv loses focus
