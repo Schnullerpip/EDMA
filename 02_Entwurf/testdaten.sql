@@ -36,15 +36,15 @@ VALUES ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `
 ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), 'Trichter Mitte'),
 ((SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), (SELECT id FROM `sensor` WHERE sensorname = 'Trichter 4'), 'Trichter Abluft');
 
-INSERT INTO `messung` (sensor_id, messreihe_id, zeitpunkt, messwert, datum_uhrzeit)
-VALUES ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.882503, '2014-10-14 12:30:01'),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.379281, '2014-10-14 13:30:02'),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.378268, '2014-10-14 12:30:03'),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.980477, '2014-10-14 12:30:01'),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.865348, '2014-10-14 12:30:02'),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.981266, '2014-10-14 12:30:03'),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.999486, '2014-10-14 12:30:01'),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.998877, '2014-10-14 12:30:02'),
-       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.789654, '2014-10-14 12:30:03');
+INSERT INTO `messung` (sensor_id, messreihe_id, zeitpunkt, messwert, datum_uhrzeit, mikrosekunden)
+VALUES ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.882503, '2014-10-14 12:30:01', '123456'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.379281, '2014-10-14 13:30:02', '123450'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 1'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.378268, '2014-10-14 12:30:03', '123400'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.980477, '2014-10-14 12:30:01', '000123'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.865348, '2014-10-14 12:30:02', '012300'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 2'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.981266, '2014-10-14 12:30:03', '120000'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 1, 22.999486, '2014-10-14 12:30:01', '012345'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 2, 22.998877, '2014-10-14 12:30:02', '100000'),
+       ((SELECT id FROM `sensor` WHERE sensorname = 'Trichter 3'), (SELECT id FROM `messreihe` ORDER BY id DESC LIMIT 1), 3, 22.789654, '2014-10-14 12:30:03', '123456');
 
 

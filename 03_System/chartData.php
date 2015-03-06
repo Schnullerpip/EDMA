@@ -143,7 +143,7 @@ while ($row = $db->fetch()) {
     if ($modus === "CSV") {
         $line .= $row->messwert;
     } else {
-        $line .= "{$row->messwert};{$row->datum_uhrzeit}";
+        $line .= "{$row->messwert};{$row->datum_uhrzeit}.{$row->mikrosekunden}";
     }
 
     // wenn mehr als ein paar existiert, darf index nicht 0 sein ansonsten
