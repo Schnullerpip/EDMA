@@ -47,11 +47,8 @@ if ($step === 1) {
     }
 } else {
     if($bis === 0){
-        $db->query("SELECT MAX(zeitpunkt) FROM `messung` WHERE {$whereSensoren}");//hol max wert der selectedSensors  
-        $tmp_bis = $db->results();
-        $bis = get_object_vars($tmp_bis[0]);
-        $bis = intval($bis["MAX(zeitpunkt)"]);
-        
+        $db->query("SELECT MAX(zeitpunkt) as max_zeitpunkt FROM `messung` WHERE {$whereSensoren}");//hol max wert der selectedSensors  
+        $bis = intval($db->first()->max_zeitpunkt);
     }
     // zeitpunkte (n,n,....,n) als string fuer IN Operator
     $zeitpunkte = "(";

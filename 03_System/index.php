@@ -1102,34 +1102,37 @@ $jsonselectsensor = json_encode($selectsensor);
         //stepInput on change
         $("#stepInput").change(function (e) {
             step = $(e.target).val();
-            if(!isInt(step)){
+            if(step && !isInt(step)){
                 step = 1;
                 $("#stepInput").val("");
                 modalTextWarning("Schrittweite muss als positive ganze Zahl eingegeben werden... Bitte erst berichtigen");
                 $('#infoModal').modal();
             }
+            step = parseInt(step);
         });
 
         //intervallInput1 on change
         $("#intervallInput1").change(function (e) {
             intervall1 = $(e.target).val();
-            if(!isInt(intervall1)){
+            if(intervall1 && !isInt(intervall1)){
                 intervall1 = 0;
                 $("#intervallInput1").val("");
                 modalTextWarning("Von muss als positive ganze Zahl eingegeben werden... Bitte erst berichtigen");
                 $('#infoModal').modal();
             }
+            intervall1 = parseInt(intervall1);
         });
 
         //intervallInput2 on change
         $("#intervallInput2").change(function (e) {
             intervall2 = $(e.target).val();
-            if(!isInt(intervall2)){
+            if(intervall2 && !isInt(intervall2)){
                 intervall2 = 0;
                 $("#intervallInput2").val("");
                 modalTextWarning("Bis muss als positive ganze Zahl eingegeben werden... Bitte erst berichtigen");
                 $('#infoModal').modal();
             }
+            intervall2 = parseInt(intervall2);
         });
 
         //einstellungenInputDiv loses focus
