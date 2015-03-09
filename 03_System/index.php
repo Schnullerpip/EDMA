@@ -821,10 +821,14 @@ $jsonselectsensor = json_encode($selectsensor);
         $("#messreihenListe").html(replace_string.join(""));
 
         if (lookup_selected_messreihe != null) {
-            showSensorsOf(lookup_selected_messreihe);
-        } else {
-            showSensorsOf(messreihen_copy[0].messreihenname);
+            for(i=0;i<messreihen_copy.length;i++){
+                if(messreihen_copy[i].messreihenname == lookup_selected_messreihe){
+                    showSensorsOf(lookup_selected_messreihe);
+                    return;
+                }
+            }
         }
+        showSensorsOf(messreihen_copy[0].messreihenname);
     }
 
 
@@ -866,6 +870,9 @@ $jsonselectsensor = json_encode($selectsensor);
         $("#sensorenListe").html(sensors_string.join(""));
         $("#skalenListe").html(scalas_string.join(""));
         $("#smallSensoren").html("Sensoren -> " + arg);
+
+        $("#messreihenListe button").css("border", "1px solid white");
+        $("#messreihenListe button[data-messreihe='"+arg+"']").css("border", "2px solid white");
     }
 
 
@@ -1055,10 +1062,6 @@ $jsonselectsensor = json_encode($selectsensor);
             $("#meta_name_operator_div").parent().show();
             addMeta();
             $(this).blur();
-        });
-
-        $('#meta_value_div').on("change", ".valueField", function (e) {
-            evaluateAllFilters();
         });
 
         $('#meta_value_div').keypress(function (e) {
