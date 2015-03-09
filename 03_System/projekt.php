@@ -1,5 +1,5 @@
 <?php
-require_once 'header.php';
+require_once 'preHeader.php';
 
 if ($projekt->isMaster() && Input::exists()) {
     if (Token::check(Input::get('token'))) {
@@ -167,6 +167,7 @@ if (is_object($projekt->data())) {
 } else {
     $projektbeschreibungen = array();
 }
+require_once 'header.php';
 ?>
 
 <?php if (!$projekt->isMaster()) : ?>
@@ -265,12 +266,14 @@ if (is_object($projekt->data())) {
         <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
         <div class="form-group">
             <div class="col-sm-offset-4 col-sm-5">
+                <?php if (is_object($projekt->data())) : ?>
                 <button data-toggle="modal" data-target="#delete-modal"class="btn btn-link no-padding" 
                         data-element="projekt" data-redirect="logout" type="button"
                         data-id="<?php echo escape($projekt->data()->id); ?>"
                         title="Projekt &quot;<?php echo escape($projekt->data()->projektname); ?>&quot; l&ouml;schen">
                     Dieses Projekt l&ouml;schen
                 </button>
+                <?php endif; ?>
             </div>
         </div>
         <div class="form-group">

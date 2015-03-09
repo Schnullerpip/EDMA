@@ -7,9 +7,9 @@
  */
 abstract class AjaxController {
 
-    public $_succeeded = [];
-    public $_warned = [];
-    public $_failed = [];
+    public $_succeeded = array();
+    public $_warned = array();
+    public $_failed = array();
 
     public function toString($ajax) {
         if ($ajax !== '') {

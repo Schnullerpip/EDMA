@@ -8,7 +8,7 @@ if (Input::itemExists('id')) {
     $db = DB::getInstance();
 
     try {
-        $data = $db->get("anhang", ['id', '=', $id])->first();
+        $data = $db->get("anhang", array('id', '=', $id))->first();
 
         header("Content-length: $data->groesse");
         header("Content-type: $data->dateityp");

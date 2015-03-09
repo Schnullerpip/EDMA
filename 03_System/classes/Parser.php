@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Description of Parser
  *
@@ -14,7 +15,7 @@
  * @author phwachte
  */
 class Parser {
-    
+
     private $_file;
     private $_db;
     private $_projektID;
@@ -22,17 +23,17 @@ class Parser {
     private $_error = array();
     private $_warning = array();
     private $_zeilennummerMessdaten;
-    
+
     public function __construct($file, $projekt_id) {
         $this->_file = $file;
         $this->_db = DB::getInstance();
         $this->_projektID = $projekt_id;
         $this->parse();
     }
-    
+
     private function parse() {
         $stringFile = file_get_contents($this->_file);
-        
+
         $charset = mb_detect_encoding($stringFile, "UTF-8, ISO-8859-1");
         // falls Datei in ISO Format ist muss konvertiert werden.
         // falls weitere charsets vorkommen muss iconv() statt utf8_encode benutzt werden
@@ -41,16 +42,16 @@ class Parser {
         }
         $stringFile = str_replace("\r", "", $stringFile);
         $stringFile = explode("###", $stringFile);
-        if (count($stringFile) == 1) {
+        if (count($stringFile) != 2) {
             $this->_error = array(
-                'Fehler' => "Trennzeichen'###' nicht vorhanden!",
+                'Fehler' => "Trennzeichen '###' nicht oder mehrfach vorhanden!",
                 'ABBRUCH' => "Import abgebrochen!"
             );
             return;
         }
-        $metadaten = $stringFile[0];        
+        $metadaten = $stringFile[0];
         $messdaten = $stringFile[1];
-        
+
         $this->_db->beginTransaction();
         try {
             $this->parseMetaDaten($metadaten);
@@ -70,27 +71,27 @@ class Parser {
         }
         $this->_db->commit();
     }
-    
-    private function parseMetaDaten($metadaten) {        
+
+    private function parseMetaDaten($metadaten) {
         // Metanamen besteht aus beliebiger Anzahl von Buchstaben, Ziffern, 
         // Leerzeichen, Prozentzeichen, Gradzeichen, Slash, Minuszeichen und am
         // Ende Unterstrich mit Datentyp (_d, _n oder _s)
         $metaNamePattern = "([\p{L}\p{N} \x{00B0}\x{0025}/\-]+)_([dns])";
-        
+
         // String Pattern 
         // nach s:\t beliebige Anzahl von Buchstaben \p{L}, Ziffern \p{N}, Punkt,
         // Leerzeichen, Komma, Unterstrich, Slash, Minuszeichen
         $stringPattern = "((?<=s:\t)[\p{L}\p{N}\. ,_/\-]+)";
-        
+
         // Datum Pattern
         // nach d:\t DD.MM.YYYY
         $datePattern = "((?<=d:\t)\p{N}{2}\.\p{N}{2}\.\p{N}{4})";
-        
+
         // Nummer Pattern 
         // nach n:\t optionales Minuszeichen gefolgt von beliebig vielen Ziffern 
         // \p{N}, zwischen den Ziffern optional Punkt oder Komma
         $numberPattern = "((?<=n:\t)-?\p{N}+[\.,]?\p{N}*)";
-        
+
         $pattern = "#^" . $metaNamePattern . ":\t(" . $stringPattern . "|" . $datePattern . "|" . $numberPattern . ")\t*$#mu";
         $matches = array();
         $count = preg_match_all($pattern, $metadaten, $matches);
@@ -107,19 +108,19 @@ class Parser {
             $nameError = "Metainfo 'Name' nicht gefunden oder Wert ungültig!";
             $this->throwMetaException($nameError);
         }
-        
+
         $datum_index = array_search("Datum", $matches[1]);
         if ($datum_index === FALSE) {
             $datumError = "Metainfo 'Datum' nicht gefunden oder Wert ungültig!";
             $this->throwMetaException($datumError);
-        }        
+        }
 
         $datum_german = $matches[3][$datum_index];
         $datum_mysql = Utils::convertDate($datum_german);
 
         // insert messreihe
         $messreihen_name = $matches[3][$messreihenname];
-        $messreihe = array (
+        $messreihe = array(
             "messreihenname" => $messreihen_name,
             "datum" => $datum_mysql,
             "projekt_id" => $this->_projektID,
@@ -131,7 +132,7 @@ class Parser {
         }
         $messreihe_id = $this->_db->getIdBySelectOrInsert('messreihe', $messreihe);
         $this->_messreiheID = $messreihe_id;
-        
+
         // alle Indizes außer Indizes von "Name" und "Datum"
         $meta_indizes = array();
         foreach ($matches[1] as $meta_index => $metarow) {
@@ -188,19 +189,19 @@ class Parser {
                 );
                 $metawert = $matches[6][$index];
             }
-            // TODO: was, wenn metainfo eines anderen Projekts gleichen Namen, aber anderen Datentyp hat?
+
             $metainfo_id = $this->_db->getIdBySelectOrInsert('metainfo', $metainfo);
             if ($this->_db->error()) {
                 $metainfo_name = $metainfo["metaname"];
                 $this->throwMetaException("Fehler beim INSERT von 'metainfo' (" . $metainfo_name . ")");
             }
-            
+
             $messreihe_metainfo = array(
                 $messreihe_id,
                 $metainfo_id,
                 $metawert,
             );
-            
+
             $this->_db->executeStatement($preparedInsert, $messreihe_metainfo);
             if ($this->_db->error()) {
                 $this->throwMetaException("Fehler beim INSERT von 'messreihe_metainfo' ("
@@ -210,7 +211,7 @@ class Parser {
             }
         }
     }
-    
+
     private function parseMessDaten($messdaten) {
         $saveExTime = ini_get('max_execution_time');
         ini_set('max_execution_time', 1000);
@@ -218,8 +219,20 @@ class Parser {
         $messdaten = array_slice($messdaten, 1);    // array_slice() löscht erstes Element, da leer aufgrund von explode(###)
 
         $spaltennamen = preg_split("/:[\t]?/", $messdaten[0]);
+
         $spaltenanzahl = count($spaltennamen) - 1;   // letztes Element leer aufgrund der preg_split-Bedingung
-        
+        if ($spaltenanzahl > 1) {
+            if ($spaltennamen[0] != "Datum") {     // 1. Spalte der Messungen muss Datum sein
+                $this->throwMessException("Die 1. Spalte der Messungen lautet nicht 'Datum' sondern: " . $spaltennamen[0]);
+            }
+            if ($spaltennamen[1] != "Uhrzeit") {       // 2. Spalte der Messungen muss Uhrzeit sein
+                $this->throwMessException("Die 2. Spalte der Messungen lautet nicht 'Uhrzeit' sondern: " . $spaltennamen[1]);
+            }
+            if ($spaltenanzahl == 2) {   // wenn gleich 2, dann Fehler, da mindestens ein Sensor vorhanden sein muss (plus Datum und Uhrzeit)
+                $this->throwMessException("Keine Sensoren(-Namen) vorhanden, nur Datum und Uhrzeit");
+            }
+        }
+
         // insert sensor und messreihe_sensor
         $sensor_id_array = array();
         $statement_messreihe_sensor = $this->_db->createStatement("INSERT INTO messreihe_sensor (messreihe_id, sensor_id, anzeigename) VALUES (?, ?, ?)");
@@ -251,26 +264,26 @@ class Parser {
                         . ", sensorname: " . $sensorname . ")");
             }
         }
-        $messdaten = array_slice($messdaten, 1);	// löschen des Elements mit Sensornamen, da nicht mehr benötigt
-        
+        $messdaten = array_slice($messdaten, 1); // löschen des Elements mit Sensornamen, da nicht mehr benötigt
+
         // Sql Statement fuer eine Zeile erstellen
-        $sql = "INSERT INTO messung (messreihe_id, zeitpunkt, datum_uhrzeit, sensor_id, messwert) VALUES ";
+        $sql = "INSERT INTO messung (messreihe_id, zeitpunkt, datum_uhrzeit, mikrosekunden, sensor_id, messwert) VALUES ";
         for ($i = 2; $i < $spaltenanzahl; ++$i) {
             if ($i != 2) {
                 $sql = $sql . ",";
             }
-            $sql = $sql . "(?, ?, STR_TO_DATE(? ?, '%d.%m.%Y %H:%i:%s,%f'), ?, ?)";
+            $sql = $sql . "(?, ?, STR_TO_DATE(? ?, '%d.%m.%Y %H:%i:%s'), ?, ?, ?)";
         }
-        
+
         $statement_messung = $this->_db->createStatement($sql);
         if ($statement_messreihe_sensor === FALSE) {
             $this->throwMessException("Fehler beim Erstellen des prepared statements von 'messung'");
         }
-        
+
         // Iteration ueber alle Zeilen
         for ($j = 0; $j < count($messdaten); ++$j) {
             $messungsSpalte = preg_split("/\t/", $messdaten[$j]);
-            
+
             // Pruefung auf zu wenig Spalten
             if (count($messungsSpalte) !== $spaltenanzahl) {
                 // Pruefung auf Leerzeile in letzter Zeile
@@ -283,11 +296,13 @@ class Parser {
                 }
             }
             $datum = $messungsSpalte[0];
-            $uhrzeit = $messungsSpalte[1];
-                        
-            $defaults = array($this->_messreiheID, $j, $datum, $uhrzeit);
+            $zeit = $messungsSpalte[1];
+
+            $zeit = $this->checkUhrzeitFormat($zeit);
+
+            $defaults = array($this->_messreiheID, $j, $datum, $zeit["uhrzeit"], $zeit["mikroseks"]);
             $values = array();
-            
+
             for ($i = 2; $i < count($messungsSpalte); ++$i) {
                 $messwert = $messungsSpalte[$i];
                 // Ersetze NaN mit 0
@@ -295,13 +310,13 @@ class Parser {
                     $messwert = "0";
                 }
                 // Ersetze Komma durch Punkt
-                $messwert = str_replace(",", ".",$messwert);
-                
+                $messwert = str_replace(",", ".", $messwert);
+
                 $values = array_merge($values, $defaults);
                 array_push($values, $sensor_id_array[$i - 2]);
                 array_push($values, $messwert);
             }
-            
+
             $this->_db->executeStatement($statement_messung, $values);
             if ($this->_db->error()) {
                 $this->throwMessException("Fehler beim INSERT von 'messung' "
@@ -310,7 +325,7 @@ class Parser {
         }
         ini_set('max_execution_time', $saveExTime);
     }
-    
+
     private function metalinesToIgnore($parsedLines, $allLines) {
         $retArray = array();
         $retArray["Folgende Header-Zeile(n) wurde(n) ignoriert"] = "";
@@ -321,14 +336,14 @@ class Parser {
         }
         return $retArray;
     }
-    
+
     private function throwMetaException($msg) {
         $dbErrorMsg = array(
             'Fehler' => $msg
         );
         throw new ParserException("Fehler in Funktion parseMetaDaten()", 0, null, $dbErrorMsg);
     }
-    
+
     private function throwMessException($msg) {
         $dbErrorMsg = array(
             'Fehler' => $msg
@@ -336,15 +351,56 @@ class Parser {
         throw new ParserException("Fehler in Funktion parseMessDaten()", 0, null, $dbErrorMsg);
     }
 
+    private function checkUhrzeitFormat($zeit) {
+        $retVal = array();
+        $zeit_splitted = preg_split("/[\.,]/", $zeit);
+        $zeiten_teile = count($zeit_splitted);
+        if ($zeiten_teile < 2) {
+            $hh_mm_ss = explode(":", $zeit);
+            if ($hh_mm_ss[2] > 59) {        // Fehler, wenn Sekunden groesser als 59 (Mikrosekunden ohne '.' oder ',' angehaengt
+                $this->throwMessException("UngÃ¼ltiges Uhrzeitformat in Zeile " .
+                        ($j + $this->_zeilennummerMessdaten) . ": " . $zeit);
+            }
+            $uhrzeit = $zeit;
+            $mikrosekunden = "000000";
+        } else if ($zeiten_teile > 2) {
+            $this->throwMessException("UngÃ¼ltiges Uhrzeitformat in Zeile " .
+                    ($j + $this->_zeilennummerMessdaten) . ": " . $zeit);
+        } else {
+            $uhrzeit = $zeit_splitted[0];
+            $mikrosekunden = $zeit_splitted[1];
+            if ($mikrosekunden > 999999) {      // Fehler, wenn Mikrosekunden aus mehr als 6 Stellen bestehen
+                $this->throwMessException("Sekunden haben mehr als sechs Nachkommastellen in Zeile " .
+                        ($j + $this->_zeilennummerMessdaten) . ": " . $zeit);
+            }
+            $mikrosekunden = $this->fillMikroseks($mikrosekunden);
+        }
+        $retVal["uhrzeit"] = $uhrzeit;
+        $retVal["mikroseks"] = $mikrosekunden;
+        return $retVal;
+    }
+
+    private function fillMikroseks($mikroseks) {
+        $length = strlen($mikroseks);
+        if ($length < 6) {
+            $i = 6 - $length;
+            for ($i = $length; $i < 6; ++$i) {
+                $mikroseks .= "0";
+            }
+        }
+        return $mikroseks;
+    }
+
     public function errors() {
         return $this->_error;
     }
-    
+
     public function warnings() {
         return $this->_warning;
     }
-    
+
     public function getID() {
         return $this->_messreiheID;
     }
+
 }

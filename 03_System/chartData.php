@@ -16,6 +16,22 @@ if ($modus === "CSV") {
 
 $db = DB::getInstance();
 
+$whereSensoren = "(";
+$first = true;
+// baue WHERE Bedinung aus paare: 0 = sensor_id, 1 = messreihe_id
+foreach ($paare as $paar) {
+    if ($first) {
+        $first = false;
+    } else {
+        $whereSensoren .= " OR ";
+    }
+
+    $whereSensoren .= "(sensor_id = " . $paar[0] . " AND messreihe_id = " . $paar[1] . ")";
+}
+$whereSensoren .= ")";
+
+
+
 $whereZeitpunkt = "";
 if ($step === 1) {
     if ($von === 0 && $bis === 0) {
@@ -30,10 +46,14 @@ if ($step === 1) {
         $whereZeitpunkt = "messung.zeitpunkt BETWEEN {$von} AND {$bis}";
     }
 } else {
+    if($bis === 0){
+        $db->query("SELECT MAX(zeitpunkt) as max_zeitpunkt FROM `messung` WHERE {$whereSensoren}");//hol max wert der selectedSensors  
+        $bis = intval($db->first()->max_zeitpunkt);
+    }
     // zeitpunkte (n,n,....,n) als string fuer IN Operator
     $zeitpunkte = "(";
     $first = true;
-    for ($i = $von; $i <= $bis; $i += $step) {
+    for ($i = $von; $i <= (int)$bis; $i += $step) {
         if ($first) {
             $first = false;
         } else {
@@ -46,19 +66,7 @@ if ($step === 1) {
     $whereZeitpunkt = "messung.zeitpunkt IN {$zeitpunkte}";
 }
 
-$whereSensoren = "(";
-$first = true;
-// baue WHERE Bedinung aus paare: 0 = sensor_id, 1 = messreihe_id
-foreach ($paare as $paar) {
-    if ($first) {
-        $first = false;
-    } else {
-        $whereSensoren .= " OR ";
-    }
 
-    $whereSensoren .= "(sensor_id = " . $paar[0] . " AND messreihe_id = " . $paar[1] . ")";
-}
-$whereSensoren .= ")";
 
 $db->query("SELECT messreihe_sensor.anzeigename, messreihe.messreihenname " .
         "FROM messreihe_sensor " .
@@ -135,7 +143,7 @@ while ($row = $db->fetch()) {
     if ($modus === "CSV") {
         $line .= $row->messwert;
     } else {
-        $line .= "{$row->messwert};{$row->datum_uhrzeit}";
+        $line .= "{$row->messwert};{$row->datum_uhrzeit}.{$row->mikrosekunden}";
     }
 
     // wenn mehr als ein paar existiert, darf index nicht 0 sein ansonsten
