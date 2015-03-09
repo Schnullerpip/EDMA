@@ -418,7 +418,7 @@ $jsonselectsensor = json_encode($selectsensor);
         var tmp_str = "<div id='' class='form-group'><label id='metaNameField" + uniqueId + "' class='control-label col-sm-8 text-right'>" + selectedMetafield["metaname"] + "</label>";
 
         addOperatorMenu(selectedMetafield.typ, tmp_str);
-        addDefaultValueField();
+        addDefaultValueField(selectedMetafield.typ);
         selectFlag = false;
 
 
@@ -490,6 +490,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
         var argsId = id;
         var valueFieldExists = $('#metaValueField' + argsId);
+        var former_input_string = $("#metaValueInput"+argsId).val();
 
         //Den Beschriftung des OperatorenMenüs des Metafilters auf den ausgewählten Operator setzen
         $("#operatorButton" + argsId).html(name + "<span class='caret'></span>");
@@ -499,7 +500,7 @@ $jsonselectsensor = json_encode($selectsensor);
         var isSingleValueFieldOperator = $.inArray(value, singleFieldOperators);
 
         //Unterscheide ob es sich um einen ein-Feld-/oder mehr-feld-operator handelt
-        if ($.inArray(value, singleFieldOperators) > -1) {
+        if (isSingleValueFieldOperator > -1) {
 
             if ($(valueFieldExists).hasClass("singleValueField") && isSingleValueFieldOperator) {
                 //Feld muss nicht erneuert werden
@@ -515,6 +516,8 @@ $jsonselectsensor = json_encode($selectsensor);
             appendString = "<div id='metaValueField" + argsId + "' class='form-group'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input id='metaValueInput" + argsId + "' class='doubleValueField form-control valueField' type='text' placeholder='bis' name='stringInput" + argsId + "'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
         }
         $('#metaValueField' + argsId).replaceWith(appendString);
+        $("#metaValueInput"+argsId).val(former_input_string);
+        $("#metaValueInput"+argsId).fadeOut(100).fadeIn(100);//kleiner Effekt um dem veränderten ValueInput Aufmerksamkeit zu schenken
     }
 
 
@@ -526,10 +529,14 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
-    function addDefaultValueField() {
+    function addDefaultValueField(type) {
         var appendString;
         appendString = "<div id='metaValueField" + uniqueId + "' class='form-group'><div class='col-xs-8'><input id='metaValueInput" + uniqueId + "'class='singleValueField form-control valueField' type='text' placeholder='insert Value' name='stringInput" + uniqueId + "'></input></div><a class='btn' onclick='delMeta(" + uniqueId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
         $("#meta_value_div").append(appendString);
+        if(type != 'string'){
+            $("#metaValueInput"+uniqueId).attr("disabled", "disabled");
+            $("#metaValueInput"+uniqueId).attr("title", "Bitte erst Operator wählen"); //Damit Inputfelder erst beschreibbar sind, wenn ein passender operator gewählt wurde -> bei strings egal da strings immer mit gleich verglichen werden sollen
+        }
         ++uniqueId;
     }
 
@@ -1050,6 +1057,12 @@ $jsonselectsensor = json_encode($selectsensor);
 
         $('#meta_value_div').on("change", ".valueField", function (e) {
             evaluateAllFilters();
+        });
+
+        $('#meta_value_div').keypress(function (e) {
+            if(e.keyCode == 13){
+                evaluateAllFilters();
+            }
         });
 
         //CLICK ON MESSREIHE
