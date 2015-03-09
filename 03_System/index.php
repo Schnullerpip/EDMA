@@ -489,8 +489,8 @@ $jsonselectsensor = json_encode($selectsensor);
         var singleFieldOperators = ["==", "<", ">", "<=", ">="];
 
         var argsId = id;
-        var valueFieldExists = $('#metaValueField' + argsId);
-        var former_input_string = $("#metaValueInput"+argsId).val();
+        var valueFieldExists = $('#metaValueInput' + argsId);
+        former_input_string = $("#metaValueInput"+argsId).val();
 
         //Den Beschriftung des OperatorenMenüs des Metafilters auf den ausgewählten Operator setzen
         $("#operatorButton" + argsId).html(name + "<span class='caret'></span>");
@@ -502,22 +502,20 @@ $jsonselectsensor = json_encode($selectsensor);
         //Unterscheide ob es sich um einen ein-Feld-/oder mehr-feld-operator handelt
         if (isSingleValueFieldOperator > -1) {
 
-            if ($(valueFieldExists).hasClass("singleValueField") && isSingleValueFieldOperator) {
-                //Feld muss nicht erneuert werden
-                return;
-            }
             appendString = "<div id='metaValueField" + argsId + "' class='form-group'><div class='col-xs-8'><input id='metaValueInput" + argsId + "' class='singleValueField form-control valueField' type='text' placeholder='insert Value' name='stringInput" + argsId + "'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
+
         } else {
             //kann momentan nur "between sein"
-            if ($(valueFieldExists).hasClass("doubleValueField") && !(isSingleValueFieldOperator)) {
-                //Feld muss nicht erneuert werden
-                return;
-            }
             appendString = "<div id='metaValueField" + argsId + "' class='form-group'><div class='col-xs-4'><input class='form-control' type='text' placeholder='von' name='stringInput" + argsId + "'></input></div><div class='col-xs-4'><input id='metaValueInput" + argsId + "' class='doubleValueField form-control valueField' type='text' placeholder='bis' name='stringInput" + argsId + "'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
         }
         $('#metaValueField' + argsId).replaceWith(appendString);
         $("#metaValueInput"+argsId).val(former_input_string);
         $("#metaValueInput"+argsId).fadeOut(100).fadeIn(100);//kleiner Effekt um dem veränderten ValueInput Aufmerksamkeit zu schenken
+
+        //mit dem neuen Operator gleich einen neuen Filterdurchlaif starten - nur wenn auch ein vorheriger input vorhanden war
+        if((former_input_string != "") && (isSingleValueFieldOperator > -1)){
+            evaluateAllFilters();
+        }
     }
 
 
