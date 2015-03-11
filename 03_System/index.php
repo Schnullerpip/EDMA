@@ -1362,11 +1362,16 @@ $jsonselectsensor = json_encode($selectsensor);
                 },
                 legend: {
                     location: 'bottom',
-                    textFillStyle: '#FFFFFF',
+                    textFillStyle: '#224565',
                     border: {
-                        visible: false
+                        visible: true,
+                        lineWidth: 0,
+                        padding: 6
                     },
-                    margin: 10
+                    margin: 10,
+                    inactiveTextFillStyle: '#83afd7',
+                    background: '#FFFFFF',
+                    cornerRadius: 3
                 },
                 axes: scalas_copy,
                 series: seriesData,
