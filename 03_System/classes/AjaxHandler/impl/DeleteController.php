@@ -41,7 +41,9 @@ class DeleteController extends AjaxController {
         if ($this->_id == -1) {
             // Neue Beschreibung, noch nicht in der DB aber in der Session
             $uploadedFiles = Session::get(Config::get('session/upload_name'));
-            // Aus Sesstion entfernen damit die Datei nicht hochgeladen wird.
+            // Datei aus uploads-Verzeichnis loeschen
+            unlink($uploadedFiles[$this->_filenName]['fileTemp']);
+            // Aus Session entfernen damit die Datei nicht hochgeladen wird.
             unset($uploadedFiles[$this->_filenName]);
             Session::put(Config::get('session/upload_name'), $uploadedFiles);
         } else {
