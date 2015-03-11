@@ -796,12 +796,46 @@ $jsonselectsensor = json_encode($selectsensor);
             }
         }
     }
+
+
+    function reorganizeMessreihenCopyByDate(){
+        var tmp;
+        var iter_index;
+        var d1, d2;
+        if(messreihen_copy.length < 2){//in dem fall würde die überprüfung gehler werfen, außerdem ist in diesem Fall eine Sortierung nicht nötig
+            return;
+        }
+        for(iter_index=1;iter_index<messreihen_copy.length;iter_index++){
+        d2 = new Date(messreihen_copy[iter_index].datum).getTime();
+        d1= new Date(messreihen_copy[iter_index-1].datum).getTime();
+            if((d2 < d1) || ((d2 == d1) &&(messreihen_copy[iter_indexi].messreihenname < messreihen_copy[iter_indexi-1].messreihenname))){
+                tmp = tmp = d1;
+                messreihen_copy[iter_indexi-1] = messreihen_copy[iter_indexi];
+                messreihen_copy[iter_indexi] = tmp;
+            }
+        }
+    }
+
+    //diese Funktion kann zum debuggen benutzt werden
+    function showMessreihenCopy(){
+        console.log("A--------A");
+        for(i=0;i<messreihen_copy.length;i++){
+            console.log(messreihen_copy[i].messreihennamei+" - "+messreihen_copy[i].datum);
+        }
+        console.log("V--------V");
+    }
+
+
+
+
+
     //----------------------------------Funktionen zum Bearbeiten der "Messreihen/Sensoren-Filtern" Felder ------------------------------
 
 
     //Liste der angezeigten Messreihen regenerieren 
     var lookup_selected_messreihe = null;
     function regenerateMessreihenList() {
+        reorganizeMessreihenCopyByDate();
         var replace_string = [];
         for (i = 0; i < messreihen_copy.length; i++) {
             var hms = anySensorsSelectedFrom(messreihen_copy[i]["messreihenname"]);
