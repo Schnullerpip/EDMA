@@ -70,13 +70,13 @@ require_once 'preHeader.php'
             </div>
         <?php endif; ?>
         <?php if (Session::exists('warning')) : ?>
-            <div class="alert alert-info alert-dismissible">
+            <div class="alert alert-top alert-info alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Schließen</span></button>
                 <strong>Warnung!</strong> <?php echo Session::flash('warning'); ?>
             </div>
         <?php endif; ?>
         <?php if (Session::exists('success')) : ?>
-            <div class="alert alert-success alert-dismissible">
+            <div class="alert alert-top alert-success alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Schließen</span></button>
                 <?php echo Session::flash('success'); ?>
             </div>
@@ -95,13 +95,15 @@ require_once 'preHeader.php'
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <?php if ($projekt->isLoggedIn()) : ?>
-                        <ul class="nav navbar-nav">
-                            <li><a href="index">Startseite</a></li>
-                            <li><a href="projekt">Projektverwaltung</a></li>
-                            <?php if ($projekt->isMaster()) : ?>
-                                <li><a href="messreihen">Messreihenverwaltung</a></li>
-                            <?php endif; ?>
-                        </ul>
+                        <?php if (Session::get(Config::get('session/session_name')) !== 'Neues Projekt') :?>
+                            <ul class="nav navbar-nav">
+                                <li><a href="index">Startseite</a></li>
+                                <li><a href="projekt">Projektverwaltung</a></li>
+                                <?php if ($projekt->isMaster()) : ?>
+                                    <li><a href="messreihen">Messreihenverwaltung</a></li>
+                                <?php endif; ?>
+                            </ul>
+                        <?php endif; ?>
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="logout.php">Projekt wechseln</a></li>
                         </ul>
