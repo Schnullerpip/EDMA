@@ -608,6 +608,12 @@ h2 small{
     padding-top:10px;
 }
 
+/*Damit zu langer Text im Button des metabla auswählen nicht über die borders hinausgeht sondern umgebrochen wird*/
+#meta_select_button {
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
 
 /* Footer */
 /* ------------------------------- */
