@@ -74,7 +74,7 @@ require_once 'header.php';
                 <div class="input-group">
                     <input type="password" name="password" class="form-control" placeholder="Passwort" id="password" required>
                     <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button" tabindex="-1" id="password-popover" data-html="true" data-toggle="popover" data-placement="right" title="Passwort vergessen?" data-trigger="" data-content="Wenn Sie ihr Passwort für ein Projekt vergessen haben, wenden Sie sich bitte telefonisch oder per E-Mail an das Kunstofflabor der HTWG-Konstanz.<br><br>Tel.: 202-555-0114<br><br><a href='mailto:bla@mail.com'>mail@bla.com</a>">?</button>
+                        <button class="btn btn-primary" type="button" tabindex="-1" id="password-popover" data-html="true" data-toggle="popover" data-placement="right" title="Passwort vergessen?" data-trigger="" data-content="Wenn Sie ihr Passwort für ein Projekt vergessen haben, wenden Sie sich bitte telefonisch oder per E-Mail an das Kunstofflabor der HTWG-Konstanz.<br><br>Tel.: 202-555-0114<br><br><a href='mailto:fm.kienzler@htwg-konstanz.de'>fm.kienzler@htwg-konstanz.de</a>">?</button>
                     </span>
                 </div>
             </div>
