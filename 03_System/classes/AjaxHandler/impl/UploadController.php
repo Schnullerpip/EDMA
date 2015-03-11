@@ -118,7 +118,7 @@ class UploadController extends AjaxController {
                 // Pruefen ob Datei schon in der DB und damit schon in der Liste ist
                 $sql = 'SELECT id FROM anhang WHERE projekt_id = ? and dateiname = ?';
                 
-                if ($this->_db->query($sql, array($id, $fileName))->count() === 0) {
+                if ($id === 0 || $this->_db->query($sql, array($id, $fileName))->count() === 0) {
                     // Noch nicht in der Liste
                     $refreshList = true;
                 }
