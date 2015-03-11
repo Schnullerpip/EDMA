@@ -1349,6 +1349,12 @@ $jsonselectsensor = json_encode($selectsensor);
                     text: $(this).data('title'),
                     fillStyle: '#FFFFFF'
                 },
+                toolbar: {
+                  visibility: 'auto', // auto, visible, hidden
+                  resetZoomTooltipText: 'Zoom zurücksetzen (100%)',
+                  zoomingTooltipText: 'Zoombereich aufspannen',
+                  panningTooltipText: 'Zoombereich verschieben'
+                },
                 background: '#36a7eb',
                 chartAreaBackground: '#FFFFFF',
                 border: {
