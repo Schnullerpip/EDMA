@@ -19,7 +19,7 @@ $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
         <div class="panel-group accordeon" role="tablist">
             <div class="panel panel-default">
                 <a class="btn btn-block panel-heading text-center collapsed" role="tab" href="#collapseMessreihen" data-toggle="collapse" aria-expanded="true" aria-controls="collapseMessreihen" id="collapseMessreihenLabel">
-                    Letzte Messreihenimporte anzeigen<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                    Letzte Messreihenimporte<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
                 </a>
                 <div id="collapseMessreihen" class="panel-collapse collapse out" role="tabpanel" aria-labelledby="collapseMessreihenLabel" aria-expanded="true">
                     <ul class="list-group list-unstyled">
@@ -38,11 +38,6 @@ $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
                                     </div>
                                     <div class="col-sm-2 pull-right controls">
                                         <ul class="list-unstyled list-inline pull-right">
-                                            <li>
-                                                <a href="#graph">
-                                                    <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
-                                                </a>
-                                            </li>
                                             <li>
                                                 <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe bearbeiten">
                                                     <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
