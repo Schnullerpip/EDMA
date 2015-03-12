@@ -91,7 +91,11 @@ foreach ($results as $namen) {
     if ($first) {
         $first = false;
     } else {
-        $line .= ",";
+        if ($modus === "CSV") {
+            $line .= "\t";
+        } else {
+            $line .= ",";
+        }
     }
     $line .= "{$namen->messreihenname} - {$namen->anzeigename}";
 }
@@ -141,7 +145,7 @@ while ($row = $db->fetch()) {
     
     // fuer CSV export nur messwerte ausgeben, sonst messwert und datum_uhrzeit
     if ($modus === "CSV") {
-        $line .= $row->messwert;
+        $line .= number_format($row->messwert, 6, ",", ".");
     } else {
         $line .= "{$row->messwert};{$row->datum_uhrzeit}.{$row->mikrosekunden}";
     }
@@ -153,7 +157,11 @@ while ($row = $db->fetch()) {
         echo $line;
         $line = "";
     } else {
-        $line .= ",";
+        if ($modus === "CSV") {
+            $line .= "\t";
+        } else {
+            $line .= ",";
+        }
     }
     $index++;
     $sollPosition++;
