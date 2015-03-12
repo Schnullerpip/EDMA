@@ -30,7 +30,7 @@
                         </section>
                     </div>
                     <div class="modal-footer">
-                        <a href="#" class="btn btn-primary" style="display: none;">Details ansehen</a>
+                        <a href="#" class="btn btn-primary">Details ansehen</a>
                         <button type="button" class="btn btn-link" data-dismiss="modal">Schließen</button>
                     </div>
                 </div>
