@@ -30,7 +30,7 @@ if ($projekt->isMaster() && Input::exists()) {
                         $db->update('projekt', $projekt->data()->id, $projektData);
 
                         if ($db->error()) {
-                            throw new Exception("Projektname konnte nicht aktualisiert werden.");
+                            throw new Exception("Projektname konnte nicht aktualisiert werden!");
                         }
                         $projekt = new Projekt();
                     }
@@ -46,7 +46,7 @@ if ($projekt->isMaster() && Input::exists()) {
                         $db->insert('passwort', $passwordData);
 
                         if ($db->error()) {
-                            throw new Exception("Passwort konnte nicht angelegt werden.");
+                            throw new Exception("Passwort konnte nicht angelegt werden!");
                         }
                     }
                 } else {
@@ -73,7 +73,7 @@ if ($projekt->isMaster() && Input::exists()) {
                     $db->insert('passwort', $passwordData);
 
                     if ($db->error()) {
-                        throw new Exception("Passwort konnte nicht angelegt werden.");
+                        throw new Exception("Passwort konnte nicht angelegt werden!");
                     }
 
                     $projekt = new Projekt($projekt_id);

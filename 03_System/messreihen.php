@@ -73,11 +73,13 @@ if (Input::exists('post')) {
                 </div>
             </div>
             <div class="upload-progress"></div>
+            
             <!-- Spinner waehrend Datei importiert wird -->
             <div class="loading-div" style="display: none">
-                <div class="loading-spinner"></div>
+                <div class="loading-spinner"></div>                
                 <h4 class="text-center">Datei wird importiert, bitte warten...</h4>
             </div>
+            
             <hr>
             <div class="form-group">
                 <div class="col-sm-5 col-sm-offset-4">
@@ -245,7 +247,7 @@ if (Input::exists('post')) {
     <div class="row mb-30">
         <div class="form-group">
             <div class="col-sm-2 col-sm-offset-6">
-                <input type="text" class="form-control" id="suche-messreihen-name" data-dynatable-query-event="input" data-dynatable-query="suche-messreihen-name" placeholder="Messreihen Suche">
+                <input type="text" class="form-control" id="suche-messreihen-name" data-dynatable-query-event="input" data-dynatable-query="suche-messreihen-name" placeholder="Messreihen suchen">
             </div>
             <div class="col-sm-2">
                 <div class="input-group date">

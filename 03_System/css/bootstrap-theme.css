@@ -858,24 +858,38 @@ h2 small{
 /* -------------------------------------- */
 
 @keyframes spin {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 .loading-spinner {
-  width: 75px;
-  height: 75px;
-  margin: 5rem auto;
-  border-radius: 50%;
-  border: 10px solid transparent;
-  border-bottom: 10px solid white;
-  border-top: 10px solid white;
-  animation-duration: 1.8s;
-  animation-name: spin;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+    width: 75px;
+    height: 75px;
+    margin: 5rem auto;
+    border-radius: 50%;
+    border: 10px solid transparent;
+    border-bottom: 10px solid white;
+    border-top: 10px solid white;
+    animation-duration: 1.8s;
+    animation-name: spin;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    -webkit-animation-duration: 1.8s;
+    -webkit-animation-name: spin;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
 }
+
