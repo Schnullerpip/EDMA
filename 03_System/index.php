@@ -971,7 +971,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function regenerateScalaModal() {
         var replace_string = [];
-        replace_string.push("<tr><th>Skala</th><th>Titel</th><th>Einheit</th><th>Int/Float</th><th colspan='2'>Position</th></tr>");
+        replace_string.push("<tr><th>Skala</th><th>Titel</th><th>Einheit</th><th>Int/Float</th><th colspan='3'>Position</th></tr>");
         for (i = 0; i < scalas.length; i++) {
             replace_string.push("<tr>");
             replace_string.push("<td>" + scalas[i].name + "</td>");
@@ -985,7 +985,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 replace_string.push("<td>INT</td>");
             }
             replace_string.push("<td>" + scalas[i].location + "</td>");
-            replace_string.push("<td><button class='btn btn-primary choose-scala-btn btn-sm pull-right' data-scalaID='" + scalas[i].name + "'>Ausw&auml;hlen</button></td>");
+            replace_string.push("<td><button class='btn btn-primary choose-scala-btn btn-sm pull-right' data-scalaID='" + scalas[i].name + "'>Ausw&auml;hlen</button></td><td><button class='btn btn-primary delete-scala-btn btn-sm' data-scalaID='"+scalas[i].name+"'>Entf</button></td>");
             replace_string.push("</tr>");
         }
         $("#scalaModalContent").html(replace_string.join(""));
@@ -1055,6 +1055,25 @@ $jsonselectsensor = json_encode($selectsensor);
         }
     }
 
+    function deleteScala(e){
+        for(i=0;i<scalas.length;i++){
+            if(scalas[i].name === e){
+                for(o=0;o<sensors.length;o++){
+                    if(sensors[o].scala === scalas[i]){
+                        sensors[o].scala = null;
+                    }
+                }
+                for(o=0;o<selected_sensors.length;o++){
+                    if(selected_sensors[o].scala === scalas[i]){
+                        selected_sensors[o].scala = null;
+                    }
+                }
+                scalas.splice(i, 1);
+                break;
+            }
+        }
+        regenerateScalaModal();
+    }
 
     function titleDoesntExists(titl) {
         for (i = 0; i < scalas.length; i++) {
@@ -1080,12 +1099,38 @@ $jsonselectsensor = json_encode($selectsensor);
 
     $(function () {
 
+
+        //Defaultskala erstellen
+        scalas.push({
+                name: "",
+                strokeStyle: '#FFFFFF',
+                location: "left",
+                majorGridLines: {
+                    visible: false,
+                },
+                majorTickMarks: {
+                    strokeSTyle: '#FFFFFF',
+                },
+                title: {
+                    text: "Default Skala",
+                    fillStyle: '#FFFFFF',
+                },
+                labels: {
+                    stringFormat: "",
+                    fillStyle: '#FFFFFF',
+                },
+        });
+
+        for(i=0;i<sensors.length;i++){
+            sensors[i].scala = scalas[0];
+        }
+
         regenerateDocument();
 
         //den Downloadbuttons den richtigen Titel usw. geben
         var projekt_name = "<?php echo escape($projekt->data()->projektname); ?>";
         var curr_date = new Date();
-        var curr_time = curr_date.getDate()+"/"+(curr_date.getMonth()+1)+"/"+curr_date.getFullYear()+" @"+curr_date.getHours()+":"+curr_date.getMinutes()+":"+curr_date.getSeconds();
+        var curr_time = curr_date.getDate()+"."+(curr_date.getMonth()+1)+"."+curr_date.getFullYear()+" um "+curr_date.getHours()+":"+curr_date.getMinutes()+":"+curr_date.getSeconds()+"Uhr";
         $("#saveImg").attr("download", "Chart - "+projekt_name+" on "+curr_time+".png"); 
         $("#saveCSV").attr("download", "Data - "+projekt_name+" on "+curr_time+".csv"); 
 
@@ -1120,6 +1165,11 @@ $jsonselectsensor = json_encode($selectsensor);
         //in Modal on click in modalContent -> click on a scala
         $("#scalaModalContent").on("click", ".choose-scala-btn", function (e) {
             chooseScala(e.target.getAttribute("data-scalaID")); //wird der funktion eine scala id geben
+        });
+
+        //in Modal on click in modalContent -> delete a scala
+        $("#scalaModalContent").on("click", ".delete-scala-btn", function (e) {
+            deleteScala(e.target.getAttribute("data-scalaID"));
         });
 
         //in Modal click on "neue skala"
