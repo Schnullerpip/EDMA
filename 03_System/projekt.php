@@ -276,6 +276,7 @@ require_once 'header.php';
                 <?php endif; ?>
             </div>
         </div>
+        <br>
         <div class="form-group">
             <div class="col-sm-offset-4 col-sm-5">
                 <button name="projekt_save" type="submit" class="btn btn-default">Speichern</button>

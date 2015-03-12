@@ -17,9 +17,10 @@
  * @author Sandro
  */
 class Validate {
+
     private $_passed = false,
             $_errors = array();
-    
+
     /**
      * Prüft die Eingabewerte von $source ($_POST oder $_GET) auf die angegebenen
      * Anforderungen in $items
@@ -30,39 +31,40 @@ class Validate {
      */
     public function check($source, $items = array()) {
         foreach ($items as $item => $rules) {
-            $fieldname = $item;
+            if (isset($rules['fieldname'])) {
+                $name = $rules['fieldname'];
+            } else {
+                $name = $item;
+            }
+            
             foreach ($rules as $rule => $rule_value) {
                 $value = trim($source[$item]);
-                
-                if ($rule === 'fieldname') {
-                    $fieldname = $rule_value;
-                }
-                
+
                 if ($rule === 'required' && empty($value)) {
-                    $this->addError($fieldname . " ist ein Pflichtfeld.");
-                } else if (!empty ($value)) {
+                    $this->addError($name . " ist ein Pflichtfeld.");
+                } else if (!empty($value)) {
                     switch ($rule) {
                         case 'min':
                             if (strlen($value) < $rule_value) {
-                                $this->addError($item . ' muss mindestens ' .
+                                $this->addError($name . ' muss mindestens ' .
                                         $rule_value . ' Zeichen lang sein.');
                             }
                             break;
                         case 'max':
                             if (strlen($value) > $rule_value) {
-                                $this->addError($item . ' darf maximal ' .
+                                $this->addError($name . ' darf maximal ' .
                                         $rule_value . ' Zeichen lang sein.');
                             }
                             break;
                         case 'matches':
                             if ($value != $source[$rule_value]) {
                                 if (isset($items[$rule_value]['fieldname'])) {
-                                    $matchesFieldname = $source[$rule_value]['fieldname'];
+                                    $matches = $items[$rule_value]['fieldname'];
                                 } else {
-                                    $matchesFieldname = $rule_value;
+                                    $matches = $rule_value;
                                 }
-                                $this->addError($matchesFieldname . ' muss gleich '
-                                        . 'sein wie ' . $fieldname);
+                                $this->addError('"' . $matches . '" muss gleich '
+                                        . 'sein wie "' . $name . '"');
                             }
                             break;
                         case 'unique':
@@ -70,17 +72,16 @@ class Validate {
                             break;
                     }
                 }
-                
             }
         }
-        
+
         if (empty($this->_errors)) {
             $this->_passed = true;
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Fuegt dem Errors-Array ein neuen Eintrag hinzu
      * 
@@ -89,7 +90,7 @@ class Validate {
     private function addError($error) {
         $this->_errors[] = $error;
     }
-    
+
     /**
      * Gibt das Array mit eventuellen Fehlern aus.
      * 
@@ -98,8 +99,7 @@ class Validate {
     public function errors() {
         return $this->_errors;
     }
-    
-    
+
     /**
      * Gibt true zurück, wenn die Validierung erfolgreich war. Ansonsten false
      * 
@@ -108,4 +108,5 @@ class Validate {
     public function passed() {
         return $this->_passed;
     }
+
 }

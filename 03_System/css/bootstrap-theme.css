@@ -325,6 +325,10 @@ a:active,
     border-top: 2px solid white;
 }
 
+.form-group .col-sm-5 .panel {
+    margin-bottom: 0;
+}
+
 
 /* Tables */
 /* ------------------------------- */
