@@ -26,7 +26,7 @@ $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
                         <?php foreach ($messreihen as $key => $messreihe) : ?>
                             <li>
                                 <div class="row">
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-9">
                                         <div class="list-content">
                                             <?php echo escape($messreihe->messreihenname); ?>
                                         </div>
@@ -36,7 +36,7 @@ $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
                                             <?php echo escape($messreihe->datum); ?>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 pull-right controls">
+                                    <div class="col-sm-1 pull-right controls">
                                         <ul class="list-unstyled list-inline pull-right">
                                             <li>
                                                 <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe bearbeiten">
@@ -218,8 +218,8 @@ $jsonselectsensor = json_encode($selectsensor);
 <h2 id="h2MessreihenWählen">Messreihen/Sensoren wählen</h2>
 <div id="messreihenSensorenFilterDiv" class="row">
 
-    <div class="col-sm-6"> <small>Messreihen</small></div>
-    <div id="smallSensoren" class="col-sm-5"><small id="smallSensoren">Sensoren</small></div>
+    <div class="col-sm-6"><small class="col-xs-12">Messreihen</small></div>
+    <div class="col-sm-5"><small id="smallSensoren" class="col-xs-12">Sensoren</small></div>
     <div id="smallSkala" class="col-sm-1" style="padding-left:0px"><small>Skala</small></div>
 
     <div id="messreihenDiv" class="col-xs-12 col-sm-6">
@@ -898,12 +898,10 @@ $jsonselectsensor = json_encode($selectsensor);
         }
         $("#sensorenListe").html(sensors_string.join(""));
         $("#skalenListe").html(scalas_string.join(""));
-        $("#smallSensoren").html("Sensoren -> " + arg);
+        $("#smallSensoren").html('Sensoren für "' + arg + '"');
 
-        $("#messreihenListe button").css("color", "white");
-        $("#messreihenListe button").css("background-color", "#36A7EB");
-        $("#messreihenListe button[data-messreihe='"+arg+"']").css("background-color", "white");
-        $("#messreihenListe button[data-messreihe='"+arg+"']").css("color", "#36A7EB");
+        $("#messreihenListe button").css({"color": "white", "background-color": "#36A7EB", "text-decoration": "none"});
+        $("#messreihenListe button[data-messreihe='"+arg+"']").css({"background-color": "white", "color": "#36A7EB", "text-decoration": "underline"});
     }
 
 
@@ -971,7 +969,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function regenerateScalaModal() {
         var replace_string = [];
-        replace_string.push("<tr><th>Skala</th><th>Titel</th><th>Einheit</th><th>Int/Float</th><th colspan='3'>Position</th></tr>");
+        replace_string.push("<tr><th>Skala</th><th>Titel</th><th>Einheit</th><th>Int/Float</th><th>Position</th><th></th><th></th></tr>");
         for (i = 0; i < scalas.length; i++) {
             replace_string.push("<tr>");
             replace_string.push("<td>" + scalas[i].name + "</td>");
@@ -985,7 +983,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 replace_string.push("<td>INT</td>");
             }
             replace_string.push("<td>" + scalas[i].location + "</td>");
-            replace_string.push("<td><button class='btn btn-primary choose-scala-btn btn-sm pull-right' data-scalaID='" + scalas[i].name + "'>Ausw&auml;hlen</button></td><td><button class='btn btn-primary delete-scala-btn btn-sm' data-scalaID='"+scalas[i].name+"'>Entf</button></td>");
+            replace_string.push("<td><button class='btn btn-primary choose-scala-btn btn-sm pull-right' data-scalaID='" + scalas[i].name + "'>Ausw&auml;hlen</button></td><td><button class='btn btn-primary delete-scala-btn btn-sm pull-right' data-scalaID='"+scalas[i].name+"'>Löschen</button></td>");
             replace_string.push("</tr>");
         }
         $("#scalaModalContent").html(replace_string.join(""));

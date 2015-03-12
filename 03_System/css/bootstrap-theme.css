@@ -66,29 +66,6 @@ h2 {
     margin-bottom: 30px;
 }
 
-/* Helpers */
-/* ------------------------------- */
-
-.no-padding {
-    padding: 0;
-}
-
-.mb-0 {
-    margin-bottom: 0px;
-}
-
-.mb-5 {
-    margin-bottom: 5px;
-}
-
-.mb-15 {
-    margin-bottom: 15px;
-}
-
-.mb-30 {
-    margin-bottom: 30px;
-}
-
 
 /* Navbar */
 /* ------------------------------- */
@@ -143,6 +120,10 @@ a:active,
 
 /* Buttons */
 /* ------------------------------- */
+
+.btn {
+    padding: 6px 15px;
+}
 
 .btn .caret {
     margin-left: 5px;
@@ -250,7 +231,7 @@ a:active,
 
 .sensor-btn .glyphicon {
     position: absolute;
-    top: 8px;
+    top: 11px;
     right: 10px;
 }
 
@@ -261,18 +242,18 @@ a:active,
 
 #messreihenDiv .scroll-scrolly_visible .btn-default,
 .scroll-scrolly_visible #sensorenDiv .btn-default {
-    padding-left: 4%;
+    padding-left: 3.2%;
 }
 
 #messreihenListe small {
     position: absolute;
     right: 12px;
-    top: 11px;
+    top: 14px;
 }
 #messreihenListe span {
     position: absolute;
     right: 20px;
-    top: 8px;
+    top: 11px;
 }
 
 
@@ -525,6 +506,10 @@ form .table#projektbeschreibungen {
     visibility: visible;
 }
 
+#collapseMessreihenLabel {
+    padding: 9px 15px;
+}
+
 
 /* Messages */
 /* ------------------------------- */
@@ -685,6 +670,11 @@ h2 small{
 }
 #delete-modal .error {
     margin-bottom: 0;
+}
+
+#scalaModal table tr:not(first-of-type) td:last-child {
+    padding-right: 0;
+    padding-left: 0;
 }
 
 /* Chart */
@@ -897,3 +887,34 @@ h2 small{
     -webkit-animation-timing-function: linear;
 }
 
+
+/* Messreihen & Sensoren Anzeige */
+/* ------------------------------- */
+
+#messreihenSensorenFilterDiv .btn {
+    padding: 9px 15px;
+}
+
+
+/* Helpers */
+/* ------------------------------- */
+
+.no-padding {
+    padding: 0;
+}
+
+.mb-0 {
+    margin-bottom: 0px;
+}
+
+.mb-5 {
+    margin-bottom: 5px;
+}
+
+.mb-15 {
+    margin-bottom: 15px;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}
