@@ -258,7 +258,7 @@ function buildRowForSeriespoint(point, assertedX) {
     result += "<td><span style='color:" + series.fillStyle + "'>" + series.title + "</span>:</td>";
     
     var y, date, time;
-    if (point.x !== assertedX) {
+    if ((point.x !== assertedX) && (assertedX != undefined)) {
         // falls x Werte ableichen muessen die Daten "korrigiert" werden
         var rightData = series.arrData[assertedX];
         y = rightData[1];
