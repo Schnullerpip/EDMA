@@ -262,10 +262,11 @@ if (Input::exists('post')) {
     </div>
 
     <?php
-    $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
-    $messreihen = $db->results();
+        $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
+        $messreihen = $db->results();
     ?>
-    <div class="panel panel-default">
+    <?php if (sizeof($messreihen) !== 0) : ?>
+        <div class="panel panel-default">
         <div class="table-responsive">
             <table class="table controlled-table" id="messreihen-tabelle">
                 <thead>
@@ -305,6 +306,10 @@ if (Input::exists('post')) {
             </table>
         </div>
     </div>
+    <?php else : ?>
+        <br>
+        <p class="text-center">Bisher wurden noch keine Messreihen importiert. Um eine Messreihe zu importieren, klicken Sie bitte auf "Messreihe hinzufügen".</p>
+    <?php endif; ?>
 <?php endif; ?>
 
 <?php
