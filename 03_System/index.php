@@ -904,8 +904,8 @@ $jsonselectsensor = json_encode($selectsensor);
         $("#skalenListe").html(scalas_string.join(""));
         $("#smallSensoren").html('Sensoren für "' + arg + '"');
 
-        $("#messreihenListe button").css({"color": "white", "background-color": "#36A7EB", "text-decoration": "none"});
-        $("#messreihenListe button[data-messreihe='"+arg+"']").css({"background-color": "white", "color": "#36A7EB", "text-decoration": "underline"});
+        $("#messreihenListe button").css({"color": "white", "background-color": "#36A7EB"});
+        $("#messreihenListe button[data-messreihe='"+arg+"']").css({"background-color": "white", "color": "#224565"});
     }
 
 

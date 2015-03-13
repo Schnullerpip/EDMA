@@ -149,7 +149,7 @@ a:active {
 .btn-default:active {
     background-color: white;
     border-color: white;
-    color: #36a7eb;
+    color: #224565;
 }
 
 .btn-primary {
@@ -436,7 +436,7 @@ form .table#projektbeschreibungen {
 .accordeon .panel-heading:hover,
 .accordeon .panel-heading:focus,
 .accordeon .panel-heading:active {
-    color: #36a7eb ;
+    color: #224565 ;
     background-color: white;
     border-color: white;
 }
