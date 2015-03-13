@@ -282,10 +282,9 @@ $jsonselectsensor = json_encode($selectsensor);
 
 <div class="row">
     <div class="col-xs-12">
-        <div id="jqChart-wrapper" style="width: 100%; height: 800px; display:none" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
+        <div id="jqChart-wrapper" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
     </div>
 </div>
-
 
 <a id="saveImg" style="display:none" class="btn btn-default" href="#">Speichern als Bild</a>
 <a id="saveCSV" style="display:none" class="btn btn-default" target=_blank href="../datagross.csv">Speichern als CSV</a>
@@ -1447,6 +1446,10 @@ $jsonselectsensor = json_encode($selectsensor);
                 series: seriesData,
                 tooltips: {
                     type: 'shared'
+                },
+                noDataMessage: {
+                    text: "Keine Daten vorhanden",
+                    fillStyle: "#FFFFFF"
                 }
             });
             
