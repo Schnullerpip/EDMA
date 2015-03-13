@@ -280,7 +280,12 @@ $jsonselectsensor = json_encode($selectsensor);
 </div>
 
 
-<div id="jqChart-wrapper" style="width: 100%; height: 800px; display:none" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="jqChart-wrapper" style="width: 100%; height: 800px; display:none" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
+    </div>
+</div>
+
 
 <a id="saveImg" style="display:none" class="btn btn-default" href="#">Speichern als Bild</a>
 <a id="saveCSV" style="display:none" class="btn btn-default" target=_blank href="../datagross.csv">Speichern als CSV</a>
@@ -1359,11 +1364,11 @@ $jsonselectsensor = json_encode($selectsensor);
             $("#saveCSV").show();
             
             // ausblenden bei erneutem drücken von 'Anzeigen', solange Spinner eingeblendet ist
-//            if ($("#jqChart-wrapper").is(":visible")){
-//                $("#jqChart-wrapper").toggle();
-//                $("#saveImg").toggle();
-//                $("#saveCSV").toggle();
-//            }
+            if ($("#jqChart-wrapper").is(":visible")){
+                $("#jqChart-wrapper").toggle();
+                $("#saveImg").toggle();
+                $("#saveCSV").toggle();
+            }
 
             //die erste y-Achse (auf der linken Seite des Graphen) sollte zoom-enabled haben
             for (i = 0; i < scalas_copy.length; i++) {
@@ -1449,9 +1454,9 @@ $jsonselectsensor = json_encode($selectsensor);
             $('.loading-div, #anzeigeButton').toggle();
             
             // anzeigen, da Chart fertig geladen
-//            $("#jqChart-wrapper").toggle();
-//            $("#saveImg").toggle();
-//            $("#saveCSV").toggle();
+            $("#jqChart-wrapper").toggle();
+            $("#saveImg").toggle();
+            $("#saveCSV").toggle();
 
             $('#jqChart-wrapper').bind('tooltipFormat', function (e, data) {
                 var result = "<b>Zeitpunkt: ";
