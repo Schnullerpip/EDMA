@@ -578,6 +578,7 @@ h2 small{
 .scala-btn {
     border-top-left-radius:0px;
     background-color:#224565;
+    min-width: 46px;
 }
 
 
