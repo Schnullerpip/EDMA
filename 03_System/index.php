@@ -992,7 +992,7 @@ $jsonselectsensor = json_encode($selectsensor);
             if(scalas[i].location === "left"){
                 replace_string.push("<td>links</td>");
             }else{
-                replace_string.push("<td>rechtss</td>");
+                replace_string.push("<td>rechts</td>");
             }
             replace_string.push("<td><button class='btn btn-primary choose-scala-btn btn-sm pull-right' data-scalaID='" + scalas[i].name + "'>Ausw&auml;hlen</button></td><td><button class='btn btn-primary delete-scala-btn btn-sm pull-right' data-scalaID='"+scalas[i].name+"'>Löschen</button></td>");
             replace_string.push("</tr>");
