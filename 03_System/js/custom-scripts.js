@@ -264,9 +264,11 @@ function parseCSV(csvAsString, data) {
                 serien.push(cols[j].trim());
                 werte[j] = []; //new Array(rows.length - 2);
             } else {
-                var cell = cols[j].split(";");
-                var datum_uhrzeit = cell[1].split(" ");
-                werte[j].push([x, parseFloat(cell[0]), datum_uhrzeit[0], datum_uhrzeit[1]]);
+                if(cols[j] != ""){
+                    var cell = cols[j].split(";");
+                    var datum_uhrzeit = cell[1].split(" ");
+                    werte[j].push([x, parseFloat(cell[0]), datum_uhrzeit[0], datum_uhrzeit[1]]);
+                }
             }
         }
         if (i > 0) {

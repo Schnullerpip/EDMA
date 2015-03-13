@@ -591,6 +591,11 @@ h2 small{
     pointer-events: none;
 }
 
+/*für das infomodal damit der link sichtbar ist*/
+#infoRedirectMessreihen {
+    color:#224565;
+}
+
 /*für das skalen-modal*/
 .modal-content input {
     border-color: #224565;

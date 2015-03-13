@@ -808,10 +808,10 @@ $jsonselectsensor = json_encode($selectsensor);
         for(iter_index=1;iter_index<messreihen_copy.length;iter_index++){
         d2 = new Date(messreihen_copy[iter_index].datum).getTime();
         d1= new Date(messreihen_copy[iter_index-1].datum).getTime();
-            if((d2 < d1) || ((d2 == d1) &&(messreihen_copy[iter_indexi].messreihenname < messreihen_copy[iter_indexi-1].messreihenname))){
-                tmp = tmp = d1;
-                messreihen_copy[iter_indexi-1] = messreihen_copy[iter_indexi];
-                messreihen_copy[iter_indexi] = tmp;
+            if((d2 < d1) || ((d2 == d1) &&(messreihen_copy[iter_index].messreihenname < messreihen_copy[iter_index-1].messreihenname))){
+                tmp = messreihen_copy[iter_index-1];
+                messreihen_copy[iter_index-1] = messreihen_copy[iter_index];
+                messreihen_copy[iter_index] = tmp;
             }
         }
     }
@@ -1100,7 +1100,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function checkForExistingMessreihen(){
         if(messreihen.length == 0){
-            modalTextWarning("Momentan sind noch keine Messreihen importiert, dies kann auf <a href='messreihen'>Messreihenverwaltung</a> erledigt werden.");
+            modalTextWarning("Momentan sind noch keine Messreihen importiert, dies kann auf <a id='infoRedirectMessreihen' href='messreihen'>Messreihenverwaltung</a> erledigt werden.");
             $('#infoModal').modal();
             //Die Überschriften Messreihen, Sensoren, Skala entfernen -> sieht nur verwirrend aus wenn es noch keine Daten gibt..
             $("#messreihenSensorenFilterDiv").html("<p style='text-align:center'>Keine Messreihen vorhanden</p>");
