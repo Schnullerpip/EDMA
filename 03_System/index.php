@@ -277,7 +277,7 @@ $jsonselectsensor = json_encode($selectsensor);
 <!-- Spinner waehrend Chart laedt -->
 <div class="loading-div" style="display: none">
     <div class="loading-spinner"></div>
-    <h4 class="text-center">Chart wird geladen, bitte warten...</h4>
+    <h4 class="text-center">Graph wird geladen, bitte warten...</h4>
 </div>
 
 
