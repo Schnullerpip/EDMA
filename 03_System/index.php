@@ -832,6 +832,8 @@ $jsonselectsensor = json_encode($selectsensor);
     //Liste der angezeigten Messreihen regenerieren 
     var lookup_selected_messreihe = null;
     function regenerateMessreihenList() {
+        //falls es noch keine messreihen gibt - eine Meldung ausgeben welche auf die Situation hinweist, anstatt überschriften ohne eigentliche werte anzuzeigen
+        checkForExistingMessreihen();
         reorganizeMessreihenCopyByDate();
         var replace_string = [];
         for (i = 0; i < messreihen_copy.length; i++) {
@@ -1083,6 +1085,15 @@ $jsonselectsensor = json_encode($selectsensor);
     function isInt(value) {
         return /^\d+$/.test(value);
    }
+
+    function checkForExistingMessreihen(){
+        if(messreihen.length == 0){
+            modalTextWarning("Momentan sind noch keine Messreihen importiert, dies kann auf 'Messreihenverwaltung' erledigt werden.");
+            $('#infoModal').modal();
+            //Die Überschriften Messreihen, Sensoren, Skala entfernen -> sieht nur verwirrend aus wenn es noch keine Daten gibt..
+            $("#messreihenSensorenFilterDiv").html("<p style='text-align:center'>Keine Messreihen vorhanden</p>");
+        }
+    }
     //-----------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -1122,6 +1133,7 @@ $jsonselectsensor = json_encode($selectsensor);
         }
 
         regenerateDocument();
+
 
         //den Downloadbuttons den richtigen Titel usw. geben
         var projekt_name = "<?php echo escape($projekt->data()->projektname); ?>";
