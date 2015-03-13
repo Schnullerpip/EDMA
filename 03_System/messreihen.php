@@ -1,26 +1,32 @@
 <?php
-require_once 'header.php';
-$db = DB::getInstance();
+require_once 'preHeader.php';
 
-// Javascript Includes definieren. Werden in Footer eingebunden.
-$includes = array('messreihen');
+$db = DB::getInstance();
 
 // Wurden Daten im bearbeiten Formular geändert?
 if (Input::exists('post')) {
     if (Token::check(Input::get('token'))) {
+        $errors = array();
         // Name geändert
-        // TODO: For-Schleife bauen?
         if ($name = Input::get('name')) {
-            if (!$db->update('messreihe', Input::get('messreihenid'), array('messreihenname' => $name))) {
-                // Error
-                // TODO: Was wenn Name schon vorhanden?
+
+            // Name schon vorhanden?
+            $db->get('messreihe', array('messreihenname', '=', $name));
+            $results = $db->results();
+
+            if (sizeof($results) >= 1) {
+                array_push($errors, 'Die Messreihe konnte nicht umbenannt werden! Der Messreihenname ist schon vorhanden!<br>');
+            } else {
+                if (!$db->update('messreihe', Input::get('messreihenid'), array('messreihenname' => $name))) {
+                    array_push($errors, 'Die Messreihe konnte nicht umbenannt werden! Bitte versuchen Sie es erneut!<br>');
+                }
             }
         }
         // Datum geändert
         if ($datum = Input::get('datum')) {
             $datum = Utils::convertDate($datum);
             if (!$db->update('messreihe', Input::get('messreihenid'), array('datum' => $datum))) {
-                // Error
+                array_push($errors, 'Das Datum der Messreihe konnte nicht ge&auml;ndert werden! Bitte versuchen Sie es erneut!<br>');
             }
         }
         // Anzeigenamen bearbeitet
@@ -29,7 +35,7 @@ if (Input::exists('post')) {
                 if (!empty($sensorname)) {
                     $db->query("UPDATE messreihe_sensor SET anzeigename = ? WHERE messreihe_sensor.messreihe_id = ? AND messreihe_sensor.sensor_id = ?", array($sensorname, Input::get('messreihenid'), $key));
                     if ($db->error()) {
-                        // Error
+                        array_push($errors, 'Der Anzeoigename des Sensors "' . $key . '" konnte nicht ge&auml;ndert werden! Bitte versuchen Sie es erneut!<br>');
                     }
                 }
             }
@@ -40,13 +46,25 @@ if (Input::exists('post')) {
                 if (!empty($metaeintrag)) {
                     $db->query("UPDATE messreihe_metainfo SET metawert = ? WHERE messreihe_metainfo.messreihe_id = ? AND messreihe_metainfo.metainfo_id = ?", array($metaeintrag, Input::get('messreihenid'), $key));
                     if ($db->error()) {
-                        // Error
+                        array_push($errors, 'Der Wert des Metafeldes "' . $key . '" konnte nicht ge&auml;ndert werden! Bitte versuchen Sie es erneut!<br>');
                     }
                 }
             }
         }
+
+        if (sizeof($errors) > 0) {
+            $errorString = '';
+            foreach ($errors as $error) {
+                $errorString .= "<br>" . $error;
+            }
+
+            Session::flash('error', $errorString);
+            Redirect::to('messreihen.php');
+        }
     }
 }
+
+require_once 'header.php';
 ?>
 
 <?php if (Input::exists('get')) : ?>
@@ -73,13 +91,13 @@ if (Input::exists('post')) {
                 </div>
             </div>
             <div class="upload-progress"></div>
-            
+
             <!-- Spinner waehrend Datei importiert wird -->
             <div class="loading-div" style="display: none">
                 <div class="loading-spinner"></div>                
                 <h4 class="text-center">Datei wird importiert, bitte warten...</h4>
             </div>
-            
+
             <hr>
             <div class="form-group">
                 <div class="col-sm-5 col-sm-offset-4">
@@ -212,7 +230,7 @@ if (Input::exists('post')) {
                         </div>
                     </div>
                 <?php endforeach; ?>
-                
+
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-5">
                         <button data-toggle="modal" data-target="#delete-modal" class="btn btn-link no-padding" 
@@ -262,50 +280,50 @@ if (Input::exists('post')) {
     </div>
 
     <?php
-        $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
-        $messreihen = $db->results();
+    $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
+    $messreihen = $db->results();
     ?>
     <?php if (sizeof($messreihen) !== 0) : ?>
         <div class="panel panel-default">
-        <div class="table-responsive">
-            <table class="table controlled-table" id="messreihen-tabelle">
-                <thead>
-                    <tr>
-                        <th data-dynatable-column="name">Messreihe</th>
-                        <th data-dynatable-column="datum" class="text-right">Datum</th>
-                        <th class="table-controls"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($messreihen as $messreihe) : ?>
+            <div class="table-responsive">
+                <table class="table controlled-table" id="messreihen-tabelle">
+                    <thead>
                         <tr>
-                            <td><?php echo escape($messreihe->messreihenname); ?></td>
-                            <td class="text-right"><?php echo escape(Utils::convertDate($messreihe->datum)); ?></td>
-                            <td class="controls-wrapper">
-                                <div class="pull-right controls">
-                                    <ul class="list-unstyled pull-right mb-0">
-                                        <li>
-                                            <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe &quot;<?php echo escape($messreihe->messreihenname); ?>&quot; bearbeiten">
-                                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <button data-toggle="modal" data-target="#delete-modal" class="btn btn-link" 
-                                                    data-element="messreihe" data-redirect="" type="button"
-                                                    data-id="<?php echo escape($messreihe->id); ?>"
-                                                    title="Messreihe &quot;<?php echo escape($messreihe->messreihenname); ?>&quot; l&ouml;schen">
-                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
+                            <th data-dynatable-column="name">Messreihe</th>
+                            <th data-dynatable-column="datum" class="text-right">Datum</th>
+                            <th class="table-controls"></th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($messreihen as $messreihe) : ?>
+                            <tr>
+                                <td><?php echo escape($messreihe->messreihenname); ?></td>
+                                <td class="text-right"><?php echo escape(Utils::convertDate($messreihe->datum)); ?></td>
+                                <td class="controls-wrapper">
+                                    <div class="pull-right controls">
+                                        <ul class="list-unstyled pull-right mb-0">
+                                            <li>
+                                                <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe &quot;<?php echo escape($messreihe->messreihenname); ?>&quot; bearbeiten">
+                                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <button data-toggle="modal" data-target="#delete-modal" class="btn btn-link" 
+                                                        data-element="messreihe" data-redirect="" type="button"
+                                                        data-id="<?php echo escape($messreihe->id); ?>"
+                                                        title="Messreihe &quot;<?php echo escape($messreihe->messreihenname); ?>&quot; l&ouml;schen">
+                                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
     <?php else : ?>
         <br>
         <p class="text-center">Bisher wurden noch keine Messreihen importiert. Um eine Messreihe zu importieren, klicken Sie bitte auf "Messreihe hinzufügen".</p>

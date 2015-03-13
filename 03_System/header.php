@@ -1,7 +1,3 @@
-<?php
-require_once 'preHeader.php'
-?>
-
 <!DOCTYPE html>
 <html lang="de">
     <head>

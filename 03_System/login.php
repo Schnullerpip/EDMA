@@ -26,7 +26,7 @@ if (Input::exists()) {
             } else {
                 Session::flash('error', 'Sie haben ein falsches Passwort eingegeben oder keine Berechtigungen!');
                 Session::flash('inputProjekt', Input::get('projekt'));
-                
+
                 // Auskommentieren, um Weiterleitung zu verhindern und Fehler anzuzeigen
                 Redirect::to('login');
             }
@@ -37,6 +37,7 @@ if (Input::exists()) {
         }
     }
 }
+
 require_once 'header.php';
 ?>
 
@@ -53,7 +54,7 @@ require_once 'header.php';
                     if (Session::exists('inputProjekt')) {
                         $inputProjekt = Session::flash('inputProjekt');
                     }
-                    
+
                     $db = DB::getInstance();
 
                     $db->query('SELECT projektname, id FROM projekt');
@@ -63,8 +64,8 @@ require_once 'header.php';
                         } else {
                             $selected = '';
                         }
-                        
-                        echo '<option value="' . $projekt->id . '"' . $selected  . '>' . escape($projekt->projektname) . '</option>';
+
+                        echo '<option value="' . $projekt->id . '"' . $selected . '>' . escape($projekt->projektname) . '</option>';
                     }
                     ?>
                 </select>

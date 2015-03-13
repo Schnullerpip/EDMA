@@ -1,4 +1,5 @@
 <?php
+require_once 'preHeader.php';
 require_once 'header.php';
 $db = DB::getInstance();
 ?>

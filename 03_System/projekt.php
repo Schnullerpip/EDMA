@@ -167,6 +167,7 @@ if (is_object($projekt->data())) {
 } else {
     $projektbeschreibungen = array();
 }
+
 require_once 'header.php';
 ?>
 
