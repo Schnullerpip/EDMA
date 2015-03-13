@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.9.1"/>
+<title>EDMA: classes/DB.php Quellcode</title>
+<link href="../../tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../jquery.js"></script>
+<script type="text/javascript" src="../../dynsections.js"></script>
+<link href="../../navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../resize.js"></script>
+<script type="text/javascript" src="../../navtreedata.js"></script>
+<script type="text/javascript" src="../../navtree.js"></script>
+<script type="text/javascript">
+  $(document).ready(initResizable);
+  $(window).load(resizeHeight);
+</script>
+<link href="../../search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../search/searchdata.js"></script>
+<script type="text/javascript" src="../../search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="../../doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">EDMA
+   </div>
+   <div id="projectbrief">Dokumentation des Teamprojekts EDMA der HTWG-Konstanz</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Erzeugt von Doxygen 1.8.9.1 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "../../search",false,'Suchen');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="../../index.html"><span>Hauptseite</span></a></li>
+      <li><a href="../../annotated.html"><span>Datenstrukturen</span></a></li>
+      <li class="current"><a href="../../files.html"><span>Dateien</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="../../search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Suchen" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="../../files.html"><span>Auflistung&#160;der&#160;Dateien</span></a></li>
+    </ul>
+  </div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){initNavTree('d8/d13/_d_b_8php_source.html','../../');});
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">DB.php</div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;&lt;?php</div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;</div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;require_once <span class="stringliteral">&#39;core/init.php&#39;</span>;</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="../../d1/dc8/class_d_b.html">DB</a> {</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keyword">private</span> <span class="keyword">static</span> $_instance = null;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">private</span> $_pdo,</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;            $_query,</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;            $_error = <span class="keyword">false</span>,</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;            $_results,</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;            $_count = 0;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">private</span> <span class="keyword">function</span> __construct() {</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;            $this-&gt;_pdo = <span class="keyword">new</span> PDO(<span class="stringliteral">&#39;mysql:host=&#39;</span> . <a class="code" href="../../dd/d34/class_config.html#acf85114e008343700ee273bcbaa4c357">Config::get</a>(<span class="stringliteral">&#39;mysql/host&#39;</span>) . <span class="stringliteral">&#39;;dbname=&#39;</span> . <a class="code" href="../../dd/d34/class_config.html#acf85114e008343700ee273bcbaa4c357">Config::get</a>(<span class="stringliteral">&#39;mysql/db&#39;</span>) . <span class="stringliteral">&#39;;charset=UTF8&#39;</span>, <a class="code" href="../../dd/d34/class_config.html#acf85114e008343700ee273bcbaa4c357">Config::get</a>(<span class="stringliteral">&#39;mysql/username&#39;</span>), <a class="code" href="../../dd/d34/class_config.html#acf85114e008343700ee273bcbaa4c357">Config::get</a>(<span class="stringliteral">&#39;mysql/password&#39;</span>));</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        } <span class="keywordflow">catch</span> (PDOException $e) {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;            die($e-&gt;getMessage());</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        }</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    }</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#ac93fbec81f07e5d15f80db907e63dc10">   31</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">function</span> <a class="code" href="../../d1/dc8/class_d_b.html#ac93fbec81f07e5d15f80db907e63dc10">getInstance</a>() {</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="keywordflow">if</span> (!isset(self::$_instance)) {</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            self::$_instance = <span class="keyword">new</span> <a class="code" href="../../d1/dc8/class_d_b.html">DB</a>();</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        }</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordflow">return</span> self::$_instance;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    }</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> beginTransaction() {</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        $this-&gt;_pdo-&gt;beginTransaction();</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    }</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> commit() {</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        $this-&gt;_pdo-&gt;commit();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> rollback() {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        $this-&gt;_pdo-&gt;rollBack();</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> createStatement($sql) {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <span class="keywordflow">return</span> $this-&gt;_pdo-&gt;prepare($sql);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> executeStatement(PDOStatement $statement, $values) {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordflow">if</span> ($statement-&gt;execute($values)) {</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;            $this-&gt;_results = $statement-&gt;fetchAll(PDO::FETCH_OBJ);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;            $this-&gt;_count = $this-&gt;_query-&gt;rowCount();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;            $this-&gt;_error = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    </div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#a81982948466fe9cb721c593c61156ae0">   76</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d1/dc8/class_d_b.html#a81982948466fe9cb721c593c61156ae0">query</a>($sql, $params = array()) {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="comment">// Felder zurücksetzen</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        $this-&gt;_error = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        $this-&gt;_count = 0;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        $this-&gt;_results = array();</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        </div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordflow">if</span> ($this-&gt;_query = $this-&gt;_pdo-&gt;prepare($sql)) {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            $x = 1;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="../../d1/dc8/class_d_b.html#ac751e87b3d4c4bf2feb03bee8b092755">count</a>($params)) {</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                <span class="keywordflow">foreach</span> ($params as $param) {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                    $this-&gt;_query-&gt;bindValue($x, $param);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                    $x++;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;            <span class="keywordflow">if</span> ($this-&gt;_query-&gt;execute()) {</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                $this-&gt;_results = $this-&gt;_query-&gt;fetchAll(PDO::FETCH_OBJ);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                $this-&gt;_count = $this-&gt;_query-&gt;rowCount();</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                $this-&gt;_error = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            $this-&gt;_error = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordflow">return</span> $this;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    }</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    </div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#a2131585b1370210f925a2a97668b9081">  111</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d1/dc8/class_d_b.html#a2131585b1370210f925a2a97668b9081">justquery</a>($sql, $params = array()) {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="comment">// Felder zurücksetzen</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        $this-&gt;_error = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        $this-&gt;_count = 0;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        $this-&gt;_results = array();</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="keywordflow">if</span> ($this-&gt;_query = $this-&gt;_pdo-&gt;prepare($sql)) {</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            $x = 1;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="../../d1/dc8/class_d_b.html#ac751e87b3d4c4bf2feb03bee8b092755">count</a>($params)) {</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                <span class="keywordflow">foreach</span> ($params as $param) {</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                    $this-&gt;_query-&gt;bindValue($x, $param);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                    $x++;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                }</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            }</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            <span class="keywordflow">if</span> ($this-&gt;_query-&gt;execute()) {</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;                $this-&gt;_error = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            }</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            $this-&gt;_error = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        }</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    }</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    </div>
+<div class="line"><a name="l00142"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#ae48cc10bd727774bb36203986ce3b176">  142</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d1/dc8/class_d_b.html#ae48cc10bd727774bb36203986ce3b176">fetch</a>() {</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="keywordflow">return</span> $this-&gt;_query-&gt;fetchObject();</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    }</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keyword">private</span> <span class="keyword">function</span> action($action, $table, $where = array()) {</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="../../d1/dc8/class_d_b.html#ac751e87b3d4c4bf2feb03bee8b092755">count</a>($where) === 3) {</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            $operators = array(<span class="charliteral">&#39;=&#39;</span>, <span class="charliteral">&#39;&gt;&#39;</span>, <span class="charliteral">&#39;&lt;&#39;</span>, <span class="stringliteral">&#39;&gt;=&#39;</span>, <span class="stringliteral">&#39;&lt;=&#39;</span>);</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            $field = $where[0];</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            $operator = $where[1];</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            $value = $where[2];</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            <span class="keywordflow">if</span> (in_array($operator, $operators)) {</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;                $sql = <span class="stringliteral">&quot;{$action} FROM {$table} WHERE {$field} {$operator} ?&quot;</span>;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;                <span class="keywordflow">if</span> (!$this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a81982948466fe9cb721c593c61156ae0">query</a>($sql, array($value))-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a43b8d30b879d4f09ceb059b02af2bc02">error</a>()) {</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;                    <span class="keywordflow">return</span> $this;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;                }</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            }</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        }</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    }</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;</div>
+<div class="line"><a name="l00171"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#ad365c7e06b591627c504876c815f01d7">  171</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <span class="keyword">get</span>($table, $where) {</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;        <span class="keywordflow">return</span> $this-&gt;action(<span class="stringliteral">&#39;SELECT *&#39;</span>, $table, $where);</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    }</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
+<div class="line"><a name="l00182"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#a7d14a9de8bac5dd9b5cfec163e448157">  182</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <span class="keyword">delete</span>($table, $where) {</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="keywordflow">return</span> $this-&gt;action(<span class="stringliteral">&#39;DELETE&#39;</span>, $table, $where);</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    }</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    </div>
+<div class="line"><a name="l00196"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#a20ac3c340815d787b7704d4ca7ffc07d">  196</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d1/dc8/class_d_b.html#a20ac3c340815d787b7704d4ca7ffc07d">insert</a>($table, $fields = array()) {</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        $keys = array_keys($fields);</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        $values = <span class="stringliteral">&#39;&#39;</span>;</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        $x = 1;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        <span class="keywordflow">foreach</span> ($fields as $field) {</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            $values .= <span class="charliteral">&#39;?&#39;</span>;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            <span class="keywordflow">if</span> ($x &lt; <a class="code" href="../../d1/dc8/class_d_b.html#ac751e87b3d4c4bf2feb03bee8b092755">count</a>($fields)) {</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;                $values .= <span class="stringliteral">&#39;, &#39;</span>;</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;            }</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;            $x++;</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        }</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        $sql = <span class="stringliteral">&quot;INSERT INTO {$table} (`&quot;</span> . implode(<span class="stringliteral">&#39;`,`&#39;</span>, $keys) . <span class="stringliteral">&quot;`) VALUES ({$values})&quot;</span>;</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        <span class="keywordflow">if</span> (!$this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a81982948466fe9cb721c593c61156ae0">query</a>($sql, $fields)-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a43b8d30b879d4f09ceb059b02af2bc02">error</a>()) {</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;        }</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    }</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;</div>
+<div class="line"><a name="l00225"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#a4744be2d6fa91fb9f0e4cce544dd3e90">  225</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d1/dc8/class_d_b.html#a4744be2d6fa91fb9f0e4cce544dd3e90">update</a>($table, $id, $fields) {</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        $set = $this-&gt;prepareArray($fields, <span class="charliteral">&#39;,&#39;</span>);</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        </div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        $sql = <span class="stringliteral">&quot;UPDATE {$table} SET {$set} WHERE id = {$id}&quot;</span>;</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;        <span class="keywordflow">if</span> (!$this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a81982948466fe9cb721c593c61156ae0">query</a>($sql, $fields)-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a43b8d30b879d4f09ceb059b02af2bc02">error</a>()) {</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;        }</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    }</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    </div>
+<div class="line"><a name="l00254"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#a146b6d64c4fd23d8c522cd6be463ca8a">  254</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d1/dc8/class_d_b.html#a146b6d64c4fd23d8c522cd6be463ca8a">getIdBySelectOrInsert</a>($table, $fields) {</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;        $where = $this-&gt;prepareArray($fields, <span class="stringliteral">&quot;and&quot;</span>);</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;        </div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        $sql = <span class="stringliteral">&quot;SELECT id FROM {$table} WHERE {$where}&quot;</span>;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        $this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a81982948466fe9cb721c593c61156ae0">query</a>($sql, $fields);</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        <span class="keywordflow">if</span> (!$this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a43b8d30b879d4f09ceb059b02af2bc02">error</a>() and $this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#ac751e87b3d4c4bf2feb03bee8b092755">count</a>()) {</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;            <span class="keywordflow">return</span> $this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#ac73eef9ff76ea330c0dab36ca448b90d">first</a>()-&gt;id;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;            <span class="keywordflow">if</span> ($this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a20ac3c340815d787b7704d4ca7ffc07d">insert</a>($table, $fields)) {</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                <span class="keywordflow">return</span> $this-&gt;_pdo-&gt;lastInsertId();</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;            }</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        }</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        </div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    }</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    </div>
+<div class="line"><a name="l00283"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#a0c211f228828ddec1c74606409f4b6b8">  283</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d1/dc8/class_d_b.html#a0c211f228828ddec1c74606409f4b6b8">insertOrUpdate</a>($table, $fields, $searchFields = null) {</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;        $result = -1;</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;        <span class="keywordflow">if</span> (is_null($searchFields)) {</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;            $searchFields = $fields;</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        }</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;        </div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;        $where = $this-&gt;prepareArray($searchFields, <span class="stringliteral">&quot;and&quot;</span>);</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;        $sql = <span class="stringliteral">&quot;SELECT id FROM {$table} WHERE {$where}&quot;</span>;</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;       </div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;        $this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a81982948466fe9cb721c593c61156ae0">query</a>($sql, $searchFields);</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        <span class="keywordflow">if</span>(!$this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a43b8d30b879d4f09ceb059b02af2bc02">error</a>() and $this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#ac751e87b3d4c4bf2feb03bee8b092755">count</a>()) {</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;            $id = $this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#ac73eef9ff76ea330c0dab36ca448b90d">first</a>()-&gt;id;</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;            <span class="keywordflow">if</span> ($this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a4744be2d6fa91fb9f0e4cce544dd3e90">update</a>($table, $id, $fields)) {</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;                $result = $id;</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;            }</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;            <span class="keywordflow">if</span> ($this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a20ac3c340815d787b7704d4ca7ffc07d">insert</a>($table, $fields)) {</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;                $result = $this-&gt;_pdo-&gt;lastInsertId();</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;            }</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        }</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;        </div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        <span class="keywordflow">return</span> $result;</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    }</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    </div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    <span class="keyword">private</span> <span class="keyword">function</span> prepareArray($array, $delimiter) {</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        $result = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        <span class="keywordflow">foreach</span> ($array as $fieldname =&gt; $value) {</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;            <span class="keywordflow">if</span> (!empty($result)) {</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;                $result .= <span class="stringliteral">&quot; &quot;</span> . $delimiter . <span class="stringliteral">&quot; &quot;</span>;</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;            }</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;            $result .= <span class="stringliteral">&quot;{$fieldname} = ?&quot;</span>; </div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;        }</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        </div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        <span class="keywordflow">return</span> $result;</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    }</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;</div>
+<div class="line"><a name="l00339"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#a81532ad36ede4bfc6cd5e69a321f3df4">  339</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d1/dc8/class_d_b.html#a81532ad36ede4bfc6cd5e69a321f3df4">results</a>() {</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;        <span class="keywordflow">return</span> $this-&gt;_results;</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    }</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;</div>
+<div class="line"><a name="l00348"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#ac73eef9ff76ea330c0dab36ca448b90d">  348</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d1/dc8/class_d_b.html#ac73eef9ff76ea330c0dab36ca448b90d">first</a>() {</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;        $resultSet = $this-&gt;<a class="code" href="../../d1/dc8/class_d_b.html#a81532ad36ede4bfc6cd5e69a321f3df4">results</a>();</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        <span class="keywordflow">return</span> $resultSet[0];</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    }</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;</div>
+<div class="line"><a name="l00358"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#a43b8d30b879d4f09ceb059b02af2bc02">  358</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d1/dc8/class_d_b.html#a43b8d30b879d4f09ceb059b02af2bc02">error</a>() {</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;        <span class="keywordflow">return</span> $this-&gt;_error;</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    }</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    </div>
+<div class="line"><a name="l00367"></a><span class="lineno"><a class="line" href="../../d1/dc8/class_d_b.html#ac751e87b3d4c4bf2feb03bee8b092755">  367</a></span>&#160;    <span class="keyword">public</span> <span class="keyword">function</span> <a class="code" href="../../d1/dc8/class_d_b.html#ac751e87b3d4c4bf2feb03bee8b092755">count</a>() {</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;        <span class="keywordflow">return</span> $this-&gt;_count;</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    }</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;}</div>
+<div class="ttc" id="class_d_b_html_a146b6d64c4fd23d8c522cd6be463ca8a"><div class="ttname"><a href="../../d1/dc8/class_d_b.html#a146b6d64c4fd23d8c522cd6be463ca8a">DB\getIdBySelectOrInsert</a></div><div class="ttdeci">getIdBySelectOrInsert($table, $fields)</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00254">DB.php:254</a></div></div>
+<div class="ttc" id="class_d_b_html_ac93fbec81f07e5d15f80db907e63dc10"><div class="ttname"><a href="../../d1/dc8/class_d_b.html#ac93fbec81f07e5d15f80db907e63dc10">DB\getInstance</a></div><div class="ttdeci">static getInstance()</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00031">DB.php:31</a></div></div>
+<div class="ttc" id="class_d_b_html_a20ac3c340815d787b7704d4ca7ffc07d"><div class="ttname"><a href="../../d1/dc8/class_d_b.html#a20ac3c340815d787b7704d4ca7ffc07d">DB\insert</a></div><div class="ttdeci">insert($table, $fields=array())</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00196">DB.php:196</a></div></div>
+<div class="ttc" id="class_d_b_html_ac73eef9ff76ea330c0dab36ca448b90d"><div class="ttname"><a href="../../d1/dc8/class_d_b.html#ac73eef9ff76ea330c0dab36ca448b90d">DB\first</a></div><div class="ttdeci">first()</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00348">DB.php:348</a></div></div>
+<div class="ttc" id="class_d_b_html_a43b8d30b879d4f09ceb059b02af2bc02"><div class="ttname"><a href="../../d1/dc8/class_d_b.html#a43b8d30b879d4f09ceb059b02af2bc02">DB\error</a></div><div class="ttdeci">error()</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00358">DB.php:358</a></div></div>
+<div class="ttc" id="class_d_b_html"><div class="ttname"><a href="../../d1/dc8/class_d_b.html">DB</a></div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00010">DB.php:10</a></div></div>
+<div class="ttc" id="class_config_html_acf85114e008343700ee273bcbaa4c357"><div class="ttname"><a href="../../dd/d34/class_config.html#acf85114e008343700ee273bcbaa4c357">Config\get</a></div><div class="ttdeci">static get($path=null)</div><div class="ttdef"><b>Definition:</b> <a href="../../d4/d8a/_config_8php_source.html#l00015">Config.php:15</a></div></div>
+<div class="ttc" id="class_d_b_html_a81532ad36ede4bfc6cd5e69a321f3df4"><div class="ttname"><a href="../../d1/dc8/class_d_b.html#a81532ad36ede4bfc6cd5e69a321f3df4">DB\results</a></div><div class="ttdeci">results()</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00339">DB.php:339</a></div></div>
+<div class="ttc" id="class_d_b_html_ac751e87b3d4c4bf2feb03bee8b092755"><div class="ttname"><a href="../../d1/dc8/class_d_b.html#ac751e87b3d4c4bf2feb03bee8b092755">DB\count</a></div><div class="ttdeci">count()</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00367">DB.php:367</a></div></div>
+<div class="ttc" id="class_d_b_html_a81982948466fe9cb721c593c61156ae0"><div class="ttname"><a href="../../d1/dc8/class_d_b.html#a81982948466fe9cb721c593c61156ae0">DB\query</a></div><div class="ttdeci">query($sql, $params=array())</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00076">DB.php:76</a></div></div>
+<div class="ttc" id="class_d_b_html_a0c211f228828ddec1c74606409f4b6b8"><div class="ttname"><a href="../../d1/dc8/class_d_b.html#a0c211f228828ddec1c74606409f4b6b8">DB\insertOrUpdate</a></div><div class="ttdeci">insertOrUpdate($table, $fields, $searchFields=null)</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00283">DB.php:283</a></div></div>
+<div class="ttc" id="class_d_b_html_a4744be2d6fa91fb9f0e4cce544dd3e90"><div class="ttname"><a href="../../d1/dc8/class_d_b.html#a4744be2d6fa91fb9f0e4cce544dd3e90">DB\update</a></div><div class="ttdeci">update($table, $id, $fields)</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00225">DB.php:225</a></div></div>
+<div class="ttc" id="class_d_b_html_ae48cc10bd727774bb36203986ce3b176"><div class="ttname"><a href="../../d1/dc8/class_d_b.html#ae48cc10bd727774bb36203986ce3b176">DB\fetch</a></div><div class="ttdeci">fetch()</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00142">DB.php:142</a></div></div>
+<div class="ttc" id="class_d_b_html_a2131585b1370210f925a2a97668b9081"><div class="ttname"><a href="../../d1/dc8/class_d_b.html#a2131585b1370210f925a2a97668b9081">DB\justquery</a></div><div class="ttdeci">justquery($sql, $params=array())</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d13/_d_b_8php_source.html#l00111">DB.php:111</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="../../dir_b02e4219757ae4e3a0f1714873865bbf.html">classes</a></li><li class="navelem"><b>DB.php</b></li>
+    <li class="footer">Erzeugt am Fre Mär 13 2015 11:10:57 für EDMA von
+    <a href="http://www.doxygen.org/index.html">
+    <img class="footer" src="../../doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
+  </ul>
+</div>
+</body>
+</html>

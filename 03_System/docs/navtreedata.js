@@ -9,6 +9,9 @@ var NAVTREE =
         [ "Alle", "functions.html", null ],
         [ "Funktionen", "functions_func.html", null ]
       ] ]
+    ] ],
+    [ "Dateien", null, [
+      [ "Auflistung der Dateien", "files.html", "files" ]
     ] ]
   ] ]
 ];
