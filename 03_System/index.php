@@ -1097,7 +1097,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function checkForExistingMessreihen(){
         if(messreihen.length == 0){
-            modalTextWarning("Momentan sind noch keine Messreihen importiert, dies kann auf 'Messreihenverwaltung' erledigt werden.");
+            modalTextWarning("Momentan sind noch keine Messreihen importiert, dies kann auf <a href='messreihen'>Messreihenverwaltung</a> erledigt werden.");
             $('#infoModal').modal();
             //Die Überschriften Messreihen, Sensoren, Skala entfernen -> sieht nur verwirrend aus wenn es noch keine Daten gibt..
             $("#messreihenSensorenFilterDiv").html("<p style='text-align:center'>Keine Messreihen vorhanden</p>");

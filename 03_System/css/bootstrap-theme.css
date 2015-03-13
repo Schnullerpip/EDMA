@@ -575,6 +575,11 @@ h2 small{
     pointer-events: none;
 }
 
+/*für das Info-modal*/
+#infoModal a{
+    color:blue;
+}
+
 /*für das skalen-modal*/
 .modal-content input {
     border-color: #224565;
