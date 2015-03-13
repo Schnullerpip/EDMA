@@ -893,9 +893,10 @@ $jsonselectsensor = json_encode($selectsensor);
                 sensors_string.push("</button>");
 
                 scalas_string.push("<button class='btn btn-default scala-btn' style='width:100%' data-messreihe='" + arg + "' data-sensorID='" + sensors[i]["id"] + "'>");
-                scalas_string.push("<span class='glyphicon glyphicon-stats'></span>  ");
                 if (sensors[i]["scala"] != null) {
-                    scalas_string.push(sensors[i]["scala"]["name"]);
+                    scalas_string.push("<b>"+sensors[i]["scala"]["name"]+"</b>");
+                }else{
+                    scalas_string.push("<span class='glyphicon glyphicon-stats'></span>  ");
                 }
                 scalas_string.push("</button>");
             }
@@ -913,8 +914,12 @@ $jsonselectsensor = json_encode($selectsensor);
     function selectSensor(target) {
         var selected_id = target.getAttribute("data-sensorID");
         var zugehörige_messreihe = target.getAttribute("data-messreihe");
+
         for (i = 0; i < sensors.length; i++) {
             if ((sensors[i].id == selected_id) && (sensors[i].messreihenname == zugehörige_messreihe)) {
+                if(sensors[i].scala == null){//initial die default-skala für den sensor auswählen
+                    sensors[i].scala = scalas[0]; 
+                }
                 if (sensors[i].selected == false) {
                     $(target).append(" <span class='glyphicon glyphicon-ok'></span>");
                     sensors[i].selected = true;
@@ -1030,7 +1035,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
         if ((chosen_title != "") && (titleDoesntExists(chosen_title))) {
             var new_scala = {
-                name: "Skala: " + (unique_scala_id++),
+                name: "" + (unique_scala_id++),
                 strokeStyle: '#FFFFFF',
                 location: chosen_location,
                 majorGridLines: {
@@ -1114,7 +1119,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
         //Defaultskala erstellen
         scalas.push({
-                name: "",
+                name: "D",
                 strokeStyle: '#FFFFFF',
                 location: "left",
                 majorGridLines: {
@@ -1133,9 +1138,9 @@ $jsonselectsensor = json_encode($selectsensor);
                 },
         });
 
-        for(i=0;i<sensors.length;i++){
-            sensors[i].scala = scalas[0];
-        }
+        //for(i=0;i<sensors.length;i++){
+        //    sensors[i].scala = scalas[0];
+        //}
 
         regenerateDocument();
 
