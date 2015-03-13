@@ -271,6 +271,7 @@ a:active {
 /* ------------------------------- */
 
 .form-control {
+    color: #224565;
     border: 1px solid #fff;
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -380,6 +381,10 @@ form .table#projektbeschreibungen {
 
 .table#projektbeschreibungen {
     border-bottom: none;
+}
+
+.table#scalaModalContent {
+    margin-bottom: 0;
 }
 
 .panel .upload-progress {

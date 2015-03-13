@@ -1203,6 +1203,7 @@ $jsonselectsensor = json_encode($selectsensor);
             } else {
                 $(".nachkommastellen-wrapper").hide();
             }
+            $('#scalaModal').modal('handleUpdate');
         });
 
         //in Modal on click in modal inputs -> checkbox rightSideScala
