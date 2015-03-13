@@ -58,15 +58,11 @@ $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
 
 
 <?php
-// TODO:
-// 
-// Name einer Messreihe als Filter?
 //Vorbereitung für die Filter		
 //datenbank instanz erstellen
 $projektid = $projekt->data()->id;
 
-//Select für messreihenname, metadatenname, datentyp
-//TODO messreihen_id
+//Select für messreihenname, messreihen id, metadatenname, datentyp
 $db->query("SELECT messreihe.messreihenname, messreihe.id, messreihe.datum, metainfo.metaname, messreihe_metainfo.metawert, datentyp.typ
 					FROM messreihe INNER JOIN projekt ON messreihe.projekt_id = projekt.id
 					INNER JOIN messreihe_metainfo ON messreihe.id = messreihe_metainfo.messreihe_id
@@ -122,6 +118,7 @@ $jsonselectsensor = json_encode($selectsensor);
     }
 
     //redundantes Datum zu messreihen metafields hinzufügen damit datum wie metafield behandelt werden kann
+    //datum ist eigentlich ein eigenes Feld in der Datenbank und kein metafeld aber da nach datum gefiltert werden soll muss es auch wie ein metadatum behandelt werden
     for (i = 0; i < messreihen.length; i++) {
         var o;
         var tmp_array = [];
@@ -133,20 +130,20 @@ $jsonselectsensor = json_encode($selectsensor);
         }
     }
 
-    //Arbeitskopie von messreihen erstellen
+    //Arbeitskopie von messreihen erstellen, dadurch kann bei wiederherstellen der aktuellen Auswahl einfach auf das Original zugegriffen werden
     var messreihen_copy = $.extend(true, [], messreihen); //Tiefe Kopie
 
 
     //Variablen für den Sensorzugriff
     var select_sensor = <?php echo $jsonselectsensor; ?>;
-    var sensors = [];
-    var number_sensors = 0;
+    var sensors = [];           //wird der standardanlaufpunkt um Sensoren zu bearbeiten, hält alle sensoren
+    var number_sensors = 0;     //enthält die aktuelle Anzahl an gewählten sensoren 
     const max_number_sensors = 6; //Es sollen höchstens 6 Sensoren ausgewählt werden dürfen, dies ist die Vergleichskonstante
     var selected_sensors = []; //speichert die bereits ausgewählten Sensoren
 
-    //Sensnoren müssen einer Skala zugeordnet werden, entsprechende ZUweisung wurd in folgender Datenstruktur gespeichert
-    var scalas = [];
-    var scalas_copy = []; //Wird später der jqChart übergeben, da die anzeige anweisung noch eine x-achse pusht
+    //Sensoren müssen einer Skala zugeordnet werden, entsprechende ZUweisung wurd in folgender Datenstruktur gespeichert
+    var scalas = [];       //enthält alle skalen
+    var scalas_copy = []; //Wird später der jqChart übergeben, da die 'anzeige' anweisung noch eine x-achse pusht
     var scala_unique_id; //gibt jeder Skala eine eigene id - sollte nach erstellung einer skala inkrementiert werden -> anhand dieser ID werden auch variable Faktoren wie Graphen bzw y-Achsen Farbe und Erscheinungsbild bestimmt sodass einzelne Graphen voneinander unterschieden werden können und einer y-Achse zugewiesen werden können
     var patient_sensor = null; //diese referenz wird den sensor speichern, dem über das auswahlmodal eine skala zugewiesen werden soll
 
@@ -1070,6 +1067,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 break;
             }
         }
+        regenerateMessreihenList();
         regenerateScalaModal();
     }
 
@@ -1114,7 +1112,7 @@ $jsonselectsensor = json_encode($selectsensor);
                     fillStyle: '#FFFFFF',
                 },
                 labels: {
-                    stringFormat: "",
+                    stringFormat: "%.2f",
                     fillStyle: '#FFFFFF',
                 },
         });
