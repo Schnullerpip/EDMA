@@ -80,15 +80,25 @@ h2 {
 a {
     color: white;
 }
-a:hover,
-a:focus,
-a:active,
+
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus,
 .navbar-default .navbar-brand:active,
+.navbar-default .navbar-nav > li > a.active,
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus,
 .navbar-default .navbar-nav > li > a:active {
+    background-color: #36a7eb;
+    color: white;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-nav > li > a:hover {
+    text-decoration: underline;
+}
+
+a:hover,
+a:focus,
+a:active {
     color: white;
     text-decoration: underline;
 }

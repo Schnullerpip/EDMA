@@ -97,10 +97,10 @@ require_once 'preHeader.php'
                     <?php if ($projekt->isLoggedIn()) : ?>
                         <?php if (Session::get(Config::get('session/session_name')) !== 'Neues Projekt') :?>
                             <ul class="nav navbar-nav">
-                                <li><a href="index">Startseite</a></li>
-                                <li><a href="projekt">Projektverwaltung</a></li>
+                                <li><a href="index" class="<?php echo (curPageName() === 'index.php') ? 'active' : '' ?>">Startseite</a></li>
+                                <li><a href="projekt" class="<?php echo (curPageName() === 'projekt.php') ? 'active' : '' ?>">Projektverwaltung</a></li>
                                 <?php if ($projekt->isMaster()) : ?>
-                                    <li><a href="messreihen">Messreihenverwaltung</a></li>
+                                    <li><a href="messreihen" class="<?php echo (curPageName() === 'messreihen.php') ? 'active' : '' ?>">Messreihenverwaltung</a></li>
                                 <?php endif; ?>
                             </ul>
                         <?php endif; ?>
