@@ -171,7 +171,7 @@ $jsonselectsensor = json_encode($selectsensor);
     var old_value = 0;
     var selectFlag = false; //nur falls eine Option aus dem select tag gewählt wurde darf der entsprechende button getriggert werden
     var selectChangedCount = 0;
-    //----------------------------------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -179,7 +179,7 @@ $jsonselectsensor = json_encode($selectsensor);
     var uniqueId = 0; //Diese Variable sollte nach erstellen eines neuen Metafilters inkrementiert werden	
     //welches Metafeld in die Arbeitskopie messreihen_copy zurückgeführt werden muss
     var uniquei = 0; //für die <option> tags im metafilterselect "#selectBox"
-    //----------------------------------------------------------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------------------------------
 
 
     //------------------------------------Die Strings, aus denen zuletzt der Select gebildet wird-------------
