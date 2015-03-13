@@ -250,9 +250,9 @@ require_once 'header.php';
 
                     <div class="panel-body">
                         <div class="row form-group">
-                            <label class="col-xs-12" for="files">Projektbeschreibung hochladen <small>(Max: <?php echo ini_get('post_max_size'); ?>)</small></label>
+                            <label class="col-xs-12" for="files">Projektbeschreibung hochladen <small>(Max: 16M)</small></label>
                             <div class="form-horizontal" role="form">
-                                <input class="col-md-9 control-label" name="file[]" id="files" type="file" multiple="multiple" data-maxsize="<?php echo Utils::convertBytes(ini_get('post_max_size')); ?>" data-projektid="<?php echo is_object($projekt->data()) ? $projekt->data()->id : 0 ?>">
+                                <input class="col-md-9 control-label" name="file[]" id="files" type="file" multiple="multiple" data-maxsize="<?php echo Utils::convertBytes('16M'); ?>" data-projektid="<?php echo is_object($projekt->data()) ? $projekt->data()->id : 0 ?>">
                                 <div class="col-md-3">
                                     <button type="button" name="upload" id="upload" class="btn btn-default btn-sm btn-block">Upload</button>
                                 </div>
