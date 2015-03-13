@@ -325,14 +325,12 @@ $jsonselectsensor = json_encode($selectsensor);
                     <div class="col-sm-offset-4 col-sm-2 einheit-datentyp">
                         <div class="radio">
                             <label>
-                                <input type="radio" id="radioINT" name="Zahlengruppe" value="int" checked="checked">
-                                Ganzzahl
+                                <input type="radio" id="radioINT" name="Zahlengruppe" value="int" checked="checked">Ganzzahl</input>
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" id="radioFLOAT" name="Zahlengruppe" value="float">
-                                Gleitkommazahl
+                                <input type="radio" id="radioFLOAT" name="Zahlengruppe" value="float">Gleitkommazahl</input>
                             </label>
                         </div>
                     </div>
@@ -354,7 +352,7 @@ $jsonselectsensor = json_encode($selectsensor);
                     <div class="col-sm-offset-4 col-sm-6">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" id="rightSideScala" name="Position der Skala" value="left"> Skala rechts vom Graphen anzeigen
+                                <input type="checkbox" id="rightSideScala" name="Position der Skala" value="left"> Skala rechts vom Graphen anzeigen</input>
                             </label>
                         </div>
                     </div>
@@ -991,7 +989,11 @@ $jsonselectsensor = json_encode($selectsensor);
                 replace_string.push("<td>" + scalas[i].labels.stringFormat.slice(3, 100) + "</td>");
                 replace_string.push("<td>Ganzzahl</td>");
             }
-            replace_string.push("<td>" + scalas[i].location + "</td>");
+            if(scalas[i].location === "left"){
+                replace_string.push("<td>links</td>");
+            }else{
+                replace_string.push("<td>rechtss</td>");
+            }
             replace_string.push("<td><button class='btn btn-primary choose-scala-btn btn-sm pull-right' data-scalaID='" + scalas[i].name + "'>Ausw&auml;hlen</button></td><td><button class='btn btn-primary delete-scala-btn btn-sm pull-right' data-scalaID='"+scalas[i].name+"'>Löschen</button></td>");
             replace_string.push("</tr>");
         }
@@ -1023,11 +1025,11 @@ $jsonselectsensor = json_encode($selectsensor);
     function createNewScala() {
         var chosen_title = $("#scalaTitelInput").val();
         var chosen_unit = $("#scalaEinheitInput").val();
-        var chosen_location = 'links';
+        var chosen_location = 'left';
         var chosen_int_float = '%d ';
 
         if (rightSideScala) {
-            chosen_location = 'rechts';
+            chosen_location = 'right';
         }
         if (radioFloatBool) {
             chosen_int_float = "%." + $("#sel1").val() + "f ";
@@ -1121,7 +1123,7 @@ $jsonselectsensor = json_encode($selectsensor);
         scalas.push({
                 name: "D",
                 strokeStyle: '#FFFFFF',
-                location: "links",
+                location: "left",
                 majorGridLines: {
                     visible: false,
                 },
