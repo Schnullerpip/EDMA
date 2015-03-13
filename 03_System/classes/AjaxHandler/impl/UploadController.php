@@ -164,7 +164,7 @@ class UploadController extends AjaxController {
     }
 
     protected function import() {
-        if (sizeof($_FILES) == 0) {
+        if (sizeof($_FILES) === 0) {
             $this->_failed[] = array(
                 'Keine Dateien' => 'Bitte eine Datei ausw&auml;hlen!'
             );
