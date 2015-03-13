@@ -3,7 +3,7 @@
 require_once 'core/init.php';
 
 /**
- * Description of DB
+ * Klasse um die Datenbankverbindung zu managen
  *
  * @author satonon, julmayer
  */
@@ -161,15 +161,23 @@ class DB {
         return false;
     }
 
+    /**
+     * Holt einen Eintrag aus der Datenbank.
+     * 
+     * @param string $table Tabelle aus der der Eintrag geholt werden muss
+     * @param array $where array mit (spaltenname, operator, wert) Paaren
+     * @return boolean ob erfolgreich oder nicht
+     */
     public function get($table, $where) {
         return $this->action('SELECT *', $table, $where);
     }
 
     /**
+     * Loescht einen Eintrag aus der Datenbank.
      * 
-     * @param type $table die Tabelle in der gelöscht werden soll
-     * @param type $where array mit (spaltenname, operator, wert) Paaren
-     * @return type boolean ob erfolgreich oder nicht
+     * @param string $table die Tabelle in der gelöscht werden soll
+     * @param array $where array mit (spaltenname, operator, wert) Paaren
+     * @return boolean ob erfolgreich oder nicht
      */
     public function delete($table, $where) {
         return $this->action('DELETE', $table, $where);
@@ -206,6 +214,14 @@ class DB {
         return false;
     }
 
+    /**
+     * Updated ein Eintrag in der Datenbank.
+     * 
+     * @param string $table Tabelle in der ein Wert geupdated werden muss
+     * @param int $id ID des zu updatenden Eintrags
+     * @param array $fields die Spalten die geupdated werden muessen
+     * @return boolean ob Erfolg oder nicht
+     */
     public function update($table, $id, $fields) {
         $set = $this->prepareArray($fields, ',');
         
@@ -315,19 +331,39 @@ class DB {
         return $result;
     }
 
+    /**
+     * Gibt die letzten Query-Ergebnisse zurück.
+     * 
+     * @return array mit den Query-Ergebnissen.
+     */
     public function results() {
         return $this->_results;
     }
 
+    /**
+     * Gibt die erste Zeile des letzten Query-Ergebnisses zurück.
+     * 
+     * @return array mit der Zeile
+     */
     public function first() {
         $resultSet = $this->results();
         return $resultSet[0];
     }
 
+    /**
+     * Prüft ob in dem letzen Query ein Fehler aufgetreten ist.
+     * 
+     * @return boolean true wenn kein Fehler
+     */
     public function error() {
         return $this->_error;
     }
     
+    /**
+     * Die Anzahl der letzten Query-Anfrage
+     * 
+     * @return int mit der Anzahl an zurueckgegebenen Zeilen
+     */
     public function count() {
         return $this->_count;
     }

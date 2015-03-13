@@ -30,7 +30,7 @@ if ($projekt->isMaster() && Input::exists()) {
                         $db->update('projekt', $projekt->data()->id, $projektData);
 
                         if ($db->error()) {
-                            throw new Exception("Projektname konnte nicht aktualisiert werden.");
+                            throw new Exception("Projektname konnte nicht aktualisiert werden!");
                         }
                         $projekt = new Projekt();
                     }
@@ -46,7 +46,7 @@ if ($projekt->isMaster() && Input::exists()) {
                         $db->insert('passwort', $passwordData);
 
                         if ($db->error()) {
-                            throw new Exception("Passwort konnte nicht angelegt werden.");
+                            throw new Exception("Passwort konnte nicht angelegt werden!");
                         }
                     }
                 } else {
@@ -73,7 +73,7 @@ if ($projekt->isMaster() && Input::exists()) {
                     $db->insert('passwort', $passwordData);
 
                     if ($db->error()) {
-                        throw new Exception("Passwort konnte nicht angelegt werden.");
+                        throw new Exception("Passwort konnte nicht angelegt werden!");
                     }
 
                     $projekt = new Projekt($projekt_id);
@@ -276,6 +276,7 @@ require_once 'header.php';
                 <?php endif; ?>
             </div>
         </div>
+        <br>
         <div class="form-group">
             <div class="col-sm-offset-4 col-sm-5">
                 <button name="projekt_save" type="submit" class="btn btn-default">Speichern</button>

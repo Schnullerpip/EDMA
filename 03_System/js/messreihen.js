@@ -18,7 +18,7 @@ $(function () {
                     pushState: false,
                     recordCount: false,
                     perPageSelect: false,
-                    sort: false
+                    sort: true
                 },
                 inputs: {
                     queries: $('#suche-messreihen-name, #suche-messreihen-datum'),

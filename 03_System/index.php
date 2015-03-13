@@ -26,7 +26,7 @@ $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
                         <?php foreach ($messreihen as $key => $messreihe) : ?>
                             <li>
                                 <div class="row">
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-9">
                                         <div class="list-content">
                                             <?php echo escape($messreihe->messreihenname); ?>
                                         </div>
@@ -36,7 +36,7 @@ $db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
                                             <?php echo escape($messreihe->datum); ?>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 pull-right controls">
+                                    <div class="col-sm-1 pull-right controls">
                                         <ul class="list-unstyled list-inline pull-right">
                                             <li>
                                                 <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe bearbeiten">
@@ -218,8 +218,8 @@ $jsonselectsensor = json_encode($selectsensor);
 <h2 id="h2MessreihenWählen">Messreihen/Sensoren wählen</h2>
 <div id="messreihenSensorenFilterDiv" class="row">
 
-    <div class="col-sm-6"> <small>Messreihen</small></div>
-    <div id="smallSensoren" class="col-sm-5"><small id="smallSensoren">Sensoren</small></div>
+    <div class="col-sm-6"><small class="col-xs-12">Messreihen</small></div>
+    <div class="col-sm-5"><small id="smallSensoren" class="col-xs-12">Sensoren</small></div>
     <div id="smallSkala" class="col-sm-1" style="padding-left:0px"><small>Skala</small></div>
 
     <div id="messreihenDiv" class="col-xs-12 col-sm-6">
@@ -253,7 +253,7 @@ $jsonselectsensor = json_encode($selectsensor);
     <div class="form-group">
         <label class="col-sm-4 control-label" for="stepInput">Schrittweite</label>
         <div class="col-sm-4">
-            <input id="stepInput" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="z.B. 100 (er Schritte)">
+            <input id="stepInput" class="form-control einstellungenInput" type="text" name="IntervallInput" placeholder="z.B. 100(er Schritte)">
         </div>
     </div>
 
@@ -271,7 +271,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     <div class="form-group">
         <div class="col-sm-4 col-sm-offset-4 anzeigeButtonDiv">
-            <button id="anzeigeButton"  type="button" class="btn btn-default btn-block" >Anzeigen!</button>
+            <button id="anzeigeButton"  type="button" class="btn btn-default btn-block" >Anzeigen</button>
         </div>
     </div>
 </div>
@@ -315,7 +315,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 <div class="form-group">
                     <label class="col-sm-4 control-label" for="scalaEinheitInput">Einheit</label>
                     <div class="col-sm-6">
-                        <input id="scalaEinheitInput" class="form-control scalaModalInput" type="text" name="scalaEinheitInput" placeholder="z.B. in °C"></input>
+                        <input id="scalaEinheitInput" class="form-control scalaModalInput" type="text" name="scalaEinheitInput" placeholder="z.B. °C"></input>
                     </div>
                 </div>
 
@@ -898,12 +898,10 @@ $jsonselectsensor = json_encode($selectsensor);
         }
         $("#sensorenListe").html(sensors_string.join(""));
         $("#skalenListe").html(scalas_string.join(""));
-        $("#smallSensoren").html("Sensoren -> " + arg);
+        $("#smallSensoren").html('Sensoren für "' + arg + '"');
 
-        $("#messreihenListe button").css("color", "white");
-        $("#messreihenListe button").css("background-color", "#36A7EB");
-        $("#messreihenListe button[data-messreihe='"+arg+"']").css("background-color", "white");
-        $("#messreihenListe button[data-messreihe='"+arg+"']").css("color", "#36A7EB");
+        $("#messreihenListe button").css({"color": "white", "background-color": "#36A7EB", "text-decoration": "none"});
+        $("#messreihenListe button[data-messreihe='"+arg+"']").css({"background-color": "white", "color": "#36A7EB", "text-decoration": "underline"});
     }
 
 
@@ -971,7 +969,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function regenerateScalaModal() {
         var replace_string = [];
-        replace_string.push("<tr><th>Skala</th><th>Titel</th><th>Einheit</th><th>Int/Float</th><th colspan='3'>Position</th></tr>");
+        replace_string.push("<tr><th>Skala</th><th>Titel</th><th>Einheit</th><th>Int/Float</th><th>Position</th><th></th><th></th></tr>");
         for (i = 0; i < scalas.length; i++) {
             replace_string.push("<tr>");
             replace_string.push("<td>" + scalas[i].name + "</td>");
@@ -985,7 +983,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 replace_string.push("<td>INT</td>");
             }
             replace_string.push("<td>" + scalas[i].location + "</td>");
-            replace_string.push("<td><button class='btn btn-primary choose-scala-btn btn-sm pull-right' data-scalaID='" + scalas[i].name + "'>Ausw&auml;hlen</button></td><td><button class='btn btn-primary delete-scala-btn btn-sm' data-scalaID='"+scalas[i].name+"'>Entf</button></td>");
+            replace_string.push("<td><button class='btn btn-primary choose-scala-btn btn-sm pull-right' data-scalaID='" + scalas[i].name + "'>Ausw&auml;hlen</button></td><td><button class='btn btn-primary delete-scala-btn btn-sm pull-right' data-scalaID='"+scalas[i].name+"'>Löschen</button></td>");
             replace_string.push("</tr>");
         }
         $("#scalaModalContent").html(replace_string.join(""));
@@ -1207,7 +1205,7 @@ $jsonselectsensor = json_encode($selectsensor);
             if(!isInt(step)){
                 step = 1;
                 $("#stepInput").val("");
-                modalTextWarning("Schrittweite muss als positive ganze Zahl eingegeben werden... Bitte erst berichtigen");
+                modalTextWarning("'Schrittweite' muss als positive ganze Zahl eingegeben werden!");
                 $('#infoModal').modal();
             }
         });
@@ -1225,7 +1223,7 @@ $jsonselectsensor = json_encode($selectsensor);
             if(!isInt(intervall1)){
                 intervall1 = 0;
                 $("#intervallInput1").val("");
-                modalTextWarning("Von muss als positive ganze Zahl eingegeben werden... Bitte erst berichtigen");
+                modalTextWarning("'Von' muss als positive ganze Zahl eingegeben werden!");
                 $('#infoModal').modal();
             }
         });
@@ -1243,7 +1241,7 @@ $jsonselectsensor = json_encode($selectsensor);
             if(!isInt(intervall2)){
                 intervall2 = 0;
                 $("#intervallInput2").val("");
-                modalTextWarning("Bis muss als positive ganze Zahl eingegeben werden... Bitte erst berichtigen");
+                modalTextWarning("'Bis' muss als positive ganze Zahl eingegeben werden!");
                 $('#infoModal').modal();
             }
         });
@@ -1260,7 +1258,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 if (intervall1 < 0) {
                     intervall1 = 0;
                     $("#intervallInput1").val(0);
-                    modalTextWarning("Vorsicht! -> 'Von' is negativ und wurde automatisch auf 0 gesetzt");
+                    modalTextWarning("Vorsicht! 'Von' ist negativ und wurde automatisch auf 0 gesetzt");
                     $('#infoModal').modal();
                 }
             }
@@ -1269,7 +1267,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 if (intervall2 < 0) {
                     intervall2 = 0;
                     $("#intervallInput2").val(0);
-                    modalTextWarning("Vorsicht! -> 'Bis' is negativ und wurde automatisch auf 0 gesetzt");
+                    modalTextWarning("Vorsicht! 'Bis' ist negativ und wurde automatisch auf 0 gesetzt");
                     $('#infoModal').modal();
                 }
             }
@@ -1278,14 +1276,14 @@ $jsonselectsensor = json_encode($selectsensor);
                 if (step <= 0) {
                     step = 1;
                     $("#stepInput").val("1");
-                    modalTextWarning("Vorsicht! -> 'Schrittweite' ist kleiner/gleich 0 -> Wert wurde automatisch auf 1 gesetzt");
+                    modalTextWarning("Vorsicht! 'Schrittweite' ist kleiner/gleich 0 -> Wert wurde automatisch auf 1 gesetzt");
                     $('#infoModal').modal();
                 }
                 if (b != "") {
                     if (intervall2 < step) {
                         intervall2 = intervall1 + step;
                         $("#intervallInput2").val(intervall1 + step);
-                        modalTextWarning("Vorsicht! -> die Schrittweite ist höher als der Intervall!? Der Intervall wurde automatisch auf den kleinstmöglichen Wert gesetzt");
+                        modalTextWarning("Vorsicht! 'Schrittweite' ist höher als Intervall! Intervall wurde automatisch auf kleinstmöglichen Wert gesetzt");
                         $('#infoModal').modal();
                     }
                 }
@@ -1295,7 +1293,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 if (intervall2 < intervall1) {
                     intervall2 = intervall1 + step;
                     $("#intervallInput2").val(intervall1 + step);
-                    modalTextWarning("Vorsicht! -> 'Bis' ist kleiner als 'Von' -> Werte wurden automatisch logisch neu verteilt");
+                    modalTextWarning("Vorsicht! 'Bis' ist kleiner als 'Von' -> Werte wurden automatisch logisch neu verteilt");
                     $('#infoModal').modal();
                 }
             }
@@ -1312,7 +1310,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
             if (selected_sensors.length == 0) {
-                modalTextError("Vorsicht! -> Es wurden keine Sensoren ausgewählt, deren Messwerte anzuzeigen wären... Bitte erst berichtigen");
+                modalTextError("Vorsicht! Es wurden noch keine Sensoren ausgewählt. Bitte erst berichtigen!");
                 $('#infoModal').modal();
                 return;
             }
@@ -1326,7 +1324,7 @@ $jsonselectsensor = json_encode($selectsensor);
             data.pair = [];
             for (i = 0; i < selected_sensors.length; i++) {
                 if (selected_sensors[i].scala == null) {
-                    modalTextError("Vorsicht! -> " + selected_sensors[i].anzeigename + " aus der Messreihe: '" + selected_sensors[i].messreihenname + "', wurde noch keiner Skala zugewiesen! Bitte erst berichtigen... ");
+                    modalTextError("Vorsicht! '" + selected_sensors[i].anzeigename + "' aus der Messreihe: '" + selected_sensors[i].messreihenname + "' wurde noch keiner Skala zugewiesen! Bitte erst berichtigen!");
                     $('#infoModal').modal();
                     return;
                 }
@@ -1349,6 +1347,13 @@ $jsonselectsensor = json_encode($selectsensor);
             $("#jqChart-wrapper").show();
             $("#saveImg").show();
             $("#saveCSV").show();
+            
+            // ausblenden bei erneutem drücken von 'Anzeigen', solange Spinner eingeblendet ist
+//            if ($("#jqChart-wrapper").is(":visible")){
+//                $("#jqChart-wrapper").toggle();
+//                $("#saveImg").toggle();
+//                $("#saveCSV").toggle();
+//            }
 
             //die erste y-Achse (auf der linken Seite des Graphen) sollte zoom-enabled haben
             for (i = 0; i < scalas_copy.length; i++) {
@@ -1429,8 +1434,14 @@ $jsonselectsensor = json_encode($selectsensor);
                     type: 'shared'
                 }
             });
-
+            
+            // Spinner ausblenden, da Chart fertig geladen
             $('.loading-div, #anzeigeButton').toggle();
+            
+            // anzeigen, da Chart fertig geladen
+//            $("#jqChart-wrapper").toggle();
+//            $("#saveImg").toggle();
+//            $("#saveCSV").toggle();
 
             $('#jqChart-wrapper').bind('tooltipFormat', function (e, data) {
                 var result = "<b>Zeitpunkt: ";

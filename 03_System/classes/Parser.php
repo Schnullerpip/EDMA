@@ -358,13 +358,13 @@ class Parser {
         if ($zeiten_teile < 2) {
             $hh_mm_ss = explode(":", $zeit);
             if ($hh_mm_ss[2] > 59) {        // Fehler, wenn Sekunden groesser als 59 (Mikrosekunden ohne '.' oder ',' angehaengt
-                $this->throwMessException("UngÃ¼ltiges Uhrzeitformat in Zeile " .
+                $this->throwMessException("Ungültiges Uhrzeitformat in Zeile " .
                         ($j + $this->_zeilennummerMessdaten) . ": " . $zeit);
             }
             $uhrzeit = $zeit;
             $mikrosekunden = "000000";
         } else if ($zeiten_teile > 2) {
-            $this->throwMessException("UngÃ¼ltiges Uhrzeitformat in Zeile " .
+            $this->throwMessException("Ungültiges Uhrzeitformat in Zeile " .
                     ($j + $this->_zeilennummerMessdaten) . ": " . $zeit);
         } else {
             $uhrzeit = $zeit_splitted[0];

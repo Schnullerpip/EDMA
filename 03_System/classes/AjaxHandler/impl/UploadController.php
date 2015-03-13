@@ -51,7 +51,7 @@ class UploadController extends AjaxController {
         if ($fileSize > $this->_maxSize) {
             $this->_failed[] = array(
                 'file' => $fileName,
-                'error' => 'Die Datei ist zu groß (' . $fileSize . ' von ' . $this->_maxSize . ')!'
+                'error' => 'Die Datei ist zu gro&szlig; (' . $fileSize . ' von ' . $this->_maxSize . ')!'
             );
 
             return false;
@@ -60,8 +60,8 @@ class UploadController extends AjaxController {
         if (!in_array($fileType, $this->_description_mimetypes)) {
             $this->_failed[] = array(
                 'Dateiname' => $fileName,
-                'Fehler' => "Datei ist in ungültigem Dateiformat",
-                'Unterstütze Formate' => "doc, docx, pdf, odt",
+                'Fehler' => "Datei ist in ung&uuml;ltigem Dateiformat",
+                'Unterst&uumml;tze Formate' => "doc, docx, pdf, odt",
             );
             
             return false;
@@ -164,6 +164,13 @@ class UploadController extends AjaxController {
     }
 
     protected function import() {
+        if (sizeof($this->_files) === 0) {
+            $this->_failed[] = array(
+                'Keine Dateien' => 'Bitte eine Datei ausw&auml;hlen!'
+            );
+            return;
+        }
+        
         if ($this->_files['file']['size'][0] >= 0) {
             if (in_array($this->_files['file']['type'][0], $this->_csv_mimetypes)) {
                 $parser = new Parser($this->_files['file']['tmp_name'][0], Input::get('projektid'));
