@@ -307,7 +307,7 @@ $jsonselectsensor = json_encode($selectsensor);
                 </script>
 
                 <div class="form-group">
-                    <label class="col-sm-4 control-label" for="scalaTitelInput">Titel</label>
+                    <label class="col-sm-4 control-label" for="scalaTitelInput">Titel<sup>*</sup></label>
                     <div class="col-sm-6">
                         <input id="scalaTitelInput" class="form-control scalaModalInput" type="text" name="scalaTitleInput" placeholder="z.B. Temperatur"></input>
                     </div>
@@ -325,13 +325,13 @@ $jsonselectsensor = json_encode($selectsensor);
                         <div class="radio">
                             <label>
                                 <input type="radio" id="radioINT" name="Zahlengruppe" value="int" checked="checked">
-                                Int
+                                Ganzzahl
                             </label>
                         </div>
                         <div class="radio">
                             <label>
                                 <input type="radio" id="radioFLOAT" name="Zahlengruppe" value="float">
-                                Float
+                                Gleitkommazahl
                             </label>
                         </div>
                     </div>
@@ -985,10 +985,10 @@ $jsonselectsensor = json_encode($selectsensor);
 
             if (/.*\%\.[0-9]1*/.test(scalas[i].labels.stringFormat)) { //handelt sich um float
                 replace_string.push("<td>" + scalas[i].labels.stringFormat.slice(5, 100) + "</td>");
-                replace_string.push("<td>FLOAT</td>");
+                replace_string.push("<td>Gleitkommazahl</td>");
             } else {
                 replace_string.push("<td>" + scalas[i].labels.stringFormat.slice(3, 100) + "</td>");
-                replace_string.push("<td>INT</td>");
+                replace_string.push("<td>Ganzzahl</td>");
             }
             replace_string.push("<td>" + scalas[i].location + "</td>");
             replace_string.push("<td><button class='btn btn-primary choose-scala-btn btn-sm pull-right' data-scalaID='" + scalas[i].name + "'>Ausw&auml;hlen</button></td><td><button class='btn btn-primary delete-scala-btn btn-sm pull-right' data-scalaID='"+scalas[i].name+"'>Löschen</button></td>");
@@ -1022,11 +1022,11 @@ $jsonselectsensor = json_encode($selectsensor);
     function createNewScala() {
         var chosen_title = $("#scalaTitelInput").val();
         var chosen_unit = $("#scalaEinheitInput").val();
-        var chosen_location = 'left';
+        var chosen_location = 'links';
         var chosen_int_float = '%d ';
 
         if (rightSideScala) {
-            chosen_location = 'right';
+            chosen_location = 'rechts';
         }
         if (radioFloatBool) {
             chosen_int_float = "%." + $("#sel1").val() + "f ";
@@ -1120,7 +1120,7 @@ $jsonselectsensor = json_encode($selectsensor);
         scalas.push({
                 name: "D",
                 strokeStyle: '#FFFFFF',
-                location: "left",
+                location: "links",
                 majorGridLines: {
                     visible: false,
                 },
@@ -1128,7 +1128,7 @@ $jsonselectsensor = json_encode($selectsensor);
                     strokeSTyle: '#FFFFFF',
                 },
                 title: {
-                    text: "Default Skala",
+                    text: "Default",
                     fillStyle: '#FFFFFF',
                 },
                 labels: {
