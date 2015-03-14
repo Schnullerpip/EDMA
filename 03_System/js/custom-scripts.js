@@ -104,6 +104,14 @@ $(document).ready(function () {
                     }
                 });
     }
+    
+    // Modal Footer Jump Bugfix
+    $('.modal').on('show.bs.modal', function () {
+        $('footer').css('padding-right', '28px');
+    });
+    $('.modal').on('hidden.bs.modal', function () {
+        $('footer').css('padding-right', '');
+    });
 });
 
 // Append Modal Methods
