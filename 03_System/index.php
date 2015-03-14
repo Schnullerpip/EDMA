@@ -557,6 +557,7 @@ $jsonselectsensor = json_encode($selectsensor);
         var replace_string = [];
         var tmp_metanamen = [];
         var tmp_array = [];
+        reorganizeMessreihenCopyByDate();
         for (i = 0; i < messreihen_copy.length; i++) {
             var o;
             for (o = 0; o < messreihen_copy[i].metafields.length; o++) {
@@ -837,7 +838,6 @@ $jsonselectsensor = json_encode($selectsensor);
     function regenerateMessreihenList() {
         //falls es noch keine messreihen gibt - eine Meldung ausgeben welche auf die Situation hinweist, anstatt überschriften ohne eigentliche werte anzuzeigen
         checkForExistingMessreihen();
-        reorganizeMessreihenCopyByDate();
         var replace_string = [];
         for (i = 0; i < messreihen_copy.length; i++) {
             var hms = anySensorsSelectedFrom(messreihen_copy[i]["messreihenname"]);
@@ -1044,7 +1044,7 @@ $jsonselectsensor = json_encode($selectsensor);
                     visible: false,
                 },
                 majorTickMarks: {
-                    strokeSTyle: '#FFFFFF',
+                    strokeStyle: '#FFFFFF',
                 },
                 title: {
                     text: chosen_title,
