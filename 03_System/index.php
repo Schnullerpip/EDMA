@@ -283,7 +283,9 @@ $jsonselectsensor = json_encode($selectsensor);
 
 <div class="row">
     <div class="col-xs-12">
-        <div id="jqChart-wrapper" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
+        <div class="dummywrapper">
+            <div id="jqChart-wrapper" data-title="<?php echo escape($projekt->data()->projektname); ?>"></div>
+        </div>
     </div>
 </div>
 
