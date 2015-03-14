@@ -174,14 +174,14 @@ require_once 'header.php';
                 <div class="form-group">
                     <label for="name" class="col-sm-4 control-label">Name<sup>*</sup></label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" name="name" id="name" placeholder="Name" value="<?php echo ($messreiheName = $messreihe->first()->messreihenname) ? escape($messreiheName) : ''; ?>">
+                        <input type="text" class="form-control" name="name" id="name" placeholder="<?php echo ($messreiheName = $messreihe->first()->messreihenname) ? escape($messreiheName) : ''; ?>">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="datum" class="col-sm-4 control-label">Datum<sup>*</sup></label>
                     <div class="col-sm-5">
                         <div class="input-group date">
-                            <input type="text" class="form-control" name="datum" id="datum" placeholder="Datum" value="<?php echo escape($datum = $messreihe->first()->datum) ? escape(Utils::convertDate($datum)) : ''; ?>">
+                            <input type="text" class="form-control" name="datum" id="datum" placeholder="<?php echo escape($datum = $messreihe->first()->datum) ? escape(Utils::convertDate($datum)) : ''; ?>">
                             <span class="btn btn-primary input-group-addon"><i class="glyphicon glyphicon-calendar" aria-hidden="true"></i></span>
                         </div>
                     </div>

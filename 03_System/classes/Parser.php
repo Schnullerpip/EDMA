@@ -23,16 +23,31 @@ class Parser {
     private $_error = array();
     private $_warning = array();
     private $_zeilennummerMessdaten;
+    private $_logger;
 
     public function __construct($file, $projekt_id) {
+        // Logger init
+        $this->_logger = new Logger();
+        $this->_logger->lwrite("---------------------------------------------");
+        $this->_logger->lwrite("Init:");
+        $this->_logger->lwrite(memory_get_usage());
+        
         $this->_file = $file;
         $this->_db = DB::getInstance();
         $this->_projektID = $projekt_id;
         $this->parse();
+        
+        // close log file
+        $this->_logger->lclose();
     }
 
     private function parse() {
         $stringFile = file_get_contents($this->_file);
+        // File aus Memory loeschen, da nicht mehr gebraucht
+        $this->_file = null;
+        unset($this->_file);
+        $this->_logger->lwrite("file get contents:");
+        $this->_logger->lwrite(memory_get_usage());
 
         $charset = mb_detect_encoding($stringFile, "UTF-8, ISO-8859-1");
         // falls Datei in ISO Format ist muss konvertiert werden.
@@ -40,6 +55,8 @@ class Parser {
         if ($charset === "ISO-8859-1") {
             $stringFile = utf8_encode($stringFile);
         }
+        $this->_logger->lwrite("utf8_encode:");
+        $this->_logger->lwrite(memory_get_usage());
         $stringFile = str_replace("\r", "", $stringFile);
         $stringFile = explode("###", $stringFile);
         if (count($stringFile) != 2) {
@@ -212,7 +229,7 @@ class Parser {
         }
     }
 
-    private function parseMessDaten($messdaten) {
+    private function parseMessDaten(&$messdaten) {
         $saveExTime = ini_get('max_execution_time');
         ini_set('max_execution_time', 1000);
         $messdaten = preg_split("/\n/", $messdaten);

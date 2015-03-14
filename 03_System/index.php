@@ -863,10 +863,10 @@ $jsonselectsensor = json_encode($selectsensor);
             var hms = anySensorsSelectedFrom(messreihen_copy[i]["messreihenname"]);
             replace_string.push("<button class='btn btn-default' data-messreihe='" + messreihen_copy[i]["messreihenname"] + "'>");
             if (hms > 0) {
-                replace_string.push(messreihen_copy[i]["messreihenname"] + " " + messreihen_copy[i].datum);
-                replace_string.push(" <span class='glyphicon glyphicon-ok'></span>  <small>" + hms + "</small></button>");
+                replace_string.push("<span class='messreihenname'>" + messreihen_copy[i]["messreihenname"] + "</span><span class='messreihendatum'>" + messreihen_copy[i].datum + "</span>");
+                replace_string.push("<span class='glyphicon glyphicon-ok'></span><small>" + hms + "</small></button>");
             } else {
-                replace_string.push(messreihen_copy[i]["messreihenname"] + " " + messreihen_copy[i].datum + "</button>");
+                replace_string.push("<span class='messreihenname'>" + messreihen_copy[i]["messreihenname"] + "</span><span class='messreihendatum'>" + messreihen_copy[i].datum + "</span></button>");
             }
         }
         $("#messreihenListe").html(replace_string.join(""));
@@ -904,7 +904,7 @@ $jsonselectsensor = json_encode($selectsensor);
         for (i = 0; i < sensors.length; i++) {
             if (arg == sensors[i]["messreihenname"]) {
                 sensors_string.push("<button class='btn btn-default sensor-btn' style='width:100%' data-messreihe='" + arg + "' data-sensorID='" + sensors[i]["id"] + "'>");
-                sensors_string.push(sensors[i]["anzeigename"]);
+                sensors_string.push("<span class='sensorname'>" + sensors[i]["anzeigename"] + "</span>");
                 if (sensors[i].selected == true) {
                     sensors_string.push("<span class='glyphicon glyphicon-ok'></span>");
                 }

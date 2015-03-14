@@ -199,8 +199,8 @@ class UploadController extends AjaxController {
                 }
             } else {
                 $this->_failed[] = array(
-                    'name' => $this->_files['file']['name'][0],
-                    'message' => 'Die Datei ist keine CSV Datei!'
+                    'Dateiame' => $this->_files['file']['name'][0],
+                    'Fehler' => 'Die Datei ist keine CSV Datei!'
                 );
                 return;
             }

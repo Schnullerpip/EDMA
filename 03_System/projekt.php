@@ -37,16 +37,20 @@ if ($projekt->isMaster() && Input::exists()) {
 
                     // Neues Passwort
                     if (Input::get('passwort')) {
-                        $passwordData = array(
-                            'salt' => $salt,
-                            'hash' => Hash::make(Input::get('passwort'), $salt),
-                            'projekt_id' => $projekt->data()->id
-                        );
+                        if (strlen(Input::get('passwort')) < 3) {
+                            throw new Exception("Passwort f&uuml;r Externe Besucher muss mindestens 3 Zeichen lang sein!");
+                        } else {
+                            $passwordData = array(
+                                'salt' => $salt,
+                                'hash' => Hash::make(Input::get('passwort'), $salt),
+                                'projekt_id' => $projekt->data()->id
+                            );
 
-                        $db->insert('passwort', $passwordData);
+                            $db->insert('passwort', $passwordData);
 
-                        if ($db->error()) {
-                            throw new Exception("Passwort konnte nicht angelegt werden!");
+                            if ($db->error()) {
+                                throw new Exception("Passwort konnte nicht angelegt werden!");
+                            }
                         }
                     }
                 } else {

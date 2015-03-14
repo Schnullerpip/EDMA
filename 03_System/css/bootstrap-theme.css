@@ -257,13 +257,29 @@ a:active {
 
 #messreihenListe small {
     position: absolute;
-    right: 12px;
+    right: 10px;
     top: 14px;
 }
-#messreihenListe span {
+#messreihenListe span.glyphicon {
     position: absolute;
     right: 20px;
     top: 11px;
+}
+#messreihenListe span.messreihendatum {
+    position: absolute;
+    right: 50px;
+}
+#messreihenListe span.messreihenname {
+    max-width: 75%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    float: left;
+}
+#sensorenListe span.sensorname {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    pointer-events: none;
 }
 
 
