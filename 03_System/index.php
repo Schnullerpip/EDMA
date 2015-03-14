@@ -558,19 +558,37 @@ $jsonselectsensor = json_encode($selectsensor);
     function regenerateMetaSelect() {
         var replace_string = [];
         var tmp_metanamen = [];
-        var tmp_array = [];
-        reorganizeMessreihenCopyByDate();
+        var sorted_metaobjects = [];
+        var tmp_metaobjects = [];
         for (i = 0; i < messreihen_copy.length; i++) {
             var o;
             for (o = 0; o < messreihen_copy[i].metafields.length; o++) {
                 if ($.inArray(messreihen_copy[i].metafields[o].metaname, tmp_metanamen) < 0) {
                     tmp_metanamen.push(messreihen_copy[i].metafields[o].metaname);
-                    replace_string.push("<li id='selectOption" + (uniquei++) + "'>");
                     var tmp_str = "" + i;
                     tmp_str = tmp_str.concat("" + o);
-                    replace_string.push("<a onclick='selectChanged(\"" + tmp_str + "\");'>" + messreihen_copy[i].metafields[o]["metaname"] + "</a></li>");
+                    tmp_metaobjects.push({loc: tmp_str, metname: messreihen_copy[i].metafields[o].metaname});
                 }
             }
+        }
+        while(tmp_metaobjects.length > 0){  //Alles sortieren nach metaname
+            var current, smallest_object, smallest_name = null, smallest_index;
+            //first find smallest name
+            for(i=0;i<tmp_metaobjects.length;i++){
+                current = tmp_metaobjects[i].metname.toLowerCase();
+                if((smallest_name == null) || (current < smallest_name)){
+                    smallest_name = current;
+                    smallest_object = tmp_metaobjects[i];                    
+                    smallest_index = i;
+                }
+            }
+            //then push element with smallest name
+            sorted_metaobjects.push(smallest_object);
+            //delete smallest object out of tmp_metaobjects
+            tmp_metaobjects.splice(smallest_index, 1);
+        }
+        for(i=0;i<sorted_metaobjects.length;i++){ //Alle elemente der #selectBox hinzufügen
+            replace_string.push("<li><a onclick='selectChanged(\"" + sorted_metaobjects[i].loc + "\");'>" + sorted_metaobjects[i].metname + "</a></li>");
         }
         $("#selectBox").html(replace_string.join(""));
     }
@@ -1113,6 +1131,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
     function regenerateDocument() {
+        reorganizeMessreihenCopyByDate();
         regenerateMetaSelect();
         regenerateMessreihenList();
     }
