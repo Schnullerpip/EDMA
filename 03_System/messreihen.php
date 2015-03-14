@@ -274,7 +274,7 @@ require_once 'header.php';
                 </div>
             </div>
             <div class="col-sm-2">
-                <a href="?id=neu" class="btn btn-default" value="neu">Messreihe hinzufügen</a>
+                <a href="?id=neu" class="btn btn-default" value="neu">Messreihe importieren</a>
             </div>
         </div>
     </div>

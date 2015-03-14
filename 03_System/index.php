@@ -2,61 +2,51 @@
 require_once 'preHeader.php';
 require_once 'header.php';
 $db = DB::getInstance();
+
+$error = false;
+$messreihen = NULL;
+$db->query("SELECT * FROM messreihe WHERE projekt_id = {$projekt->data()->id} ORDER BY id DESC LIMIT 5");
+
+if ($db->error()) {
+    $error = true;
+} else {
+    $messreihen = $db->results();
+}
 ?>
 
-<h1 class="heading"><?php echo escape($projekt->data()->projektname); ?></h1>
-
-<?php
-$db->get('messreihe', array('projekt_id', '=', $projekt->data()->id));
-?>
-
-<?php if ($db->error()) : ?>
-    <p>Fehler beim holen der Messreihen!</p>
-<?php else: ?>
-
-    <?php $messreihen = $db->results(); ?>
-
-    <?php if (!empty($messreihen)) : ?>
-        <div class="panel-group accordeon" role="tablist">
-            <div class="panel panel-default">
-                <a class="btn btn-block panel-heading text-center collapsed" role="tab" href="#collapseMessreihen" data-toggle="collapse" aria-expanded="true" aria-controls="collapseMessreihen" id="collapseMessreihenLabel">
-                    Letzte Messreihenimporte<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-                </a>
-                <div id="collapseMessreihen" class="panel-collapse collapse out" role="tabpanel" aria-labelledby="collapseMessreihenLabel" aria-expanded="true">
-                    <ul class="list-group list-unstyled">
+<?php if (!empty($messreihen)) : ?>
+    <div class="row">
+        <h1 class="col-sm-8 heading"><?php echo escape($projekt->data()->projektname); ?></h1>
+        <div class="col-sm-4">
+            <div class="dropdown">
+                <button id="dLabel" class="btn btn-block btn-default" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Letzte Messreihenimporte
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu letzteMessreihenUl" role="menu" aria-labelledby="dLabel">
+                    <?php if ($error) : ?>
+                        <li>Fehler beim holen der Messreihen!</li>
+                    <?php else: ?>
                         <?php foreach ($messreihen as $key => $messreihe) : ?>
                             <li>
                                 <div class="row">
-                                    <div class="col-sm-9">
-                                        <div class="list-content">
-                                            <?php echo escape($messreihe->messreihenname); ?>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2 text-right">
-                                        <div class="list-content">
-                                            <?php echo escape($messreihe->datum); ?>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-1 pull-right controls">
-                                        <ul class="list-unstyled list-inline pull-right">
-                                            <li>
-                                                <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title="Messreihe bearbeiten">
-                                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                                </a>
-                                            </li>
-                                        </ul>
+                                    <div class="col-xs-10"><?php echo escape($messreihe->messreihenname); ?></div>
+                                    <div class="col-xs-2">
+                                        <a href="messreihen.php?id=<?php echo escape($messreihe->id); ?>" title='Messreihe "<?php echo escape($messreihe->messreihenname); ?>" bearbeiten'>
+                                            <span class="glyphicon glyphicon-pencil pull-right" aria-hidden="true"></span>
+                                        </a>
                                     </div>
                                 </div>
                             </li>
+                            <hr>
                         <?php endforeach; ?>
-                    </ul>
-                </div>
+                    <?php endif; ?>
+                    <li class="text-center"><a href="messreihen.php" title="Zur Messreihenverwaltung gehen">Alle Messreihen ansehen</a></li>
+                </ul>
             </div>
         </div>
-    <?php endif; ?>
+    </div>
 <?php endif; ?>
-
-
 
 <?php
 //Vorbereitung für die Filter		
@@ -187,7 +177,7 @@ $jsonselectsensor = json_encode($selectsensor);
     //--------------------------------------------------------------------------------------------------------
 </script>				
 
-<h2>Metadaten filtern</h2>
+<h2 class="mt-10">Metadaten filtern</h2>
 <div class="form-horizontal mb-15" id="addMetaDiv">
     <!-- Anzeigefelder für die ausgewählten Metadatenfilter -->
     <div class="form-group" style="display:none">

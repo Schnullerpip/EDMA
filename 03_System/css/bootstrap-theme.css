@@ -64,7 +64,8 @@ h2 {
 }
 
 .heading {
-    margin-bottom: 30px;
+    margin: 0 auto 30px;
+    line-height: 27px;
 }
 
 
@@ -74,6 +75,10 @@ h2 {
 .navbar {
     background-color: #224565;
     border: none;
+}
+
+nav.navbar.navbar-default.navbar-static-top {
+    margin-bottom: 40px;
 }
 
 .navbar-default .navbar-brand,
@@ -182,6 +187,34 @@ a:active {
 
 .btn-40 {
     height: 40px;
+}
+
+.letzteMessreihenUl {
+    min-width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    border-top: none;
+}
+.letzteMessreihenUl li {
+    color: #224565;
+    padding: 10px;
+}
+.letzteMessreihenUl hr {
+    margin: 0;
+}
+.letzteMessreihenUl li .glyphicon {
+    height: 20px;
+    width: 20px;
+    top: 4px;
+}
+.letzteMessreihenUl li a {
+    color: #224565;
+}
+.dropdown-menu.letzteMessreihenUl > li > a:hover {
+    text-decoration: underline;
+    background-color: transparent;
+    color: inherit;
 }
 
 .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle) {
@@ -973,4 +1006,8 @@ h2 small{
 
 .mb-30 {
     margin-bottom: 30px;
+}
+
+.mt-10 {
+    margin-top: 10px;
 }
