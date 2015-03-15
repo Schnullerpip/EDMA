@@ -13,3 +13,5 @@ RewriteRule ^projekt$ projekt.php [NC,L]
 RewriteRule ^messreihen$ messreihen.php
 RewriteRule ^messreihen/neu$ messreihen.php?id=neu
 RewriteRule ^messreihen/([0-9]+)$ messreihen.php?id=$1
+
+RewriteRule ^resetpw$ resetpw.php [NC,L]
