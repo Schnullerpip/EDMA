@@ -1,0 +1,7 @@
+[15/Mar/2015:11:44:00] (ajaxHandler) ---------------------------------------------
+[15/Mar/2015:11:44:00] (ajaxHandler) Init:
+[15/Mar/2015:11:44:00] (ajaxHandler) 302352
+[15/Mar/2015:11:44:00] (ajaxHandler) file get contents:
+[15/Mar/2015:11:44:00] (ajaxHandler) 771288
+[15/Mar/2015:11:44:00] (ajaxHandler) utf8_encode:
+[15/Mar/2015:11:44:00] (ajaxHandler) 771352
