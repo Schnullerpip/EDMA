@@ -6,7 +6,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Schließen</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Schlie&szlig;en</span></button>
                         <h4 class="modal-title" id="modalUeberschrift">Info!</h4>
                     </div>
                     <div class="modal-body">
@@ -31,7 +31,7 @@
                     </div>
                     <div class="modal-footer">
                         <a href="#" class="btn btn-primary" style="display: none;">Details ansehen</a>
-                        <button type="button" class="btn btn-link" data-dismiss="modal">Schließen</button>
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Schlie&szlig;en</button>
                     </div>
                 </div>
             </div>
@@ -41,20 +41,28 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Schließen</span></button>
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Schlie&szlig;en</span></button>
                         <h4 class="modal-title" id="confirmModalUeberschrift">Achtung!</h4>
                     </div>
                     <div class="modal-body">
+
+                        <!-- Spinner waehrend Datei importiert wird -->
+                        <div class="loading-div" style="display: none">
+                            <div class="loading-spinner"></div>                
+                            <h4 class="text-center">Die Messreihe wird gel&ouml;scht, bitte warten...</h4>
+                        </div>
+                        
                         <section class="error mb-30">
                             <div class="alert alert-danger">
                                 <h4>Fehler!</h4>
                                 <div class="content"></div>
                             </div>
                         </section>
-                        <p class="mb-15">Soll <span class="type"></span> wirklich gelöscht werden?</p>
+                        
+                        <p class="mb-15">Soll <span class="type"></span> wirklich gel&ouml;scht werden?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" id="confirm-delete">Löschen</button>
+                        <button type="button" class="btn btn-danger" id="confirm-delete">L&ouml;schen</button>
                         <button type="button" class="btn btn-link" data-dismiss="modal">Abbrechen</button>
                     </div>
                 </div>

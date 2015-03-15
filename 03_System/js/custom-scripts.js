@@ -41,6 +41,8 @@ $(document).ready(function () {
     $('#confirm-delete').on('click', function () {
         var errorbox = $('#delete-modal .error');
         errorbox.hide();
+        errorbox.siblings('p').hide();
+        errorbox.siblings('.loading-div').show();
         // Element löschen
         $.ajax({
             type: "POST",
@@ -51,6 +53,7 @@ $(document).ready(function () {
             if (msg.failed.length === 0) {
                 // Erfolg:
                 // Modal ausblenden und weiterleiten oder sonstiges
+                errorbox.siblings('.loading-div').hide();
                 $('#delete-modal').modal('hide');
                 $('#delete-modal').on('hidden.bs.modal', function () {
                     if (target === '') {
@@ -64,6 +67,7 @@ $(document).ready(function () {
                 // Fehler-Alert im Modal anzeigen
                 $('#delete-modal section.error .content').html("<strong>" + msg.failed.name + "</strong>: " + msg.failed.message);
                 errorbox.siblings('p').hide();
+                errorbox.siblings('.loading-div').hide();
                 errorbox.toggle();
             }
         });

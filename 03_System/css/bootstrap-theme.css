@@ -940,6 +940,9 @@ h2 small{
     }
 }
 
+.loading-div {
+    margin-bottom: 15px;
+}
 .loading-spinner {
     width: 75px;
     height: 75px;
@@ -956,6 +959,10 @@ h2 small{
     -webkit-animation-name: spin;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-timing-function: linear;
+}
+#delete-modal .loading-spinner {
+    border-bottom: 10px solid #224565;
+    border-top: 10px solid #224565;
 }
 
 
