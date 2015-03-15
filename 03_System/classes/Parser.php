@@ -51,7 +51,7 @@ class Parser {
         // falls Datei in ISO Format ist muss konvertiert werden.
         // falls weitere charsets vorkommen muss iconv() statt utf8_encode benutzt werden
         if ($charset === "ISO-8859-1") {
-            // $stringFile = utf8_encode($stringFile);
+//            $stringFile = utf8_encode($stringFile);
             $stringFile = iconv("ISO-8859-1", "UTF-8", $stringFile);
         }
         $this->_logger->lwrite("utf8_encode:");
@@ -231,7 +231,7 @@ class Parser {
     }
 
     private function parseMessDaten($messdaten) {
-        $this->_logger->lwrite("Vor parseMessDaten:");
+        $this->_logger->lwrite("Vor parseMessDaten und RegExZeug:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
         
         $saveExTime = ini_get('max_execution_time');
