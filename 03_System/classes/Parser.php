@@ -44,9 +44,6 @@ class Parser {
 
     private function parse() {
         $stringFile = file_get_contents($this->_file);
-        // File aus Memory loeschen, da nicht mehr gebraucht
-        $this->_file = null;
-        unset($this->_file);
         $this->_logger->lwrite("file get contents:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
@@ -54,7 +51,8 @@ class Parser {
         // falls Datei in ISO Format ist muss konvertiert werden.
         // falls weitere charsets vorkommen muss iconv() statt utf8_encode benutzt werden
         if ($charset === "ISO-8859-1") {
-            $stringFile = utf8_encode($stringFile);
+            // $stringFile = utf8_encode($stringFile);
+            $stringFile = iconv("ISO-8859-1", "UTF-8", $stringFile);
         }
         $this->_logger->lwrite("utf8_encode:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
@@ -67,8 +65,8 @@ class Parser {
             );
             return;
         }
-        $metadaten = &$stringFile[0];
-        $messdaten = &$stringFile[1];
+        $metadaten = $stringFile[0];
+        $messdaten = $stringFile[1];
 
         $this->_db->beginTransaction();
         try {
@@ -232,16 +230,23 @@ class Parser {
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
     }
 
-    private function parseMessDaten(&$messdaten) {
+    private function parseMessDaten($messdaten) {
         $this->_logger->lwrite("Vor parseMessDaten:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
         
         $saveExTime = ini_get('max_execution_time');
         ini_set('max_execution_time', 1000);
+        
+        // UNPERFORMANT START
         $messdaten = preg_split("/\n/", $messdaten);
         $messdaten = array_slice($messdaten, 1);    // array_slice() löscht erstes Element, da leer aufgrund von explode(###)
 
         $spaltennamen = preg_split("/:[\t]?/", $messdaten[0]);
+        // UNPERFORMANT ENDE
+        
+        
+        $this->_logger->lwrite("Nach RegexZeugs:");
+        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
         $spaltenanzahl = count($spaltennamen) - 1;   // letztes Element leer aufgrund der preg_split-Bedingung
         if ($spaltenanzahl > 1) {
@@ -309,7 +314,7 @@ class Parser {
         // Iteration ueber alle Zeilen
         $startTime = microtime(true); // Zeitmessung
         for ($j = 0; $j < count($messdaten); ++$j) {
-            if ($j % 1000 === 0) {
+            if ($j === 1000) {
                 $this->_logger->lwrite("Zeit für 1000 Zeilen: " . number_format(( microtime(true) - $startTime), 4) . " Sekunden\n");
                 $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
                 $startTime = microtime(true);
