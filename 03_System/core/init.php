@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 $GLOBALS['config'] = array(
@@ -21,7 +20,6 @@ $GLOBALS['config'] = array(
     )
 );
 
-define('HOME', 'http://localhost/virtual/EDMANetBeans/');
 
 /**
  * Lädt eine Klasse automatisch beim Aufruf $class = new Class();
@@ -29,6 +27,7 @@ define('HOME', 'http://localhost/virtual/EDMANetBeans/');
  * Stattdessen wird sie nur required, wenn sie auch tatsächlich benutzt wird.
  */
 spl_autoload_register('autoload');
+
 
 /**
  * autoload
@@ -59,6 +58,7 @@ function autoload($class, $dir = null) {
         }
     }
 }
+
 
 /**
  * Kann leider nicht so wie oben gemacht werden, da functions keine Klasse ist.
