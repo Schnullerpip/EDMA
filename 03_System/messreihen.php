@@ -72,7 +72,7 @@ require_once 'header.php';
     <?php if ($inp === 'neu') : ?>
         <div class="row">
             <div class="col-sm-12">
-                <h2>Messreihe importieren</h2>
+                <h2 class="heading">Messreihe importieren</h2>
             </div>
         </div>
         <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
@@ -162,7 +162,7 @@ require_once 'header.php';
             ?>
             <div class="row">
                 <div class="col-sm-12">
-                    <h2>Messreihe "<?php echo escape($messreihe->first()->messreihenname) ?>" bearbeiten</h2>
+                    <h2 class="heading">Messreihe "<?php echo escape($messreihe->first()->messreihenname) ?>" bearbeiten</h2>
                 </div>
             </div>
             <div class="row">
@@ -259,7 +259,7 @@ require_once 'header.php';
 <?php else : ?>
     <div class="row">
         <div class="col-sm-12">
-            <h2>Messreihen</h2>
+            <h2 class="heading">Messreihen</h2>
         </div>
     </div>
     <div class="row mb-30">

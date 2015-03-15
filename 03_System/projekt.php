@@ -176,7 +176,7 @@ require_once 'header.php';
 ?>
 
 <?php if (!$projekt->isMaster()) : ?>
-    <h2>Projektbeschreibungen</h2>
+    <h2 class="heading">Projektbeschreibungen</h2>
     <div class="col-sm-offset-3 col-sm-6">
         <div class="panel panel-default">
             <table class="table" id="projektbeschreibungen">
@@ -202,7 +202,7 @@ require_once 'header.php';
         </div>
     </div>
 <?php else : ?>
-    <h2><?php echo ($projekt->data() ? $projekt->data()->projektname . ' bearbeiten' : 'Neues Projekt anlegen'); ?></h2>
+    <h2 class="heading"><?php echo ($projekt->data() ? $projekt->data()->projektname . ' bearbeiten' : 'Neues Projekt anlegen'); ?></h2>
     <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="projektname" class="col-sm-4 control-label">Projektname<sup>*</sup></label>
