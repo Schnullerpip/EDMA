@@ -39,6 +39,7 @@ class Utils {
             return $qty;
         }
     }
+
     /**
      * Konvertiert ein deutschformatiges Datum in ein für die Datenbank
      * geeignetes Format und andersrum, z.B.:
@@ -53,8 +54,16 @@ class Utils {
         } else {
             $date = date("Y-m-d", strtotime($date));
         }
-        
+
         return $date;
+    }
+
+    /**
+     * To get the memory usage in KB or MB
+     */
+    public static function convert($size) {
+        $unit = array('b', 'kb', 'mb', 'gb', 'tb', 'pb');
+        return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' ' . $unit[$i];
     }
 
 }

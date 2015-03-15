@@ -1,14 +1,44 @@
-[15/Mar/2015:11:44:00] (ajaxHandler) ---------------------------------------------
-[15/Mar/2015:11:44:00] (ajaxHandler) Init:
-[15/Mar/2015:11:44:00] (ajaxHandler) 302352
-[15/Mar/2015:11:44:00] (ajaxHandler) file get contents:
-[15/Mar/2015:11:44:00] (ajaxHandler) 771288
-[15/Mar/2015:11:44:00] (ajaxHandler) utf8_encode:
-[15/Mar/2015:11:44:00] (ajaxHandler) 771352
-[15/Mar/2015:12:08:58] (ajaxHandler) ---------------------------------------------
-[15/Mar/2015:12:08:58] (ajaxHandler) Init:
-[15/Mar/2015:12:08:58] (ajaxHandler) 302352
-[15/Mar/2015:12:08:58] (ajaxHandler) file get contents:
-[15/Mar/2015:12:08:58] (ajaxHandler) 771288
-[15/Mar/2015:12:08:58] (ajaxHandler) utf8_encode:
-[15/Mar/2015:12:08:58] (ajaxHandler) 771352
+[15/Mar/2015:15:03:21] (ajaxHandler) ---------------------------------------------
+[15/Mar/2015:15:03:21] (ajaxHandler) Init:
+[15/Mar/2015:15:03:21] (ajaxHandler) Memory Usage: 512 kb
+[15/Mar/2015:15:03:21] (ajaxHandler) file get contents:
+[15/Mar/2015:15:03:21] (ajaxHandler) Memory Usage: 1 mb
+[15/Mar/2015:15:03:21] (ajaxHandler) utf8_encode:
+[15/Mar/2015:15:03:21] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:21] (ajaxHandler) Nach PaseMetadaten:
+[15/Mar/2015:15:03:21] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:21] (ajaxHandler) Vor parseMessDaten:
+[15/Mar/2015:15:03:21] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:21] (ajaxHandler) Vor Iteration über alle Zeilen:
+[15/Mar/2015:15:03:21] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:21] (ajaxHandler) Zeit für 1000 Zeilen: 0.0001 Sekunden
+
+[15/Mar/2015:15:03:21] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:21] (ajaxHandler) Zeit für 1000 Zeilen: 0.5758 Sekunden
+
+[15/Mar/2015:15:03:21] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:22] (ajaxHandler) Zeit für 1000 Zeilen: 0.8017 Sekunden
+
+[15/Mar/2015:15:03:22] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:34] (ajaxHandler) ---------------------------------------------
+[15/Mar/2015:15:03:34] (ajaxHandler) Init:
+[15/Mar/2015:15:03:34] (ajaxHandler) Memory Usage: 512 kb
+[15/Mar/2015:15:03:34] (ajaxHandler) file get contents:
+[15/Mar/2015:15:03:34] (ajaxHandler) Memory Usage: 1 mb
+[15/Mar/2015:15:03:34] (ajaxHandler) utf8_encode:
+[15/Mar/2015:15:03:34] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:34] (ajaxHandler) Nach PaseMetadaten:
+[15/Mar/2015:15:03:34] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:34] (ajaxHandler) Vor parseMessDaten:
+[15/Mar/2015:15:03:34] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:34] (ajaxHandler) Vor Iteration über alle Zeilen:
+[15/Mar/2015:15:03:34] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:34] (ajaxHandler) Zeit für 1000 Zeilen: 0.0001 Sekunden
+
+[15/Mar/2015:15:03:34] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:35] (ajaxHandler) Zeit für 1000 Zeilen: 0.5711 Sekunden
+
+[15/Mar/2015:15:03:35] (ajaxHandler) Memory Usage: 2.5 mb
+[15/Mar/2015:15:03:35] (ajaxHandler) Zeit für 1000 Zeilen: 0.7650 Sekunden
+
+[15/Mar/2015:15:03:35] (ajaxHandler) Memory Usage: 2.5 mb

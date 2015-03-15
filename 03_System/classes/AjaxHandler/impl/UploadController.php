@@ -173,7 +173,7 @@ class UploadController extends AjaxController {
         
         if ($this->_files['file']['size'][0] >= 0) {
             if (in_array($this->_files['file']['type'][0], $this->_csv_mimetypes)) {
-                $parser = new Parser($this->_files['file']['tmp_name'][0], Input::get('projektid'));
+                $parser = new Parser($this->_files['file']['tmp_name'][0], Input::get('projektID'));
 
                 // TODO: Errorhandling / Successhandling
                 // So in der Art:

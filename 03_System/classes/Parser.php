@@ -31,7 +31,7 @@ class Parser {
         $this->_logger->lfile(realpath("logs/parser.txt"));
         $this->_logger->lwrite("---------------------------------------------");
         $this->_logger->lwrite("Init:");
-        $this->_logger->lwrite(memory_get_usage());
+        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
         
         $this->_file = $file;
         $this->_db = DB::getInstance();
@@ -48,7 +48,7 @@ class Parser {
         $this->_file = null;
         unset($this->_file);
         $this->_logger->lwrite("file get contents:");
-        $this->_logger->lwrite(memory_get_usage());
+        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
         $charset = mb_detect_encoding($stringFile, "UTF-8, ISO-8859-1");
         // falls Datei in ISO Format ist muss konvertiert werden.
@@ -57,7 +57,7 @@ class Parser {
             $stringFile = utf8_encode($stringFile);
         }
         $this->_logger->lwrite("utf8_encode:");
-        $this->_logger->lwrite(memory_get_usage());
+        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
         $stringFile = str_replace("\r", "", $stringFile);
         $stringFile = explode("###", $stringFile);
         if (count($stringFile) != 2) {
@@ -67,8 +67,8 @@ class Parser {
             );
             return;
         }
-        $metadaten = $stringFile[0];
-        $messdaten = $stringFile[1];
+        $metadaten = &$stringFile[0];
+        $messdaten = &$stringFile[1];
 
         $this->_db->beginTransaction();
         try {
@@ -228,9 +228,14 @@ class Parser {
                         . ", metawert: " . $metawert . ")");
             }
         }
+        $this->_logger->lwrite("Nach PaseMetadaten:");
+        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
     }
 
     private function parseMessDaten(&$messdaten) {
+        $this->_logger->lwrite("Vor parseMessDaten:");
+        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
+        
         $saveExTime = ini_get('max_execution_time');
         ini_set('max_execution_time', 1000);
         $messdaten = preg_split("/\n/", $messdaten);
@@ -297,9 +302,19 @@ class Parser {
         if ($statement_messreihe_sensor === FALSE) {
             $this->throwMessException("Fehler beim Erstellen des prepared statements von 'messung'");
         }
+        
+        $this->_logger->lwrite("Vor Iteration über alle Zeilen:");
+        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
         // Iteration ueber alle Zeilen
+        $startTime = microtime(true); // Zeitmessung
         for ($j = 0; $j < count($messdaten); ++$j) {
+            if ($j % 1000 === 0) {
+                $this->_logger->lwrite("Zeit für 1000 Zeilen: " . number_format(( microtime(true) - $startTime), 4) . " Sekunden\n");
+                $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
+                $startTime = microtime(true);
+            }
+                
             $messungsSpalte = preg_split("/\t/", $messdaten[$j]);
 
             // Pruefung auf zu wenig Spalten
@@ -313,8 +328,8 @@ class Parser {
                     $this->throwMessException($executeError);
                 }
             }
-            $datum = $messungsSpalte[0];
-            $zeit = $messungsSpalte[1];
+            $datum = &$messungsSpalte[0];
+            $zeit = &$messungsSpalte[1];
 
             $zeit = $this->checkUhrzeitFormat($zeit);
 

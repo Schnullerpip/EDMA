@@ -960,6 +960,11 @@ h2 small{
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-timing-function: linear;
 }
+.startseite .loading-spinner {
+    width: 30px;
+    height: 30px;
+    float: left;
+}
 #delete-modal .loading-spinner {
     border-bottom: 10px solid #224565;
     border-top: 10px solid #224565;
