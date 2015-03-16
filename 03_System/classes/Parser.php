@@ -28,7 +28,7 @@ class Parser {
     public function __construct($file, $projekt_id) {
         // Logger init
         $this->_logger = new Logger();
-        $this->_logger->activate(true);
+        $this->_logger->activate(false);
         $this->_logger->lfile(realpath("logs/parser.txt"));
         $this->_logger->lwrite("---------------------------------------------");
         $this->_logger->lwrite("Init:");

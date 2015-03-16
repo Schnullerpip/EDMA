@@ -487,7 +487,7 @@ $jsonselectsensor = json_encode($selectsensor);
         //Unterscheide ob es sich um einen ein-Feld-/oder mehr-feld-operator handelt
         if (isSingleValueFieldOperator > -1) {
 
-            appendString = "<div id='metaValueField" + argsId + "' class='form-group'><div class='col-xs-8'><input id='metaValueInput" + argsId + "' class='singleValueField form-control valueField' type='text' placeholder='insert Value' name='stringInput" + argsId + "'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
+            appendString = "<div id='metaValueField" + argsId + "' class='form-group'><div class='col-xs-8'><input id='metaValueInput" + argsId + "' class='singleValueField form-control valueField' type='text' name='stringInput" + argsId + "'></input></div><a class='btn' onclick='delMeta(" + argsId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
 
         } else {
             //kann momentan nur "between sein"
@@ -514,7 +514,7 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function addDefaultValueField(type) {
         var appendString;
-        appendString = "<div id='metaValueField" + uniqueId + "' class='form-group'><div class='col-xs-8'><input id='metaValueInput" + uniqueId + "'class='singleValueField form-control valueField' type='text' placeholder='insert Value' name='stringInput" + uniqueId + "'></input></div><a class='btn' onclick='delMeta(" + uniqueId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
+        appendString = "<div id='metaValueField" + uniqueId + "' class='form-group'><div class='col-xs-8'><input id='metaValueInput" + uniqueId + "'class='singleValueField form-control valueField' type='text' name='stringInput" + uniqueId + "'></input></div><a class='btn' onclick='delMeta(" + uniqueId + ");'><span class='glyphicon glyphicon-remove'></span></a></div>";
         $("#meta_value_div").append(appendString);
         if(type != 'string'){
             $("#metaValueInput"+uniqueId).attr("disabled", "disabled");
