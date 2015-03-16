@@ -12,12 +12,19 @@
 class Logger {
     // declare log file and file pointer as private properties
     private $log_file, $fp;
+    private $_activated;
     // set log file (path and name)
     public function lfile($path) {
+        if (!$this->_activated) {
+            return;
+        }
         $this->log_file = $path;
     }
     // write message to the log file
     public function lwrite($message) {
+        if (!$this->_activated) {
+            return;
+        }
         // if file pointer doesn't exist, then open log file
         if (!is_resource($this->fp)) {
             $this->lopen();
@@ -32,10 +39,16 @@ class Logger {
     }
     // close log file (it's always a good idea to close a file when you're done with it)
     public function lclose() {
+        if (!$this->_activated) {
+            return;
+        }
         fclose($this->fp);
     }
     // open log file (private method)
     private function lopen() {
+        if (!$this->_activated) {
+            return;
+        }
         // in case of Windows set default log file
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $log_file_default = 'c:/php/logfile.txt';
@@ -49,5 +62,9 @@ class Logger {
         // open log file for writing only and place file pointer at the end of the file
         // (if the file does not exist, try to create it)
         $this->fp = fopen($lfile, 'a') or exit("Can't open $lfile!");
+    }
+    
+    public function activate($activate) {
+        $this->_activated = $activate;
     }
 }
