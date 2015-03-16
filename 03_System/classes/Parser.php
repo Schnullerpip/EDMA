@@ -28,17 +28,17 @@ class Parser {
     public function __construct($file, $projekt_id) {
         // Logger init
         $this->_logger = new Logger();
-        $this->_logger->activate(false);
+        $this->_logger->activate(true);
         $this->_logger->lfile(realpath("logs/parser.txt"));
         $this->_logger->lwrite("---------------------------------------------");
         $this->_logger->lwrite("Init:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-        
+
         $this->_file = $file;
         $this->_db = DB::getInstance();
         $this->_projektID = $projekt_id;
         $this->parse();
-        
+
         // close log file
         $this->_logger->lclose();
     }
@@ -232,20 +232,26 @@ class Parser {
     }
 
     private function parseMessDaten($messdaten) {
-        $this->_logger->lwrite("Vor parseMessDaten und RegExZeug:");
-        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-        
         $saveExTime = ini_get('max_execution_time');
         ini_set('max_execution_time', 1000);
-        
+
         // UNPERFORMANT START
+        $this->_logger->lwrite("Vor erstem preg_split:");
+        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
+
         $messdaten = preg_split("/\n/", $messdaten);
+        // UNPERFORMANT ENDE
+
+        $this->_logger->lwrite("Vor array_slice:");
+        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
+
         $messdaten = array_slice($messdaten, 1);    // array_slice() löscht erstes Element, da leer aufgrund von explode(###)
 
+        $this->_logger->lwrite("Vor zweitem preg_split:");
+        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
+
         $spaltennamen = preg_split("/:[\t]?/", $messdaten[0]);
-        // UNPERFORMANT ENDE
-        
-        
+
         $this->_logger->lwrite("Nach RegexZeugs:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
@@ -294,7 +300,6 @@ class Parser {
             }
         }
         $messdaten = array_slice($messdaten, 1); // löschen des Elements mit Sensornamen, da nicht mehr benötigt
-
         // Sql Statement fuer eine Zeile erstellen
         $sql = "INSERT INTO messung (messreihe_id, zeitpunkt, datum_uhrzeit, mikrosekunden, sensor_id, messwert) VALUES ";
         for ($i = 2; $i < $spaltenanzahl; ++$i) {
@@ -308,7 +313,7 @@ class Parser {
         if ($statement_messreihe_sensor === FALSE) {
             $this->throwMessException("Fehler beim Erstellen des prepared statements von 'messung'");
         }
-        
+
         $this->_logger->lwrite("Vor Iteration über alle Zeilen:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
@@ -320,7 +325,7 @@ class Parser {
                 $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
                 $startTime = microtime(true);
             }
-                
+
             $messungsSpalte = preg_split("/\t/", $messdaten[$j]);
 
             // Pruefung auf zu wenig Spalten
