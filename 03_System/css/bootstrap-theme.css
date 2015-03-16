@@ -345,6 +345,12 @@ a:active {
     margin-bottom: 0;
 }
 
+.input-group.date .btn-primary:hover,
+.input-group.date .btn-primary:active,
+.input-group.date .btn-primary:focus {
+    border-color: #FFFFFF;
+}
+
 
 /* Panels */
 /* ------------------------------- */
@@ -959,11 +965,6 @@ h2 small{
     -webkit-animation-name: spin;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-timing-function: linear;
-}
-.startseite .loading-spinner {
-    width: 30px;
-    height: 30px;
-    float: left;
 }
 #delete-modal .loading-spinner {
     border-bottom: 10px solid #224565;
