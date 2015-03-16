@@ -24,6 +24,7 @@ class Parser {
     private $_warning = array();
     private $_zeilennummerMessdaten;
     private $_logger;
+    private $_metadata;
 
     public function __construct($file, $projekt_id) {
         // Logger init
@@ -34,7 +35,7 @@ class Parser {
         $this->_logger->lwrite("Init:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
-        $this->_file = $file;
+        $this->_file = new SplFileObject($file);
         $this->_db = DB::getInstance();
         $this->_projektID = $projekt_id;
         $this->parse();
@@ -44,35 +45,46 @@ class Parser {
     }
 
     private function parse() {
-        $stringFile = file_get_contents($this->_file);
+        
+        $this->_metadata = "";
+        while(true) {
+            $string = $this->_file->fgets();
+            if ($string === "###") {
+                break;
+            }
+            $this->_metadata .= $string;
+        }
+        
+        //$stringFile = file_get_contents($this->_file);
+        
         $this->_logger->lwrite("file get contents:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
-        $charset = mb_detect_encoding($stringFile, "UTF-8, ISO-8859-1");
+        $charset = mb_detect_encoding($this->_metadata, "UTF-8, ISO-8859-1");
         // falls Datei in ISO Format ist muss konvertiert werden.
         // falls weitere charsets vorkommen muss iconv() statt utf8_encode benutzt werden
         if ($charset === "ISO-8859-1") {
 //            $stringFile = utf8_encode($stringFile);
-            $stringFile = iconv("ISO-8859-1", "UTF-8", $stringFile);
+            $this->_metadata = iconv("ISO-8859-1", "UTF-8", $this->_metadata);
         }
         $this->_logger->lwrite("utf8_encode:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-        $stringFile = str_replace("\r", "", $stringFile);
-        $stringFile = explode("###", $stringFile);
-        if (count($stringFile) != 2) {
-            $this->_error = array(
-                'Fehler' => "Trennzeichen '###' nicht oder mehrfach vorhanden!",
-                'ABBRUCH' => "Import abgebrochen!"
-            );
-            return;
-        }
-        $metadaten = $stringFile[0];
-        $messdaten = $stringFile[1];
+        //$stringFile = str_replace("\r", "", $stringFile);
+        //$stringFile = explode("###", $stringFile);
+//        if (count($stringFile) != 2) {
+//            $this->_error = array(
+//                'Fehler' => "Trennzeichen '###' nicht oder mehrfach vorhanden!",
+//                'ABBRUCH' => "Import abgebrochen!"
+//            );
+//            return;
+//        }
+//        $metadaten = $stringFile[0];
+        //$messdaten = $stringFile[1];
 
         $this->_db->beginTransaction();
         try {
-            $this->parseMetaDaten($metadaten);
-            $this->parseMessDaten($messdaten);
+            $this->parseMetaDaten();
+            $this->parseMessDaten();
         } catch (ParserException $e) {
             $exceptionArray = array(
                 'Parser.php' => $e->getMessage(),
@@ -89,7 +101,7 @@ class Parser {
         $this->_db->commit();
     }
 
-    private function parseMetaDaten($metadaten) {
+    private function parseMetaDaten() {
         // Metanamen besteht aus beliebiger Anzahl von Buchstaben, Ziffern, 
         // Leerzeichen, Prozentzeichen, Gradzeichen, Slash, Minuszeichen und am
         // Ende Unterstrich mit Datentyp (_d, _n oder _s)
@@ -111,8 +123,8 @@ class Parser {
 
         $pattern = "#^" . $metaNamePattern . ":\t(" . $stringPattern . "|" . $datePattern . "|" . $numberPattern . ")\t*$#mu";
         $matches = array();
-        $count = preg_match_all($pattern, $metadaten, $matches);
-        $metalines = explode("\n", $metadaten);
+        $count = preg_match_all($pattern, $this->_metadata, $matches);
+        $metalines = explode("\n", $this->_metadata);
         array_pop($metalines);  // letztes Element löschen, da leer
         $lines = count($metalines);
         $this->_zeilennummerMessdaten = $lines + 3; // Metazeilen + (Trennzeichenzeile + Sensornamenzeile + Indexbeginn = 3)
@@ -231,7 +243,7 @@ class Parser {
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
     }
 
-    private function parseMessDaten($messdaten) {
+    private function parseMessDaten() {
         $saveExTime = ini_get('max_execution_time');
         ini_set('max_execution_time', 1000);
 
@@ -239,18 +251,18 @@ class Parser {
         $this->_logger->lwrite("Vor erstem preg_split:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
-        $messdaten = preg_split("/\n/", $messdaten);
+        //$messdaten = preg_split("/\n/", $messdaten);
         // UNPERFORMANT ENDE
 
         $this->_logger->lwrite("Vor array_slice:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
-        $messdaten = array_slice($messdaten, 1);    // array_slice() löscht erstes Element, da leer aufgrund von explode(###)
+        //$messdaten = array_slice($messdaten, 1);    // array_slice() löscht erstes Element, da leer aufgrund von explode(###)
 
         $this->_logger->lwrite("Vor zweitem preg_split:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-
-        $spaltennamen = preg_split("/:[\t]?/", $messdaten[0]);
+        
+        $spaltennamen = preg_split("/:[\t]?/", $this->_file->fgets());
 
         $this->_logger->lwrite("Nach RegexZeugs:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
@@ -299,7 +311,7 @@ class Parser {
                         . ", sensorname: " . $sensorname . ")");
             }
         }
-        $messdaten = array_slice($messdaten, 1); // löschen des Elements mit Sensornamen, da nicht mehr benötigt
+        //$messdaten = array_slice($messdaten, 1); // löschen des Elements mit Sensornamen, da nicht mehr benötigt
         // Sql Statement fuer eine Zeile erstellen
         $sql = "INSERT INTO messung (messreihe_id, zeitpunkt, datum_uhrzeit, mikrosekunden, sensor_id, messwert) VALUES ";
         for ($i = 2; $i < $spaltenanzahl; ++$i) {
@@ -319,25 +331,29 @@ class Parser {
 
         // Iteration ueber alle Zeilen
         $startTime = microtime(true); // Zeitmessung
-        for ($j = 0; $j < count($messdaten); ++$j) {
-            if ($j === 1000) {
-                $this->_logger->lwrite("Zeit für 1000 Zeilen: " . number_format(( microtime(true) - $startTime), 4) . " Sekunden\n");
-                $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-                $startTime = microtime(true);
-            }
+        //for ($j = 0; $j < count($messdaten); ++$j) {
+        $leereZeile = false;
+        while(!$this->_file->eof()) {
+//            if ($j === 1000) {
+//                $this->_logger->lwrite("Zeit für 1000 Zeilen: " . number_format(( microtime(true) - $startTime), 4) . " Sekunden\n");
+//                $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
+//                $startTime = microtime(true);
+//            }
 
-            $messungsSpalte = preg_split("/\t/", $messdaten[$j]);
+            $messungsSpalte = preg_split("/\t/", $this->_file->fgets());
 
             // Pruefung auf zu wenig Spalten
             if (count($messungsSpalte) !== $spaltenanzahl) {
+                $leereZeile = true;
+                break;
                 // Pruefung auf Leerzeile in letzter Zeile
-                if ($j === count($messdaten) - 1 and count($messungsSpalte) === 1) {
-                    continue;
-                } else {
-                    $executeError = "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
-                            . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")";
-                    $this->throwMessException($executeError);
-                }
+//                if ($j === count($messdaten) - 1 and count($messungsSpalte) === 1) {
+//                    continue;
+//                } else {
+//                    $executeError = "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
+//                            . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")";
+//                    $this->throwMessException($executeError);
+//                }
             }
             $datum = &$messungsSpalte[0];
             $zeit = &$messungsSpalte[1];
@@ -366,6 +382,12 @@ class Parser {
                 $this->throwMessException("Fehler beim INSERT von 'messung' "
                         . "(Zeile: " . ($j + $this->_zeilennummerMessdaten) . ")");
             }
+        }
+        
+        if ($leereZeile && !$this->_file->eof()) {
+            $executeError = "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
+                            . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")";
+                    $this->throwMessException($executeError);
         }
         ini_set('max_execution_time', $saveExTime);
     }
