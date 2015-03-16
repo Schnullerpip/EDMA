@@ -496,10 +496,11 @@ $jsonselectsensor = json_encode($selectsensor);
         $('#metaValueField' + argsId).replaceWith(appendString);
         $("#metaValueInput"+argsId).val(former_input_string);
         $("#metaValueInput"+argsId).fadeOut(100).fadeIn(100);//kleiner Effekt um dem veränderten ValueInput Aufmerksamkeit zu schenken
+        $("#metaValueInput"+argsId).focus();
 
         //mit dem neuen Operator gleich einen neuen Filterdurchlaif starten - nur wenn auch ein vorheriger input vorhanden war
         if((former_input_string != "") && (isSingleValueFieldOperator > -1)){
-            evaluateAllFilters();
+            evaluateAllFilters(true);
         }
     }
 
@@ -533,7 +534,7 @@ $jsonselectsensor = json_encode($selectsensor);
         $("#metaNameField" + argid).parent().remove();
         $("#metaValueField" + argid).remove();
 
-        evaluateAllFilters();
+        evaluateAllFilters(false);
     }
 
 
@@ -584,7 +585,10 @@ $jsonselectsensor = json_encode($selectsensor);
 
 
 
-    function evaluateAllFilters() {
+    var showMetaInputError = true;
+    function evaluateAllFilters(showErrors) {
+        //je nach dem wann diese funktion aufgerufen wird sollen errors gezeigt werden oder nicht (z.B. beim Löschen eines Filters soll die Fehlernachricht für einen anderen noch fehlerfhaften Filter nicht nocheinmal gezeigt werden... )
+        showMetaInputError = showErrors;
         /*erstelle eine neue messreihen_copy von dem original anhand des filters auf alle verbleibenden filter*/
         messreihen_copy = $.extend(true, [], messreihen); //Tiefe Kopie vom Original
 
@@ -723,12 +727,16 @@ $jsonselectsensor = json_encode($selectsensor);
 
     function checkInput(datatype, value) {
         if ((datatype == "numerisch") && (isNaN(parseInt(value)))) {
-            modalTextWarning("Ein numerischer input sollte eine Zahl sein! 120k geht zum Beispiel auch, jedoch wird dann eben das k ignoriert.");
-            $('#infoModal').modal();
+            if(showMetaInputError){
+                modalTextWarning("Ein numerischer input sollte eine Ganzzahl sein! 120k geht auch, jedoch wird dann eben das k ignoriert.");
+                $('#infoModal').modal();
+            }
             return false;
         } else if ((datatype == "datum") && !(/[0-9]{4}-[0-9]{2}-[0-9]{2}$/).test(value)) {
-            modalTextWarning("Ein Datum sollte von der Form yyyy-mm-dd sein!");
-            $('#infoModal').modal();
+            if(showMetaInputError){
+                modalTextWarning("Ein Datum sollte von der Form yyyy-mm-dd sein!");
+                $('#infoModal').modal();
+            }
             return false;
         }
         return true;
@@ -1169,10 +1177,14 @@ $jsonselectsensor = json_encode($selectsensor);
             $(this).blur();
         });
 
+        //der Input von values im metafilter bereich soll sowohl durch drücken von enter als auch durch eien lost fokus bestätigt werden können
         $('#meta_value_div').keypress(function (e) {
             if(e.keyCode == 13){
-                evaluateAllFilters();
+                evaluateAllFilters(true);
             }
+        });
+        $('#meta_value_div').on("blur", ".valueField",function (e) {
+            evaluateAllFilters(true);
         });
 
         //CLICK ON MESSREIHE
