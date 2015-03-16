@@ -577,7 +577,11 @@ $jsonselectsensor = json_encode($selectsensor);
             tmp_metaobjects.splice(smallest_index, 1);
         }
         for(i=0;i<sorted_metaobjects.length;i++){ //Alle elemente der #selectBox hinzufügen
-            replace_string.push("<li><a onclick='selectChanged(\"" + sorted_metaobjects[i].loc + "\");'>" + sorted_metaobjects[i].metname + "</a></li>");
+            if(sorted_metaobjects[i].metname === "datum"){
+                replace_string.push("<li><a onclick='selectChanged(\"" + sorted_metaobjects[i].loc + "\");'>Datum</a></li>");
+            }else{
+                replace_string.push("<li><a onclick='selectChanged(\"" + sorted_metaobjects[i].loc + "\");'>" + sorted_metaobjects[i].metname + "</a></li>");
+            }
         }
         $("#selectBox").html(replace_string.join(""));
     }
