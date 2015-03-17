@@ -31,7 +31,7 @@ class Parser {
         $this->_logger = new Logger();
         $this->_logger->activate(true);
         $this->_logger->lfile(realpath("logs/parser.txt"));
-        $this->_logger->lwrite("---------------------------------------------");
+        $this->_logger->lwrite("-------------------- NEW --------------------");
         $this->_logger->lwrite("Init:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
@@ -45,49 +45,44 @@ class Parser {
     }
 
     private function parse() {
-//        $this->_db->beginTransaction();
-//        try {
         $this->_metadata = "";
-        while (true) {
+        while (!$this->_file->eof()) {
             $string = $this->_file->fgets();
-            $this->_logger->lwrite($string);
-//            if (!$string) {
-//                $errorMsg = array(
-//                    'Fehler' => "Aus Datei kann nicht eingelesen werden!"
-//                );
-//                throw new ParserException("Fehler in Funktion fgets()", 0, null, $errorMsg);
-//            }
-            if (strpos($string,"###") === 0) {
+            if ($string === FALSE) {
+                $this->_error = array(
+                    'Fehler' => "Aus Datei kann nicht eingelesen werden!",
+                    'ABBRUCH' => "Import abgebrochen!"
+                );
+                return;
+            }
+            // Pruefung auf Trennzeichen
+            if (strpos($string, "###") === 0) {
                 break;
             }
             $this->_metadata .= $string;
         }
+        // Filepointer darf zu diesem Zeitpunkt nicht auf das Ende zeigen
+        if ($this->_file->eof()) {
+            $this->_error = array(
+                'Fehler' => "Trennzeichen '###' nicht oder ganz am Ende der Datei vorhanden!",
+                'ABBRUCH' => "Import abgebrochen!"
+            );
+            return;
+        }
 
-        //$stringFile = file_get_contents($this->_file);
-
-        $this->_logger->lwrite("file get contents:");
+        $this->_logger->lwrite("nach Metadaten-Erstellung:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
         $charset = mb_detect_encoding($this->_metadata, "UTF-8, ISO-8859-1");
         // falls Datei in ISO Format ist muss konvertiert werden.
         // falls weitere charsets vorkommen muss iconv() statt utf8_encode benutzt werden
         if ($charset === "ISO-8859-1") {
-//            $stringFile = utf8_encode($stringFile);
+            // $stringFile = utf8_encode($stringFile);
             $this->_metadata = iconv("ISO-8859-1", "UTF-8", $this->_metadata);
         }
-        $this->_logger->lwrite("utf8_encode:");
+        $this->_logger->lwrite("nach iconv:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
         $this->_metadata = str_replace("\r", "", $this->_metadata);
-        //$stringFile = explode("###", $stringFile);
-//        if (count($stringFile) != 2) {
-//            $this->_error = array(
-//                'Fehler' => "Trennzeichen '###' nicht oder mehrfach vorhanden!",
-//                'ABBRUCH' => "Import abgebrochen!"
-//            );
-//            return;
-//        }
-//        $metadaten = $stringFile[0];
-        //$messdaten = $stringFile[1];
 
         $this->_db->beginTransaction();
         try {
@@ -136,9 +131,6 @@ class Parser {
         array_pop($metalines);  // letztes Element löschen, da leer
         $lines = count($metalines);
         $this->_zeilennummerMessdaten = $lines + 3; // Metazeilen + (Trennzeichenzeile + Sensornamenzeile + Indexbeginn = 3)
-        $this->_logger->lwrite("lines: ".$lines);
-        $this->_logger->lwrite("count: ".$count);
-        $this->_logger->lwrite("metadata: ".$this->_metadata);
         if ($count != $lines) {
             $this->_warning = $this->metalinesToIgnore($matches[0], $metalines);
         }
@@ -250,35 +242,16 @@ class Parser {
                         . ", metawert: " . $metawert . ")");
             }
         }
-        $this->_logger->lwrite("Nach PaseMetadaten:");
+        $this->_logger->lwrite("nach parseMetaDaten:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
     }
 
     private function parseMessDaten() {
-        $saveExTime = ini_get('max_execution_time');
-        ini_set('max_execution_time', 1000);
-
-        // UNPERFORMANT START
-        $this->_logger->lwrite("Vor erstem preg_split:");
-        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-
-        //$messdaten = preg_split("/\n/", $messdaten);
-        // UNPERFORMANT ENDE
-
-        $this->_logger->lwrite("Vor array_slice:");
-        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-
-        //$messdaten = array_slice($messdaten, 1);    // array_slice() löscht erstes Element, da leer aufgrund von explode(###)
-
-        $this->_logger->lwrite("Vor zweitem preg_split:");
-        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-
         $spaltennamen = preg_split("/:[\t]?/", $this->_file->fgets());
-
-        $this->_logger->lwrite("Nach RegexZeugs:");
+        $this->_logger->lwrite("nach urspruenglich unperformantem Teil:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
-        $spaltenanzahl = count($spaltennamen) - 1;   // letztes Element leer aufgrund der preg_split-Bedingung
+        $spaltenanzahl = count($spaltennamen) - 1;   // letztes Element leer aufgrund der preg_split-Bedingung ':'
         if ($spaltenanzahl > 1) {
             if ($spaltennamen[0] != "Datum") {     // 1. Spalte der Messungen muss Datum sein
                 $this->throwMessException("Die 1. Spalte der Messungen lautet nicht 'Datum' sondern: " . $spaltennamen[0]);
@@ -341,15 +314,14 @@ class Parser {
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
         // Iteration ueber alle Zeilen
-//        $startTime = microtime(true); // Zeitmessung
-        //for ($j = 0; $j < count($messdaten); ++$j) {
+        $startTime = microtime(true); // Zeitmessung
         $j = 0;
         while (!$this->_file->eof()) {
-//            if ($j === 1000) {
-//                $this->_logger->lwrite("Zeit für 1000 Zeilen: " . number_format(( microtime(true) - $startTime), 4) . " Sekunden\n");
-//                $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-//                $startTime = microtime(true);
-//            }
+            if ($j === 1000) {
+                $this->_logger->lwrite("Zeit für 1000 Zeilen: " . number_format(( microtime(true) - $startTime), 4) . " Sekunden");
+                $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)) . "\n\n");
+                $startTime = microtime(true);
+            }
 
             $messungsSpalte = preg_split("/\t/", $this->_file->fgets());
 
@@ -362,20 +334,12 @@ class Parser {
                             . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")";
                     $this->throwMessException($executeError);
                 }
-
-                // Pruefung auf Leerzeile in letzter Zeile
-//                if ($j === count($messdaten) - 1 and count($messungsSpalte) === 1) {
-//                    continue;
-//                } else {
-//                    $executeError = "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
-//                            . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")";
-//                    $this->throwMessException($executeError);
-//                }
             }
+            
             $datum = &$messungsSpalte[0];
             $zeit = &$messungsSpalte[1];
 
-            $zeit = $this->checkUhrzeitFormat($zeit);
+            $zeit = $this->checkUhrzeitFormat($zeit, $j);
 
             $defaults = array($this->_messreiheID, $j, $datum, $zeit["uhrzeit"], $zeit["mikroseks"]);
             $values = array();
@@ -401,8 +365,6 @@ class Parser {
             }
             ++$j;
         }
-
-        ini_set('max_execution_time', $saveExTime);
     }
 
     private function metalinesToIgnore($parsedLines, $allLines) {
@@ -430,7 +392,7 @@ class Parser {
         throw new ParserException("Fehler in Funktion parseMessDaten()", 0, null, $dbErrorMsg);
     }
 
-    private function checkUhrzeitFormat($zeit) {
+    private function checkUhrzeitFormat($zeit, $zeile) {
         $retVal = array();
         $zeit_splitted = preg_split("/[\.,]/", $zeit);
         $zeiten_teile = count($zeit_splitted);
@@ -438,19 +400,19 @@ class Parser {
             $hh_mm_ss = explode(":", $zeit);
             if ($hh_mm_ss[2] > 59) {        // Fehler, wenn Sekunden groesser als 59 (Mikrosekunden ohne '.' oder ',' angehaengt
                 $this->throwMessException("Ungültiges Uhrzeitformat in Zeile " .
-                        ($j + $this->_zeilennummerMessdaten) . ": " . $zeit);
+                        ($zeile + $this->_zeilennummerMessdaten) . ": " . $zeit);
             }
             $uhrzeit = $zeit;
             $mikrosekunden = "000000";
         } else if ($zeiten_teile > 2) {
             $this->throwMessException("Ungültiges Uhrzeitformat in Zeile " .
-                    ($j + $this->_zeilennummerMessdaten) . ": " . $zeit);
+                    ($zeile + $this->_zeilennummerMessdaten) . ": " . $zeit);
         } else {
             $uhrzeit = $zeit_splitted[0];
             $mikrosekunden = $zeit_splitted[1];
             if ($mikrosekunden > 999999) {      // Fehler, wenn Mikrosekunden aus mehr als 6 Stellen bestehen
                 $this->throwMessException("Sekunden haben mehr als sechs Nachkommastellen in Zeile " .
-                        ($j + $this->_zeilennummerMessdaten) . ": " . $zeit);
+                        ($zeile + $this->_zeilennummerMessdaten) . ": " . $zeit);
             }
             $mikrosekunden = $this->fillMikroseks($mikrosekunden);
         }
