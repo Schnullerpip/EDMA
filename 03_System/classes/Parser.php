@@ -70,14 +70,7 @@ class Parser {
             return;
         }
 
-        $charset = mb_detect_encoding($this->_metadata, "UTF-8, ISO-8859-1");
-        // falls Datei in ISO Format ist muss konvertiert werden.
-        // falls weitere charsets vorkommen muss iconv() statt utf8_encode benutzt werden
-        if ($charset === "ISO-8859-1") {
-            // $stringFile = utf8_encode($stringFile);
-            $this->_metadata = iconv("ISO-8859-1", "UTF-8", $this->_metadata);
-        }
-        $this->_metadata = str_replace("\r", "", $this->_metadata);
+        $this->_metadata = $this->encodeString($this->_metadata);
 
         $this->_db->beginTransaction();
         try {
@@ -240,7 +233,9 @@ class Parser {
     }
 
     private function parseMessDaten() {
-        $spaltennamen = preg_split("/:[\t]?/", $this->_file->fgets());
+        $spaltenString = $this->_file->fgets();
+        $spaltenString = $this->encodeString($spaltenString);
+        $spaltennamen = preg_split("/:[\t]?/", $spaltenString);
         $spaltenanzahl = count($spaltennamen) - 1;   // letztes Element leer aufgrund der preg_split-Bedingung ':'
         if ($spaltenanzahl > 1) {
             if ($spaltennamen[0] != "Datum") {     // 1. Spalte der Messungen muss Datum sein
@@ -308,7 +303,9 @@ class Parser {
 //                $this->_logger->lwrite("Zeit für 1000 Zeilen: " . number_format(( microtime(true) - $startTime), 4) . " Sekunden");
 //            }
 
-            $messungsSpalte = preg_split("/\t/", $this->_file->fgets());
+            $messungsString = $this->_file->fgets();
+            $messungsString = $this->encodeString($messungsString);
+            $messungsSpalte = preg_split("/\t/", $messungsString);
 
             // Pruefung auf zu wenig Spalten
             if (count($messungsSpalte) !== $spaltenanzahl) {
@@ -320,7 +317,7 @@ class Parser {
                     $this->throwMessException($executeError);
                 }
             }
-            
+
             $datum = &$messungsSpalte[0];
             $zeit = &$messungsSpalte[1];
 
@@ -415,6 +412,18 @@ class Parser {
             }
         }
         return $mikroseks;
+    }
+
+    private function encodeString($string) {
+        $charset = mb_detect_encoding($string, "UTF-8, ISO-8859-1");
+        // falls Datei/String in ISO Format ist muss konvertiert werden.
+        // falls weitere charsets vorkommen muss iconv() statt utf8_encode benutzt werden
+        if ($charset === "ISO-8859-1") {
+            // $stringFile = utf8_encode($stringFile);
+            $retVal = iconv("ISO-8859-1", "UTF-8", $string);
+        }
+        $retVal = str_replace("\r", "", $string);
+        return $retVal;
     }
 
     public function errors() {
