@@ -185,3 +185,63 @@ Fördergerät Förderzyklus in min_n:	11
 Fördergerät Mittelwert in kg/Zyklus_n:	0,218																			
 Fördergerät Standardabweichung in kg/Zyklus_n:	0,00428																			
 
+[17/Mar/2015:16:04:25] (ajaxHandler) ---------------------------------------------
+[17/Mar/2015:16:04:25] (ajaxHandler) Init:
+[17/Mar/2015:16:04:25] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:16:04:25] (ajaxHandler) Name_s:	Trocknungslauf_151214																			
+
+[17/Mar/2015:16:04:25] (ajaxHandler) Datum_d:	15.12.2014																			
+
+[17/Mar/2015:16:04:25] (ajaxHandler) Gewicht in kg_n:	100
+
+[17/Mar/2015:16:04:25] (ajaxHandler) Lage Trichter_s:	mitte
+
+[17/Mar/2015:16:04:25] (ajaxHandler) Länge in cm_n:	8,5
+
+[17/Mar/2015:16:04:25] (ajaxHandler) Material_s:	PET																			
+
+[17/Mar/2015:16:04:25] (ajaxHandler) Trocknungstemp in °C_n:	120																			
+
+[17/Mar/2015:16:04:25] (ajaxHandler) Taupunkt in °C_n:	-15																			
+
+[17/Mar/2015:16:04:25] (ajaxHandler) Masse in kg_n:	---																			
+
+[17/Mar/2015:16:04:25] (ajaxHandler) Fördergerät Förderzyklus in min_n:	11																			
+
+[17/Mar/2015:16:04:25] (ajaxHandler) Fördergerät Mittelwert in kg/Zyklus_n:	0,3699																			
+
+[17/Mar/2015:16:04:25] (ajaxHandler) Fördergerät Standardabweichung in kg/Zyklus_n:	0,00428																			
+
+[17/Mar/2015:16:04:25] (ajaxHandler) ###																				
+
+[17/Mar/2015:16:04:25] (ajaxHandler) file get contents:
+[17/Mar/2015:16:04:25] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:16:04:25] (ajaxHandler) utf8_encode:
+[17/Mar/2015:16:04:25] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:16:04:25] (ajaxHandler) lines: 12
+[17/Mar/2015:16:04:25] (ajaxHandler) count: 11
+[17/Mar/2015:16:04:25] (ajaxHandler) metadata: Name_s:	Trocknungslauf_151214																			
+Datum_d:	15.12.2014																			
+Gewicht in kg_n:	100
+Lage Trichter_s:	mitte
+Länge in cm_n:	8,5
+Material_s:	PET																			
+Trocknungstemp in °C_n:	120																			
+Taupunkt in °C_n:	-15																			
+Masse in kg_n:	---																			
+Fördergerät Förderzyklus in min_n:	11																			
+Fördergerät Mittelwert in kg/Zyklus_n:	0,3699																			
+Fördergerät Standardabweichung in kg/Zyklus_n:	0,00428																			
+
+[17/Mar/2015:16:04:25] (ajaxHandler) Nach PaseMetadaten:
+[17/Mar/2015:16:04:25] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:16:04:25] (ajaxHandler) Vor erstem preg_split:
+[17/Mar/2015:16:04:25] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:16:04:25] (ajaxHandler) Vor array_slice:
+[17/Mar/2015:16:04:25] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:16:04:25] (ajaxHandler) Vor zweitem preg_split:
+[17/Mar/2015:16:04:25] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:16:04:25] (ajaxHandler) Nach RegexZeugs:
+[17/Mar/2015:16:04:25] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:16:04:25] (ajaxHandler) Vor Iteration über alle Zeilen:
+[17/Mar/2015:16:04:25] (ajaxHandler) Memory Usage: 768 kb
