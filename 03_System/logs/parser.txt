@@ -245,3 +245,54 @@ FÃ¶rdergerÃ¤t Standardabweichung in kg/Zyklus_n:	0,00428
 [17/Mar/2015:16:04:25] (ajaxHandler) Memory Usage: 768 kb
 [17/Mar/2015:16:04:25] (ajaxHandler) Vor Iteration Ã¼ber alle Zeilen:
 [17/Mar/2015:16:04:25] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:18:55:20] (ajaxHandler) ---------------------------------------------
+[17/Mar/2015:18:55:20] (ajaxHandler) Init:
+[17/Mar/2015:18:55:20] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:18:55:20] (ajaxHandler) Name_s:	Trocknungslauf PA6	
+
+[17/Mar/2015:18:55:20] (ajaxHandler) Datum_d:	01.09.2014	
+
+[17/Mar/2015:18:55:20] (ajaxHandler) Material_s:	PA6	
+
+[17/Mar/2015:18:55:20] (ajaxHandler) Trocknungstemp in °C_n:	80	
+
+[17/Mar/2015:18:55:20] (ajaxHandler) Taupunkt in °C_n:	-15
+
+[17/Mar/2015:18:55:20] (ajaxHandler) Masse in kg_n:	---		
+
+[17/Mar/2015:18:55:20] (ajaxHandler) Fördergerät Förderzyklus in min_n:	11,000000	
+
+[17/Mar/2015:18:55:20] (ajaxHandler) Fördergerät Mittelwert in kg / Zyklus_n:	0,369900		
+
+[17/Mar/2015:18:55:20] (ajaxHandler) Fördergerät Standardabweichung in kg / Zyklus:	0,004280		
+
+[17/Mar/2015:18:55:20] (ajaxHandler) ###
+
+[17/Mar/2015:18:55:20] (ajaxHandler) file get contents:
+[17/Mar/2015:18:55:20] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:18:55:20] (ajaxHandler) utf8_encode:
+[17/Mar/2015:18:55:20] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:18:55:20] (ajaxHandler) lines: 9
+[17/Mar/2015:18:55:20] (ajaxHandler) count: 7
+[17/Mar/2015:18:55:20] (ajaxHandler) metadata: Name_s:	Trocknungslauf PA6	
+Datum_d:	01.09.2014	
+Material_s:	PA6	
+Trocknungstemp in Â°C_n:	80	
+Taupunkt in Â°C_n:	-15
+Masse in kg_n:	---		
+FÃ¶rdergerÃ¤t FÃ¶rderzyklus in min_n:	11,000000	
+FÃ¶rdergerÃ¤t Mittelwert in kg / Zyklus_n:	0,369900		
+FÃ¶rdergerÃ¤t Standardabweichung in kg / Zyklus:	0,004280		
+
+[17/Mar/2015:18:55:20] (ajaxHandler) Nach PaseMetadaten:
+[17/Mar/2015:18:55:20] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:18:55:20] (ajaxHandler) Vor erstem preg_split:
+[17/Mar/2015:18:55:20] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:18:55:20] (ajaxHandler) Vor array_slice:
+[17/Mar/2015:18:55:20] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:18:55:20] (ajaxHandler) Vor zweitem preg_split:
+[17/Mar/2015:18:55:20] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:18:55:20] (ajaxHandler) Nach RegexZeugs:
+[17/Mar/2015:18:55:20] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:18:55:20] (ajaxHandler) Vor Iteration Ã¼ber alle Zeilen:
+[17/Mar/2015:18:55:20] (ajaxHandler) Memory Usage: 768 kb
