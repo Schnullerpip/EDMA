@@ -45,18 +45,26 @@ class Parser {
     }
 
     private function parse() {
-        
+
+//        $this->_db->beginTransaction();
+//        try {
         $this->_metadata = "";
-        while(true) {
+        while (true) {
             $string = $this->_file->fgets();
+//            if (!$string) {
+//                $errorMsg = array(
+//                    'Fehler' => "Aus Datei kann nicht eingelesen werden!"
+//                );
+//                throw new ParserException("Fehler in Funktion fgets()", 0, null, $errorMsg);
+//            }
             if ($string === "###") {
                 break;
             }
             $this->_metadata .= $string;
         }
-        
+
         //$stringFile = file_get_contents($this->_file);
-        
+
         $this->_logger->lwrite("file get contents:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
@@ -261,7 +269,7 @@ class Parser {
 
         $this->_logger->lwrite("Vor zweitem preg_split:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-        
+
         $spaltennamen = preg_split("/:[\t]?/", $this->_file->fgets());
 
         $this->_logger->lwrite("Nach RegexZeugs:");
@@ -330,10 +338,10 @@ class Parser {
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
 
         // Iteration ueber alle Zeilen
-        $startTime = microtime(true); // Zeitmessung
+//        $startTime = microtime(true); // Zeitmessung
         //for ($j = 0; $j < count($messdaten); ++$j) {
-        $leereZeile = false;
-        while(!$this->_file->eof()) {
+        $j = 0;
+        while (!$this->_file->eof()) {
 //            if ($j === 1000) {
 //                $this->_logger->lwrite("Zeit für 1000 Zeilen: " . number_format(( microtime(true) - $startTime), 4) . " Sekunden\n");
 //                $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
@@ -344,8 +352,14 @@ class Parser {
 
             // Pruefung auf zu wenig Spalten
             if (count($messungsSpalte) !== $spaltenanzahl) {
-                $leereZeile = true;
-                break;
+                if ($this->_file->eof()) {
+                    continue;
+                } else {
+                    $executeError = "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
+                            . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")";
+                    $this->throwMessException($executeError);
+                }
+
                 // Pruefung auf Leerzeile in letzter Zeile
 //                if ($j === count($messdaten) - 1 and count($messungsSpalte) === 1) {
 //                    continue;
@@ -382,13 +396,9 @@ class Parser {
                 $this->throwMessException("Fehler beim INSERT von 'messung' "
                         . "(Zeile: " . ($j + $this->_zeilennummerMessdaten) . ")");
             }
+            ++$j;
         }
-        
-        if ($leereZeile && !$this->_file->eof()) {
-            $executeError = "Falsche Anzahl an Spalten in Zeile " . ($j + $this->_zeilennummerMessdaten)
-                            . " (" . count($messungsSpalte) . " statt " . $spaltenanzahl . ")";
-                    $this->throwMessException($executeError);
-        }
+
         ini_set('max_execution_time', $saveExTime);
     }
 
