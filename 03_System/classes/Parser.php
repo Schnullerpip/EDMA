@@ -29,7 +29,7 @@ class Parser {
     public function __construct($file, $projekt_id) {
         // Logger init
         $this->_logger = new Logger();
-        $this->_logger->activate(false);
+        $this->_logger->activate(true);
         $this->_logger->lfile(realpath("logs/parser.txt"));
         $this->_logger->lwrite("---------------------------------------------");
         $this->_logger->lwrite("Init:");
@@ -45,19 +45,19 @@ class Parser {
     }
 
     private function parse() {
-
 //        $this->_db->beginTransaction();
 //        try {
         $this->_metadata = "";
         while (true) {
             $string = $this->_file->fgets();
+            $this->_logger->lwrite($string);
 //            if (!$string) {
 //                $errorMsg = array(
 //                    'Fehler' => "Aus Datei kann nicht eingelesen werden!"
 //                );
 //                throw new ParserException("Fehler in Funktion fgets()", 0, null, $errorMsg);
 //            }
-            if ($string === "###") {
+            if (strpos($string,"###") === 0) {
                 break;
             }
             $this->_metadata .= $string;
@@ -136,6 +136,9 @@ class Parser {
         array_pop($metalines);  // letztes Element löschen, da leer
         $lines = count($metalines);
         $this->_zeilennummerMessdaten = $lines + 3; // Metazeilen + (Trennzeichenzeile + Sensornamenzeile + Indexbeginn = 3)
+        $this->_logger->lwrite("lines: ".$lines);
+        $this->_logger->lwrite("count: ".$count);
+        $this->_logger->lwrite("metadata: ".$this->_metadata);
         if ($count != $lines) {
             $this->_warning = $this->metalinesToIgnore($matches[0], $metalines);
         }
