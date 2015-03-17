@@ -29,7 +29,7 @@ class Parser {
     public function __construct($file, $projekt_id) {
         // Logger init
         $this->_logger = new Logger();
-        $this->_logger->activate(true);
+        $this->_logger->activate(false);
         $this->_logger->lfile(realpath("logs/parser.txt"));
         $this->_logger->lwrite("-------------------- NEW --------------------");
         $this->_logger->lwrite("Init:");
@@ -70,9 +70,6 @@ class Parser {
             return;
         }
 
-        $this->_logger->lwrite("nach Metadaten-Erstellung:");
-        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-
         $charset = mb_detect_encoding($this->_metadata, "UTF-8, ISO-8859-1");
         // falls Datei in ISO Format ist muss konvertiert werden.
         // falls weitere charsets vorkommen muss iconv() statt utf8_encode benutzt werden
@@ -80,8 +77,6 @@ class Parser {
             // $stringFile = utf8_encode($stringFile);
             $this->_metadata = iconv("ISO-8859-1", "UTF-8", $this->_metadata);
         }
-        $this->_logger->lwrite("nach iconv:");
-        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
         $this->_metadata = str_replace("\r", "", $this->_metadata);
 
         $this->_db->beginTransaction();
@@ -242,15 +237,10 @@ class Parser {
                         . ", metawert: " . $metawert . ")");
             }
         }
-        $this->_logger->lwrite("nach parseMetaDaten:");
-        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
     }
 
     private function parseMessDaten() {
         $spaltennamen = preg_split("/:[\t]?/", $this->_file->fgets());
-        $this->_logger->lwrite("nach urspruenglich unperformantem Teil:");
-        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-
         $spaltenanzahl = count($spaltennamen) - 1;   // letztes Element leer aufgrund der preg_split-Bedingung ':'
         if ($spaltenanzahl > 1) {
             if ($spaltennamen[0] != "Datum") {     // 1. Spalte der Messungen muss Datum sein
@@ -310,18 +300,13 @@ class Parser {
             $this->throwMessException("Fehler beim Erstellen des prepared statements von 'messung'");
         }
 
-        $this->_logger->lwrite("Vor Iteration über alle Zeilen:");
-        $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-
         // Iteration ueber alle Zeilen
-        $startTime = microtime(true); // Zeitmessung
+//        $startTime = microtime(true); // Zeitmessung (fuer Log)
         $j = 0;
         while (!$this->_file->eof()) {
-            if ($j === 1000) {
-                $this->_logger->lwrite("Zeit für 1000 Zeilen: " . number_format(( microtime(true) - $startTime), 4) . " Sekunden");
-                $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)) . "\n\n");
-                $startTime = microtime(true);
-            }
+//            if ($j === 1000) {
+//                $this->_logger->lwrite("Zeit für 1000 Zeilen: " . number_format(( microtime(true) - $startTime), 4) . " Sekunden");
+//            }
 
             $messungsSpalte = preg_split("/\t/", $this->_file->fgets());
 
