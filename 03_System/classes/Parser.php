@@ -70,14 +70,6 @@ class Parser {
             return;
         }
 
-//        $charset = mb_detect_encoding($this->_metadata, "UTF-8, ISO-8859-1");
-//        // falls Datei/String in ISO Format ist muss konvertiert werden.
-//        // falls weitere charsets vorkommen muss iconv() statt utf8_encode benutzt werden
-//        if ($charset === "ISO-8859-1") {
-//            // $stringFile = utf8_encode($stringFile);
-//            $this->_metadata = iconv("ISO-8859-1", "UTF-8", $this->_metadata);
-//        }
-//        $this->_metadata = str_replace("\r", "", $this->_metadata);
         $this->_metadata = $this->encodeString($this->_metadata);
 
         $this->_db->beginTransaction();
@@ -241,7 +233,6 @@ class Parser {
     }
 
     private function parseMessDaten() {
-//        $spaltenString = $this->_file->fgets();
         $spaltenString = $this->encodeString($this->_file->fgets());
         $spaltennamen = preg_split("/:[\t]?/", $spaltenString);
         $spaltenanzahl = count($spaltennamen) - 1;   // letztes Element leer aufgrund der preg_split-Bedingung ':'
@@ -288,7 +279,6 @@ class Parser {
                         . ", sensorname: " . $sensorname . ")");
             }
         }
-        //$messdaten = array_slice($messdaten, 1); // löschen des Elements mit Sensornamen, da nicht mehr benötigt
         // Sql Statement fuer eine Zeile erstellen
         $sql = "INSERT INTO messung (messreihe_id, zeitpunkt, datum_uhrzeit, mikrosekunden, sensor_id, messwert) VALUES ";
         for ($i = 2; $i < $spaltenanzahl; ++$i) {
@@ -311,7 +301,6 @@ class Parser {
 //                $this->_logger->lwrite("Zeit für 1000 Zeilen: " . number_format(( microtime(true) - $startTime), 4) . " Sekunden");
 //            }
 
-//            $messungsString = $this->_file->fgets();
             $messungsString = $this->encodeString($this->_file->fgets());
             $messungsSpalte = preg_split("/\t/", $messungsString);
 
