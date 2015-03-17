@@ -77,7 +77,7 @@ class Parser {
         }
         $this->_logger->lwrite("utf8_encode:");
         $this->_logger->lwrite("Memory Usage: " . Utils::convert(memory_get_usage(true)));
-        //$stringFile = str_replace("\r", "", $stringFile);
+        $this->_metadata = str_replace("\r", "", $this->_metadata);
         //$stringFile = explode("###", $stringFile);
 //        if (count($stringFile) != 2) {
 //            $this->_error = array(
