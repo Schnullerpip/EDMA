@@ -296,3 +296,234 @@ FÃ¶rdergerÃ¤t Standardabweichung in kg / Zyklus:	0,004280
 [17/Mar/2015:18:55:20] (ajaxHandler) Memory Usage: 768 kb
 [17/Mar/2015:18:55:20] (ajaxHandler) Vor Iteration Ã¼ber alle Zeilen:
 [17/Mar/2015:18:55:20] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:25:08] (ajaxHandler) ---------------------------------------------
+[17/Mar/2015:19:25:08] (ajaxHandler) Init:
+[17/Mar/2015:19:25:08] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:25:08] (ajaxHandler) Name_s:	Trocknungslauf dynamisch																			
+
+[17/Mar/2015:19:25:08] (ajaxHandler) Datum_d:	20.11.2014																			
+
+[17/Mar/2015:19:25:08] (ajaxHandler) Material_s:	PA6																			
+
+[17/Mar/2015:19:25:08] (ajaxHandler) Trocknungstemp in °C_n:	80																			
+
+[17/Mar/2015:19:25:08] (ajaxHandler) Taupunkt in °C_n:	-15																			
+
+[17/Mar/2015:19:25:08] (ajaxHandler) Masse in kg_n:	25																			
+
+[17/Mar/2015:19:25:08] (ajaxHandler) Fördergerät Förderzyklus in min_n:	11																			
+
+[17/Mar/2015:19:25:08] (ajaxHandler) Fördergerät Mittelwert in kg/Zyklus_n:	0,3699																			
+
+[17/Mar/2015:19:25:08] (ajaxHandler) Fördergerät Standardabweichung in kg/Zyklus_n:	0,00428																			
+
+[17/Mar/2015:19:25:08] (ajaxHandler) ###																				
+
+[17/Mar/2015:19:25:08] (ajaxHandler) file get contents:
+[17/Mar/2015:19:25:08] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:25:08] (ajaxHandler) utf8_encode:
+[17/Mar/2015:19:25:08] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:25:08] (ajaxHandler) lines: 9
+[17/Mar/2015:19:25:08] (ajaxHandler) count: 9
+[17/Mar/2015:19:25:08] (ajaxHandler) metadata: Name_s:	Trocknungslauf dynamisch																			
+Datum_d:	20.11.2014																			
+Material_s:	PA6																			
+Trocknungstemp in Â°C_n:	80																			
+Taupunkt in Â°C_n:	-15																			
+Masse in kg_n:	25																			
+FÃ¶rdergerÃ¤t FÃ¶rderzyklus in min_n:	11																			
+FÃ¶rdergerÃ¤t Mittelwert in kg/Zyklus_n:	0,3699																			
+FÃ¶rdergerÃ¤t Standardabweichung in kg/Zyklus_n:	0,00428																			
+
+[17/Mar/2015:19:25:08] (ajaxHandler) Nach PaseMetadaten:
+[17/Mar/2015:19:25:08] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:25:08] (ajaxHandler) Vor erstem preg_split:
+[17/Mar/2015:19:25:08] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:25:08] (ajaxHandler) Vor array_slice:
+[17/Mar/2015:19:25:08] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:25:08] (ajaxHandler) Vor zweitem preg_split:
+[17/Mar/2015:19:25:08] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:25:08] (ajaxHandler) Nach RegexZeugs:
+[17/Mar/2015:19:25:08] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:25:08] (ajaxHandler) Vor Iteration Ã¼ber alle Zeilen:
+[17/Mar/2015:19:25:08] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:34:32] (ajaxHandler) ---------------------------------------------
+[17/Mar/2015:19:34:32] (ajaxHandler) Init:
+[17/Mar/2015:19:34:32] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:34:32] (ajaxHandler) Name_s:	Trocknungslauf dynamisch																			
+
+[17/Mar/2015:19:34:32] (ajaxHandler) Datum_d:	20.11.2014																			
+
+[17/Mar/2015:19:34:32] (ajaxHandler) Material_s:	PA6																			
+
+[17/Mar/2015:19:34:32] (ajaxHandler) Trocknungstemp in °C_n:	80																			
+
+[17/Mar/2015:19:34:32] (ajaxHandler) Taupunkt in °C_n:	-15																			
+
+[17/Mar/2015:19:34:32] (ajaxHandler) Masse in kg_n:	25																			
+
+[17/Mar/2015:19:34:32] (ajaxHandler) Fördergerät Förderzyklus in min_n:	11																			
+
+[17/Mar/2015:19:34:32] (ajaxHandler) Fördergerät Mittelwert in kg/Zyklus_n:	0,3699																			
+
+[17/Mar/2015:19:34:32] (ajaxHandler) Fördergerät Standardabweichung in kg/Zyklus_n:	0,00428																			
+
+[17/Mar/2015:19:34:32] (ajaxHandler) ###																				
+
+[17/Mar/2015:19:34:32] (ajaxHandler) file get contents:
+[17/Mar/2015:19:34:32] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:34:32] (ajaxHandler) utf8_encode:
+[17/Mar/2015:19:34:32] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:34:32] (ajaxHandler) lines: 9
+[17/Mar/2015:19:34:32] (ajaxHandler) count: 9
+[17/Mar/2015:19:34:32] (ajaxHandler) metadata: Name_s:	Trocknungslauf dynamisch																			
+Datum_d:	20.11.2014																			
+Material_s:	PA6																			
+Trocknungstemp in Â°C_n:	80																			
+Taupunkt in Â°C_n:	-15																			
+Masse in kg_n:	25																			
+FÃ¶rdergerÃ¤t FÃ¶rderzyklus in min_n:	11																			
+FÃ¶rdergerÃ¤t Mittelwert in kg/Zyklus_n:	0,3699																			
+FÃ¶rdergerÃ¤t Standardabweichung in kg/Zyklus_n:	0,00428																			
+
+[17/Mar/2015:19:36:38] (ajaxHandler) ---------------------------------------------
+[17/Mar/2015:19:36:38] (ajaxHandler) Init:
+[17/Mar/2015:19:36:38] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:36:38] (ajaxHandler) Name_s:	Trocknungslauf dynamisch																			
+
+[17/Mar/2015:19:36:38] (ajaxHandler) Datum_d:	20.11.2014																			
+
+[17/Mar/2015:19:36:38] (ajaxHandler) Material_s:	PA6																			
+
+[17/Mar/2015:19:36:38] (ajaxHandler) Trocknungstemp in °C_n:	80																			
+
+[17/Mar/2015:19:36:38] (ajaxHandler) Taupunkt in °C_n:	-15																			
+
+[17/Mar/2015:19:36:38] (ajaxHandler) Masse in kg_n:	25																			
+
+[17/Mar/2015:19:36:38] (ajaxHandler) Fördergerät Förderzyklus in min_n:	11																			
+
+[17/Mar/2015:19:36:38] (ajaxHandler) Fördergerät Mittelwert in kg/Zyklus_n:	0,3699																			
+
+[17/Mar/2015:19:36:38] (ajaxHandler) Fördergerät Standardabweichung in kg/Zyklus_n:	0,00428																			
+
+[17/Mar/2015:19:36:38] (ajaxHandler) ###																				
+
+[17/Mar/2015:19:36:38] (ajaxHandler) file get contents:
+[17/Mar/2015:19:36:38] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:36:38] (ajaxHandler) utf8_encode:
+[17/Mar/2015:19:36:38] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:36:38] (ajaxHandler) lines: 9
+[17/Mar/2015:19:36:38] (ajaxHandler) count: 9
+[17/Mar/2015:19:36:38] (ajaxHandler) metadata: Name_s:	Trocknungslauf dynamisch																			
+Datum_d:	20.11.2014																			
+Material_s:	PA6																			
+Trocknungstemp in Â°C_n:	80																			
+Taupunkt in Â°C_n:	-15																			
+Masse in kg_n:	25																			
+FÃ¶rdergerÃ¤t FÃ¶rderzyklus in min_n:	11																			
+FÃ¶rdergerÃ¤t Mittelwert in kg/Zyklus_n:	0,3699																			
+FÃ¶rdergerÃ¤t Standardabweichung in kg/Zyklus_n:	0,00428																			
+
+[17/Mar/2015:19:40:49] (ajaxHandler) ---------------------------------------------
+[17/Mar/2015:19:40:49] (ajaxHandler) Init:
+[17/Mar/2015:19:40:49] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:40:49] (ajaxHandler) Name_s:	the_big_one_S														
+
+[17/Mar/2015:19:40:49] (ajaxHandler) Datum_d:	03.12.2014														
+
+[17/Mar/2015:19:40:49] (ajaxHandler) Material_s:	ABS														
+
+[17/Mar/2015:19:40:49] (ajaxHandler) Trocknungstemp in °C_n:	80														
+
+[17/Mar/2015:19:40:49] (ajaxHandler) Taupunkt in °C_n:	-15														
+
+[17/Mar/2015:19:40:49] (ajaxHandler) Masse in kg_n:	---														
+
+[17/Mar/2015:19:40:49] (ajaxHandler) Födergerät Förderzyklus in min_n:	11														
+
+[17/Mar/2015:19:40:49] (ajaxHandler) Födergerät Mittelwert in kg/Zyklus_n:	0,3699														
+
+[17/Mar/2015:19:40:49] (ajaxHandler) Födergerät Standardabweichung in kg/Zyklus_n:	0,00428														
+
+[17/Mar/2015:19:40:49] (ajaxHandler) ###															
+
+[17/Mar/2015:19:40:49] (ajaxHandler) file get contents:
+[17/Mar/2015:19:40:49] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:40:49] (ajaxHandler) utf8_encode:
+[17/Mar/2015:19:40:49] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:40:49] (ajaxHandler) lines: 9
+[17/Mar/2015:19:40:49] (ajaxHandler) count: 8
+[17/Mar/2015:19:40:49] (ajaxHandler) metadata: Name_s:	the_big_one_S														
+Datum_d:	03.12.2014														
+Material_s:	ABS														
+Trocknungstemp in Â°C_n:	80														
+Taupunkt in Â°C_n:	-15														
+Masse in kg_n:	---														
+FÃ¶dergerÃ¤t FÃ¶rderzyklus in min_n:	11														
+FÃ¶dergerÃ¤t Mittelwert in kg/Zyklus_n:	0,3699														
+FÃ¶dergerÃ¤t Standardabweichung in kg/Zyklus_n:	0,00428														
+
+[17/Mar/2015:19:40:50] (ajaxHandler) Nach PaseMetadaten:
+[17/Mar/2015:19:40:50] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:40:50] (ajaxHandler) Vor erstem preg_split:
+[17/Mar/2015:19:40:50] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:40:50] (ajaxHandler) Vor array_slice:
+[17/Mar/2015:19:40:50] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:40:50] (ajaxHandler) Vor zweitem preg_split:
+[17/Mar/2015:19:40:50] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:40:50] (ajaxHandler) Nach RegexZeugs:
+[17/Mar/2015:19:40:50] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:40:50] (ajaxHandler) Vor Iteration Ã¼ber alle Zeilen:
+[17/Mar/2015:19:40:50] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:41:16] (ajaxHandler) ---------------------------------------------
+[17/Mar/2015:19:41:16] (ajaxHandler) Init:
+[17/Mar/2015:19:41:16] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:41:16] (ajaxHandler) Name_s:	Trocknungslauf dynamisch																			
+
+[17/Mar/2015:19:41:16] (ajaxHandler) Datum_d:	20.11.2014																			
+
+[17/Mar/2015:19:41:16] (ajaxHandler) Material_s:	PA6																			
+
+[17/Mar/2015:19:41:16] (ajaxHandler) Trocknungstemp in °C_n:	80																			
+
+[17/Mar/2015:19:41:16] (ajaxHandler) Taupunkt in °C_n:	-15																			
+
+[17/Mar/2015:19:41:16] (ajaxHandler) Masse in kg_n:	25																			
+
+[17/Mar/2015:19:41:16] (ajaxHandler) Fördergerät Förderzyklus in min_n:	11																			
+
+[17/Mar/2015:19:41:16] (ajaxHandler) Fördergerät Mittelwert in kg/Zyklus_n:	0,3699																			
+
+[17/Mar/2015:19:41:16] (ajaxHandler) Fördergerät Standardabweichung in kg/Zyklus_n:	0,00428																			
+
+[17/Mar/2015:19:41:16] (ajaxHandler) ###																				
+
+[17/Mar/2015:19:41:16] (ajaxHandler) file get contents:
+[17/Mar/2015:19:41:16] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:41:16] (ajaxHandler) utf8_encode:
+[17/Mar/2015:19:41:16] (ajaxHandler) Memory Usage: 512 kb
+[17/Mar/2015:19:41:16] (ajaxHandler) lines: 9
+[17/Mar/2015:19:41:16] (ajaxHandler) count: 9
+[17/Mar/2015:19:41:16] (ajaxHandler) metadata: Name_s:	Trocknungslauf dynamisch																			
+Datum_d:	20.11.2014																			
+Material_s:	PA6																			
+Trocknungstemp in Â°C_n:	80																			
+Taupunkt in Â°C_n:	-15																			
+Masse in kg_n:	25																			
+FÃ¶rdergerÃ¤t FÃ¶rderzyklus in min_n:	11																			
+FÃ¶rdergerÃ¤t Mittelwert in kg/Zyklus_n:	0,3699																			
+FÃ¶rdergerÃ¤t Standardabweichung in kg/Zyklus_n:	0,00428																			
+
+[17/Mar/2015:19:41:16] (ajaxHandler) Nach PaseMetadaten:
+[17/Mar/2015:19:41:16] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:41:16] (ajaxHandler) Vor erstem preg_split:
+[17/Mar/2015:19:41:16] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:41:16] (ajaxHandler) Vor array_slice:
+[17/Mar/2015:19:41:16] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:41:16] (ajaxHandler) Vor zweitem preg_split:
+[17/Mar/2015:19:41:16] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:41:16] (ajaxHandler) Nach RegexZeugs:
+[17/Mar/2015:19:41:16] (ajaxHandler) Memory Usage: 768 kb
+[17/Mar/2015:19:41:16] (ajaxHandler) Vor Iteration Ã¼ber alle Zeilen:
+[17/Mar/2015:19:41:16] (ajaxHandler) Memory Usage: 768 kb
