@@ -66,28 +66,34 @@ class DeleteController extends AjaxController {
     private function deleteMessreihe() {
         $this->_db->get('messreihe', array('id', '=', $this->_id));
         $messreihe = $this->_db->results();
-
+        $this->_db->beginTransaction();
         $this->_db->delete('messreihe', array('id', '=', $this->_id));
         if ($this->_db->error()) {
+            $this->_db->rollback();
             $this->_failed = array(
                 'name' => $messreihe->messreihenname,
                 'message' => 'Die Messreihe konnte nicht gelöscht werden!'
             );
+        } else {
+            $this->_db->commit();
         }
     }
     
     private function deleteProjekt() {
         $this->_db->get('projekt', array('id', '=', $this->_id));
         $projekt = $this->_db->first();
-        
+        $this->_db->beginTransaction();
         $this->_db->delete('projekt', array('id', '=', $this->_id));
         
         // Not in if wegmachen! 
        if ($this->_db->error()) {
+            $this->_db->rollback();
             $this->_failed = array(
                 'name' => $projekt->projektname,
                 'message' => 'Das Projekt konnte nicht gelöscht werden!'
             );
+        } else {
+            $this->_db->commit();
         }
     }
 
