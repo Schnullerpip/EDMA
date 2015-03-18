@@ -12,7 +12,7 @@ if (Input::exists()) {
                 'max' => 30
             ),
             'neuespwwdh' => array(
-                'fieldname' => 'Neue Passwort wiederholen',
+                'fieldname' => 'Neues Passwort wiederholen',
                 'required' => true,
                 'min' => 3,
                 'max' => 30,
@@ -67,7 +67,7 @@ if (Input::exists()) {
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
         <!-- EDMA CSS -->
-        <link href="css/bootstrap-theme.css" rel="stylesheet">
+        <link href="css/bootstrap-theme.min.css" rel="stylesheet">
 
 
         <!-- Unterstützung für Media Queries und HTML5-Elemente in IE8 über HTML5 shim und Respond.js -->
