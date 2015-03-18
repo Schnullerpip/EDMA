@@ -18,7 +18,7 @@
         <link href="css/vendor/datepicker.css" rel="stylesheet">
 
         <!-- EDMA CSS -->
-        <link href="css/bootstrap-theme.css" rel="stylesheet">
+        <link href="css/bootstrap-theme.min.css" rel="stylesheet">
 
         <!-- Vendor-JavaScript -->
         <script src="js/vendor/jquery.min.js"></script>
