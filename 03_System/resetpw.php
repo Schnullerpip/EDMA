@@ -30,14 +30,14 @@ if (Input::exists()) {
                 $db->query("UPDATE passwort SET hash = ?, salt = ? WHERE projekt_id is NULL", $params);
                 if ($db->error()) {
                     Session::flash('error', 'Passwort konnte nicht geändert werden. Bitte versuchen Sie es erneut');
-                    Redirect::to('resetpw.php');
+                    Redirect::to('resetpw');
                 } else {
                     Session::flash('success', 'Das Master-Passwort wurde erfolgreich geändert.');
                     Redirect::to('./');
                 }
             } else {
                 Session::flash('error', 'Das eingebene Datenbank-Passwort ist falsch!');
-                Redirect::to('resetpw.php');
+                Redirect::to('resetpw');
             }
         } else {
             $message = "";
@@ -46,7 +46,7 @@ if (Input::exists()) {
             }
             if (!Session::exists('error')) {
                 Session::flash('error', $message);
-                Redirect::to('resetpw.php');
+                Redirect::to('resetpw');
             }
         }
     }
