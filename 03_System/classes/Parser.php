@@ -131,12 +131,22 @@ class Parser {
 
         $datum_index = array_search("Datum", $matches[1]);
         if ($datum_index === FALSE) {
-            $datumError = "Metainfo 'Datum' nicht gefunden oder Wert ungültig!";
+            $datumError = "Metainfo 'Datum' nicht gefunden!";
             $this->throwMetaException($datumError);
         }
-
-        $datum_german = $matches[3][$datum_index];
-        $datum_mysql = Utils::convertDate($datum_german);
+        $datumWert = $matches[3][$datum_index];
+        $tag = intval(substr($datumWert, 0, 2));    // index: 0 1 2 3 4 5 6 7 8 9
+        $monat = intval(substr($datumWert, 3, 2));  //        | | | | | | | | | |
+        $jahr = intval(substr($datumWert, 6, 4));   // datum: d d . m m . y y y y
+        if ($jahr < 1970) {
+            $datumError = "Metainfo 'Datum' hat ungültige Jahresangabe kleiner 1970 (" . $datumWert . ")!";
+            $this->throwMetaException($datumError);
+        }
+        if (!checkdate($monat, $tag, $jahr)) {
+            $datumError = "Metainfo 'Datum' hat ungültigen Wert (" . $datumWert . ")!";
+            $this->throwMetaException($datumError);
+        }
+        $datum_mysql = Utils::convertDate($datumWert);
 
         // insert messreihe
         $messreihen_name = $matches[3][$messreihenname];
