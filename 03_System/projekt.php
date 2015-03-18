@@ -68,18 +68,20 @@ if ($projekt->isMaster() && Input::exists()) {
 
                     Session::put(Config::get('session/session_name'), $projekt_id);
 
-                    $passwordData = array(
-                        'salt' => $salt,
-                        'hash' => Hash::make(Input::get('passwort'), $salt),
-                        'projekt_id' => $projekt_id
-                    );
+                    // Passwort nur wenn projekt nicht leer.
+                    if (Input::get('passwort')) {
+                        $passwordData = array(
+                            'salt' => $salt,
+                            'hash' => Hash::make(Input::get('passwort'), $salt),
+                            'projekt_id' => $projekt_id
+                        );
 
-                    $db->insert('passwort', $passwordData);
+                        $db->insert('passwort', $passwordData);
 
-                    if ($db->error()) {
-                        throw new Exception("Passwort konnte nicht angelegt werden!");
+                        if ($db->error()) {
+                            throw new Exception("Passwort konnte nicht angelegt werden!");
+                        }
                     }
-
                     $projekt = new Projekt($projekt_id);
                 }
 
