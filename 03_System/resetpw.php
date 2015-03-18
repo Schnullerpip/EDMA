@@ -26,7 +26,8 @@ if (Input::exists()) {
 
             // Neues Passwort
             if (Input::get('dbpw') === Config::get('mysql/password')) {
-                $db->query("UPDATE passwort SET hash = '".Hash::make(Input::get('neuespwwdh'), $salt)."', salt = '".$salt."' WHERE projekt_id is NULL");
+                $params = array(Hash::make(Input::get('neuespwwdh'), $salt), $salt);
+                $db->query("UPDATE passwort SET hash = ?, salt = ? WHERE projekt_id is NULL", $params);
                 if ($db->error()) {
                     Session::flash('error', 'Passwort konnte nicht geändert werden. Bitte versuchen Sie es erneut');
                     Redirect::to('resetpw.php');
