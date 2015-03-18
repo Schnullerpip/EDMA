@@ -19,8 +19,16 @@
 class Validate {
 
     private $_passed = false,
-            $_errors = array();
+            $_errors = array(),
+            $_db;
 
+    /**
+     * Standardconstruktor
+     */
+    public function __construct() {
+        $this->_db = DB::getInstance();
+    }
+    
     /**
      * Prüft die Eingabewerte von $source ($_POST oder $_GET) auf die angegebenen
      * Anforderungen in $items
@@ -69,6 +77,12 @@ class Validate {
                             break;
                         case 'unique':
                             // DB Anfrage
+                            $whereArray = array($rule_value['field'], '=', $value);
+                            $this->_db->get($rule_value['table'], $whereArray);
+                            if ($this->_db->count() !== 0) {
+                                $this->addError("\"{$name}\" muss eindeutig sein. "
+                                . "\"{$value}\" ist bereits vorhanden.");
+                            }
                             break;
                     }
                 }
