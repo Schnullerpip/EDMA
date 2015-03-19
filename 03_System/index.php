@@ -1182,12 +1182,7 @@ $jsonselectsensor = json_encode($selectsensor);
         });
 
         //der Input von values im metafilter bereich soll sowohl durch drücken von enter als auch durch eien lost fokus bestätigt werden können
-        $('#meta_value_div').keypress(function (e) {
-            if(e.keyCode == 13){
-                evaluateAllFilters(true);
-            }
-        });
-        $('#meta_value_div').on("blur", ".valueField",function (e) {
+        $('#meta_value_div').on("change", ".valueField",function (e) {
             evaluateAllFilters(true);
         });
 
