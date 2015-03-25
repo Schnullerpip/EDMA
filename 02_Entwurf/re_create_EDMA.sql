@@ -11,12 +11,12 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+01:00";
 
 -- clean up
-DROP DATABASE IF EXISTS `EDMA`;
+DROP DATABASE IF EXISTS `db_messwik`;
 --
--- Datenbank: `EDMA`
+-- Datenbank: `db_messwik`
 --
-CREATE DATABASE `EDMA` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `EDMA`;
+CREATE DATABASE `db_messwik` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `db_messwik`;
 
 -- --------------------------------------------------------
 
@@ -31,7 +31,7 @@ CREATE TABLE `anhang` (
   `inhalt` mediumblob NOT NULL,
   `groesse` int(10) unsigned NOT NULL,
   `dateityp` varchar(30) NOT NULL
-) ENGINE=InnoDB ROW_FORMAT=COMPRESSED DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `anhang`
 ADD CONSTRAINT pk_anhang PRIMARY KEY (id),
