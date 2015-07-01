@@ -4,6 +4,12 @@ require_once 'preHeader.php';
 if ($projekt->isMaster() && Input::exists()) {
     if (Token::check(Input::get('token'))) {
         $validate = new Validate();
+        if (is_object($projekt->data()) and $projekt->data()->id > 0) {
+            $id = $projekt->data()->id;
+        } else {
+            $id = -1;
+        }
+        
         $validation = $validate->check($_POST, array(
             'projektname' => array(
                 'fieldname' => 'Projektname',
@@ -12,7 +18,8 @@ if ($projekt->isMaster() && Input::exists()) {
                 'max' => 100,
                 'unique' => array(
                     'table' => 'projekt',
-                    'field' => 'projektname'
+                    'field' => 'projektname',
+                    'except' => 'id = ' . $id
                 )
             )
         ));

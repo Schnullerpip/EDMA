@@ -77,8 +77,11 @@ class Validate {
                             break;
                         case 'unique':
                             // DB Anfrage
-                            $whereArray = array($rule_value['field'], '=', $value);
-                            $this->_db->get($rule_value['table'], $whereArray);
+                            //$whereArray = array($rule_value['field'], '=', $value);
+                            //$query = "SELECT * FROM {$rule_value['table']} WHERE {$rule_value['field']} = ? AND NOT {$rule_value['except']}";
+                            $query = "SELECT * FROM ? WHERE ? = ? AND NOT ?";
+                            //$this->_db->query($query, array($value));
+                            $this->_db->query($query, array($rule_value['table'], $rule_value['field'], $value, $rule_value['except']));
                             if ($this->_db->count() !== 0) {
                                 $this->addError("\"{$name}\" muss eindeutig sein. "
                                 . "\"{$value}\" ist bereits vorhanden.");
