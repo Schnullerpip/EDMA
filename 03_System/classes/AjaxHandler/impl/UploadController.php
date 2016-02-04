@@ -24,6 +24,7 @@ class UploadController extends AjaxController {
                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', //docx
                 'application/vnd.oasis.opendocument.text', // openoffice
                 'application/pdf', // pdf
+                'text/csv', // csv
             ),
             $_maxSize,
             $_files,
@@ -61,7 +62,7 @@ class UploadController extends AjaxController {
             $this->_failed[] = array(
                 'Dateiname' => $fileName,
                 'Fehler' => "Datei ist in ung&uuml;ltigem Dateiformat",
-                'Unterst&uumml;tze Formate' => "doc, docx, pdf, odt",
+                'Unterst&uumml;tze Formate' => "doc, docx, pdf, odt, csv",
             );
             
             return false;
